@@ -1,0 +1,52 @@
+[
+ {
+  "id": "fba3da26-0140-4a9a-a7b7-70b0e2bee5b1",
+  "user_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "title": "وين شحنتي HDTA6351661؟",
+  "engine": "rules",
+  "provider": "rules",
+  "messages": 2,
+  "created_at": "2026-11-22T20:49:07.399Z",
+  "updated_at": "2026-11-22T20:49:07.416Z"
+ },
+ {
+  "id": "8b5fc414-338a-41f5-92d8-c71688728aab",
+  "user_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "title": "كم تكلفة 20 كجم جوي؟",
+  "engine": "rules",
+  "provider": "rules",
+  "messages": 4,
+  "created_at": "2026-11-22T20:58:00.689Z",
+  "updated_at": "2026-11-22T20:58:02.211Z"
+ },
+ {
+  "id": "dc1f5087-e493-421d-a135-856daec11060",
+  "user_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "title": "كم تكلفة 15 كجم جوي؟",
+  "engine": "rules",
+  "provider": "rules",
+  "messages": 2,
+  "created_at": "2026-11-22T21:11:05.786Z",
+  "updated_at": "2026-11-22T21:11:05.804Z"
+ },
+ {
+  "id": "1fa13fd2-fa18-490e-a833-a502cc637257",
+  "user_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "title": "كم تكلفة 20 كجم جوي؟",
+  "engine": "rules",
+  "provider": "rules",
+  "messages": 4,
+  "created_at": "2026-11-22T21:18:11.040Z",
+  "updated_at": "2026-11-22T21:18:12.567Z"
+ },
+ {
+  "id": "688f9e76-c981-4664-8bac-246f5cb3233c",
+  "user_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "title": "كم تكلفة 20 كجم جوي؟",
+  "engine": "rules",
+  "provider": "rules",
+  "messages": 4,
+  "created_at": "2026-11-22T21:20:24.057Z",
+  "updated_at": "2026-11-22T21:20:25.584Z"
+ }
+]

@@ -1,0 +1,13 @@
+[
+ {
+  "id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "fullName": "مدير النظام",
+  "email": "admin@almasar.local",
+  "phone": "",
+  "username": "admin",
+  "password_hash": "scrypt$16384$8$1$fafb6f06bb9a0b20d479cdb8b0764785$0584f5cb79f92255e1744d3ddfea9ef09ba63b491f15ccb9c49ba5cf94ee40682ddded5b2963e05e4c84e3d4dfa32c075ec340ab084261708dfcd8d4334d9ca4",
+  "role": "super_admin",
+  "status": "active",
+  "created_at": "2026-11-22T19:38:22.987Z"
+ }
+]

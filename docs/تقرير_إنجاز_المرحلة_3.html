@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>تقرير إنجاز المرحلة 3 — خادم حقيقي + إدارة متكاملة + إشعارات + أندرويد/آيفون</title>
+<style>
+  *{box-sizing:border-box}
+  body{margin:0;background:#eef1f6;color:#16243a;font-family:"Segoe UI",Tahoma,"Noto Naskh Arabic",Arial,sans-serif;line-height:1.9;font-size:15.5px;padding-bottom:60px}
+  .wrap{max-width:1020px;margin:0 auto;padding:0 16px}
+  header{background:linear-gradient(135deg,#071b30,#123c63 60%,#a3121a 165%);color:#fff;padding:36px 16px 28px;border-bottom:6px solid #d40511;margin-bottom:20px}
+  header .k{font-size:12.5px;opacity:.85;letter-spacing:1px}
+  header h1{margin:6px 0 8px;font-size:25px;line-height:1.45}
+  header p{margin:0;opacity:.93;font-size:14.5px;max-width:840px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+  .chip{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.3);padding:4px 11px;border-radius:20px;font-size:12px}
+  section{background:#fff;border:1px solid #e2e8f0;border-radius:16px;padding:20px 22px;margin-bottom:16px;box-shadow:0 5px 16px rgba(7,27,48,.06)}
+  h2{font-size:19.5px;color:#071b30;margin:0 0 12px;padding-bottom:9px;border-bottom:2px solid #eef1f6}
+  h2 .n{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;background:#123c63;color:#fff;border-radius:9px;font-size:13px;margin-left:8px;vertical-align:middle}
+  h3{font-size:16px;color:#123c63;margin:18px 0 6px}
+  table{width:100%;border-collapse:collapse;margin:12px 0;font-size:13.8px}
+  th{background:#071b30;color:#fff;text-align:right;padding:8px 10px;font-size:13px}
+  td{padding:7px 10px;border-bottom:1px solid #e8edf3;vertical-align:top}
+  tr:nth-child(even) td{background:#f8fafc}
+  code{background:#f1f5f9;border:1px solid #e2e8f0;border-radius:5px;padding:1px 5px;font-family:Consolas,monospace;font-size:12.8px;color:#b42318;direction:ltr;display:inline-block}
+  pre{background:#0d1626;color:#e2e8f0;padding:12px 14px;border-radius:11px;overflow-x:auto;direction:ltr;text-align:left;font-size:12.4px;line-height:1.6}
+  pre code{background:none;border:0;color:inherit;padding:0}
+  .ok{background:#d1fae5;color:#047857;padding:2px 9px;border-radius:20px;font-size:11.5px;font-weight:700;white-space:nowrap}
+  .warn{background:#fef3c7;color:#b45309;padding:2px 9px;border-radius:20px;font-size:11.5px;font-weight:700;white-space:nowrap}
+  .bad{background:#fee2e2;color:#b91c1c;padding:2px 9px;border-radius:20px;font-size:11.5px;font-weight:700;white-space:nowrap}
+  .callout{border-radius:11px;padding:11px 15px;margin:12px 0;font-size:14.3px;border-right:5px solid}
+  .blue{background:#eff6ff;border-color:#2563eb}
+  .green{background:#ecfdf5;border-color:#10b981}
+  .amber{background:#fff7ed;border-color:#f59e0b}
+  .red{background:#fef2f2;border-color:#dc2626}
+  .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:12px 0}
+  @media(max-width:760px){.grid{grid-template-columns:repeat(2,1fr)}}
+  .stat{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:11px;text-align:center}
+  .stat b{display:block;font-size:19px;color:#071b30}
+  .stat span{font-size:11.5px;color:#64748b}
+  .foot{text-align:center;color:#64748b;font-size:12.5px;margin-top:18px}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <div class="k">تقرير إنجاز — تسليم مرحلة</div>
+    <h1>المرحلة 3: خادم حقيقي جاهز للنشر + إدارة متكاملة + إشعارات للتطبيقات + أندرويد وآيفون وPWA</h1>
+    <p>بُنيت هذه المرحلة فوق النظام القائم دون حذف أي صفحة أو وظيفة. الخادم أصبح قابلًا للنشر على نطاق حقيقي بشهادة HTTPS ونسخ احتياطي يومي،
+    وأُضيفت لوحة إدارة كاملة داخل صفحة الإعدادات، ونظام إشعارات حقيقي متعدد القنوات، وتطبيقات للجوال (APK مبني فعليًا + مشروع Xcode + نسخة PWA قابلة للتثبيت الآن).</p>
+    <div class="chips">
+      <span class="chip">📅 22 نوفمبر 2026</span>
+      <span class="chip">🧪 209 اختبارًا — 0 فاشل</span>
+      <span class="chip">📱 APK مبني وموقّع</span>
+      <span class="chip">🍎 مشروع iOS + PWA</span>
+      <span class="chip">🔔 Web Push حقيقي (VAPID)</span>
+      <span class="chip">🐳 Docker + HTTPS + نظام نسخ احتياطي</span>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+<section>
+  <h2><span class="n">1</span> ما أُنجز في هذه المرحلة</h2>
+  <div class="grid">
+    <div class="stat"><b>209</b><span>اختبارًا ناجحًا</span></div>
+    <div class="stat"><b>6</b><span>تبويبات إدارة</span></div>
+    <div class="stat"><b>4</b><span>قنوات إشعار</span></div>
+    <div class="stat"><b>3</b><span>منصّات (أندرويد/آيفون/ويب)</span></div>
+  </div>
+
+  <h3>أ) خادم حقيقي جاهز للنشر</h3>
+  <table>
+    <tr><th>المكوّن</th><th>التفصيل</th><th>الحالة</th></tr>
+    <tr><td>جاهزية الإنتاج</td><td><code>deploy/Dockerfile</code> (Node 20 Alpine، مستخدم غير جذري، healthcheck، مجلد بيانات دائم)</td><td><span class="ok">جاهز</span></td></tr>
+    <tr><td>HTTPS تلقائي</td><td><code>deploy/docker-compose.yml</code> + <code>Caddyfile</code>: شهادة Let's Encrypt تلقائية، ترويسات أمان، تمرير SSE بلا تخزين مؤقت</td><td><span class="ok">جاهز</span></td></tr>
+    <tr><td>بديل بدون Docker</td><td><code>deploy/masar.service</code> (نظام مقوّى) + <code>deploy/nginx.conf</code> + certbot</td><td><span class="ok">جاهز</span></td></tr>
+    <tr><td>نسخ احتياطي</td><td>خدمة نسخ يومية في compose + <code>deploy/backup.sh</code> مع احتفاظ 14 يومًا + زر تنزيل نسخة JSON من اللوحة</td><td><span class="ok">جاهز</span></td></tr>
+    <tr><td>مراقبة</td><td><code>deploy/healthcheck.sh</code> + <code>/api/health</code> + لوحة حالة الخادم (ذاكرة/تشغيل/عدّادات)</td><td><span class="ok">جاهز</span></td></tr>
+    <tr><td>الدليل الكامل</td><td><code>docs/دليل-الخادم-الحقيقي.md</code> (VPS، نطاق، DNS، جدار حماية، تحديث، صيانة، قائمة تحقّق أمنية)</td><td><span class="ok">جاهز</span></td></tr>
+  </table>
+  <div class="callout blue">الخادم ما زال <b>بلا أي تبعيات npm</b> — لا حقن تبعيات خارجية، والصورة تُبنى في ثوانٍ.</div>
+
+  <h3>ب) إدارة متكاملة داخل صفحة الإعدادات</h3>
+  <p>يظهر في أعلى صفحة الإعدادات قسم <b>«🛡️ الإدارة والإشعارات»</b> يفتح لوحة إدارة كاملة بنفس هوية التصميم وستة تبويبات:</p>
+  <table>
+    <tr><th>التبويب</th><th>ما يمكن فعله</th></tr>
+    <tr><td>الخادم</td><td>حالة الخادم الحقيقية (إصدار، Node، ذاكرة، مدة التشغيل، عدد المستخدمين/الموظفين/العملاء/الزوار/الجلسات/الشحنات/المزادات/الحملات)، حالة قنوات الإشعار، تفعيل الإشعارات على الجهاز، إشعار تجريبي، تنزيل نسخة احتياطية.</td></tr>
+    <tr><td>المستخدمون</td><td>بحث وفلاتر (عملاء/موظفون/الحالة)، تفعيل وإيقاف فوري، تغيير الرتبة، إعادة تعيين كلمة المرور (كلمة مؤقتة تُعرض مرة واحدة)، إنشاء مستخدم، حذف ناعم.</td></tr>
+    <tr><td>العملاء</td><td>قائمة العملاء مع عدد الشحنات والرصيد والرتبة، رسالة مباشرة، إيقاف/تفعيل، إعادة تعيين كلمة المرور.</td></tr>
+    <tr><td>الزوار</td><td>إحصاءات حقيقية (زوار، زيارات، المتصلون الآن، المحجوبون)، رسم بياني لسبعة أيام، أكثر الصفحات زيارة، توزيع الأجهزة والمنصّات، حجب زائر/إلغاء الحجب.</td></tr>
+    <tr><td>الإشعارات</td><td>مُنشئ حملة (عنوان/نص/الجمهور/القنوات)، إرسال فوري، آخر الحملات مع نتائج كل قناة، سجل قنوات الإرسال.</td></tr>
+    <tr><td>السجل</td><td>سجل تدقيق لكل عملية إدارية: المنفّذ، الإجراء، الكيان، الوقت.</td></tr>
+  </table>
+  <div class="callout green"><b>الصلاحيات على الخادم لا في الواجهة:</b> المستخدم العادي يُرفض بـ403 على كل مسارات الإدارة (مُختبر)، مدير الفرع يدير لكن لا يحذف، والمدير العام وحده يحذف وينزّل النسخ الاحتياطية. ولا يمكن منح رتبة مساوية أو أعلى من رتبة المنفّذ.</div>
+
+  <h3>ج) الإشعارات: أربع قنوات حقيقية</h3>
+  <table>
+    <tr><th>القناة</th><th>كيف تعمل</th><th>الحالة الفعلية</th></tr>
+    <tr><td>داخل التطبيق + SSE</td><td>صندوق إشعارات في قاعدة البيانات + بث لحظي للمستخدم</td><td><span class="ok">تعمل الآن</span></td></tr>
+    <tr><td>Web Push</td><td>مفاتيح VAPID تُولَّد على الخادم + تشفير <b>RFC 8291 (aes128gcm)</b> + Service Worker يستقبل ويعرض الإشعار</td><td><span class="ok">تعمل الآن</span> على أندرويد (Chrome) وآيفون 16.4+ بعد التثبيت على الشاشة الرئيسية</td></tr>
+    <tr><td>FCM (أندرويد الأصلي)</td><td>إرسال HTTP v1 مع توقيع RS256 من حساب الخدمة</td><td><span class="warn">الكود جاهز — يحتاج <code>FCM_SERVICE_ACCOUNT</code></span></td></tr>
+    <tr><td>APNs (آيفون الأصلي)</td><td>إرسال HTTP/2 مع JWT ES256 من مفتاح <code>.p8</code></td><td><span class="warn">الكود جاهز — يحتاج مفاتيح Apple</span></td></tr>
+  </table>
+  <p>عند غياب المفاتيح تُعيد القناة الحالة <code>skipped_no_credentials</code> ويظهر في اللوحة «غير مهيّأ» مع سبب صريح — <b>لا يُقلَّد أي إرسال</b>.</p>
+
+  <h3>د) التطبيقات: أندرويد + آيفون + ويب</h3>
+  <table>
+    <tr><th>المنصّة</th><th>ما تم تسليمه</th><th>التحقّق</th></tr>
+    <tr><td>أندرويد</td><td><code>masar-logistics-v1.0.0-phase3.apk</code> — الواجهة كاملة + لوحة الإدارة الجديدة مضمّنة، خادم داخلي على 127.0.0.1، شاشة إعداد عنوان الخادم، أيقونة وتوقيع</td><td><span class="ok">بُني ووُقّع وتحقّقت محتوياته</span> · <span class="warn">لم يُثبَّت على جهاز حقيقي هنا</span></td></tr>
+    <tr><td>آيفون</td><td><code>ios/</code> — مشروع Swift (AppDelegate + WebViewController + Info.plist + project.yml + build-ios.sh)</td><td><span class="warn">يحتاج Mac + Xcode للبناء</span></td></tr>
+    <tr><td>آيفون/أندرويد بدون متجر</td><td><b>PWA</b>: <code>manifest.webmanifest</code> + <code>sw.js</code> + أيقونات 72→512 — «إضافة إلى الشاشة الرئيسية» تعطي أيقونة وتشغيلًا مستقلًا وإشعارات</td><td><span class="ok">جاهزة الآن</span></td></tr>
+  </table>
+</section>
+
+<section>
+  <h2><span class="n">2</span> أدلة الاختبار</h2>
+  <table>
+    <tr><th>الحزمة</th><th>ما تغطيه</th><th>النتيجة</th></tr>
+    <tr><td><code>test-admin.js</code> (جديد)</td><td>تتبّع الزوار، VAPID، تشفير Web Push وفكّه، الحملات والجمهور، صلاحيات الإدارة، إيقاف/إعادة تعيين/حذف، العملاء، الزوار، حالة الخادم، النسخة الاحتياطية، سجل التدقيق</td><td><span class="ok">31 / 0</span></td></tr>
+    <tr><td><code>test-e2e.js</code></td><td>دخول، مزامنة، مزادات، ثم: قسم الإدارة داخل الإعدادات، تحميل اللوحة من الخادم، تبويب المستخدمين/الزوار، إرسال حملة من الواجهة، تسجيل زيارة من المتصفح</td><td><span class="ok">23 / 0</span></td></tr>
+    <tr><td><code>test-ui.js</code></td><td>كل الصفحات والأزرار + صفحة الإدارة + PWA + مسار الإشعارات</td><td><span class="ok">65 / 0</span></td></tr>
+    <tr><td><code>test-api.mjs</code></td><td>مصادقة، صلاحيات، CRUD، بيانات حية، SSE</td><td><span class="ok">35 / 0</span></td></tr>
+    <tr><td><code>test-auctions.mjs</code></td><td>محرّك المزادات الذرّي والمحفظة</td><td><span class="ok">23 / 0</span></td></tr>
+    <tr><td><code>test-auctions-ui.js</code></td><td>واجهة المزادات ضد خادم حقيقي</td><td><span class="ok">32 / 0</span></td></tr>
+    <tr><td colspan="2"><b>الإجمالي</b></td><td><span class="ok">209 / 0</span></td></tr>
+  </table>
+
+  <h3>أهم الحالات المُثبتة</h3>
+  <ul>
+    <li><b>تشفير Web Push مطابق للمعيار:</b> نص عربي كامل أُرسل مشفّرًا ثم فُكّ بنفس خوارزمية RFC 8291 وعاد مطابقًا (186 بايت).</li>
+    <li><b>توقيع VAPID:</b> JWT بخوارزمية ES256 وتوقيع 64 بايت ومطالبات صحيحة.</li>
+    <li><b>عزل الجمهور:</b> حملة «الموظفون» لا تصل للعملاء، وحملة «العملاء» لا تصل للموظفين، وحملة لمستخدم واحد تصل له فقط.</li>
+    <li><b>الإيقاف الفوري:</b> إيقاف حساب يمنع الدخول ويسحب جلساته ورموز الوصول القائمة (token_version).</li>
+    <li><b>إعادة تعيين كلمة المرور:</b> كلمة مؤقتة تعمل مرة واحدة، والجلسات القديمة تُرفض فورًا.</li>
+    <li><b>الصلاحيات:</b> مستخدم عادي ← 403 على كل مسارات الإدارة الخمسة + منع إرسال الحملات؛ مدير الفرع ← عرض 200 وحذف 403؛ منع ترقية الذات.</li>
+    <li><b>الزوار:</b> زيارة متكررة تُحدّث نفس الزائر (بلا تكرار)، لا يُحفظ IP صريح (بصمة مجزّأة فقط)، الحجب يوقف التتبّع.</li>
+    <li><b>النسخ الاحتياطي:</b> 17 مجموعة كاملة + حدث تدقيق.</li>
+  </ul>
+</section>
+
+<section>
+  <h2><span class="n">3</span> الشفافية: ما هو حقيقي وما يحتاج شيئًا منك</h2>
+  <table>
+    <tr><th>البند</th><th>الحالة</th><th>التوضيح</th></tr>
+    <tr><td>الخادم والتخزين والمصادقة والصلاحيات</td><td><span class="ok">حقيقي</span></td><td>يعمل الآن، وقاعدة البيانات على القرص مع كتابة ذرّية ونسخ .bak</td></tr>
+    <tr><td>لوحة الإدارة والمستخدمون والعملاء والزوار</td><td><span class="ok">حقيقي</span></td><td>كل بياناتها من الخادم — لا أرقام ثابتة في الواجهة</td></tr>
+    <tr><td>الإشعارات داخل التطبيق وWeb Push</td><td><span class="ok">حقيقي</span></td><td>مُختبر معماريًا؛ الإرسال الفعلي لجهاز يحتاج سماح المستخدم بالإشعارات</td></tr>
+    <tr><td>FCM / APNs</td><td><span class="warn">يحتاج مفاتيحك</span></td><td>الخادم يبني الطلب ويوقّعه بشكل صحيح، لكن الإرسال يتوقف حتى تضيف حسابك</td></tr>
+    <tr><td>Nginx/Caddy/Docker</td><td><span class="warn">لم يُشغَّل هنا</span></td><td>ملفات النشر مكتوبة ومُراجعة، لكن بيئة البناء هنا لا تحتوي Docker — تُختبر عند أول تشغيل على سيرفرك</td></tr>
+    <tr><td>تطبيق iOS</td><td><span class="warn">يحتاج Mac</span></td><td>المشروع جاهز؛ البناء والتوقيع يتطلبان Xcode وحساب Apple</td></tr>
+    <tr><td>APK</td><td><span class="ok">مبني</span> · <span class="warn">غير مُثبَّت</span></td><td>لا يوجد جهاز/محاكي في بيئة البناء — أُبلغ بأي خطأ تشغيل لأصلحه</td></tr>
+    <tr><td>بوابة دفع / تتبع شركات الشحن</td><td><span class="bad">غير موصول</span></td><td>يحتاجان حسابات تجارية ومفاتيح API — لم يُقلَّد أي منهما</td></tr>
+  </table>
+</section>
+
+<section>
+  <h2><span class="n">4</span> كيف تستخدمها الآن</h2>
+  <pre><code># محليًا
+node server/server.js                     # ثم افتح http://localhost:8080
+admin / Masar!Admin2026                   # غيّرها فورًا
+
+# لوحة الإدارة
+الإعدادات ← 🛡️ الإدارة والإشعارات ← فتح لوحة الإدارة
+
+# اختبار كل الحزم (209 اختبارًا)
+npm test
+
+# على سيرفر حقيقي (Docker + HTTPS تلقائي)
+cp deploy/.env.example deploy/.env && nano deploy/.env
+docker compose -f deploy/docker-compose.yml --env-file deploy/.env up -d</code></pre>
+  <p>الدليل التفصيلي خطوة بخطوة: <code>docs/دليل-الخادم-الحقيقي.md</code> — ويشمل VPS، النطاق، DNS، الجدار الناري، الصيانة اليومية، وقائمة تحقّق أمنية قبل الإنتاج.</p>
+</section>
+
+<section>
+  <h2><span class="n">5</span> الخطوة التالية المقترحة</h2>
+  <ul>
+    <li><b>المرحلة 4:</b> لوحة تحكم إدارية موسّعة (تقارير مالية، قواعد تسعير، إدارة أسطول وبوابات) وربط حقيقي لشركات الشحن عند وصول المفاتيح.</li>
+    <li><b>تفعيل FCM/APNs:</b> أنشئ مشروع Firebase ومفتاح APNs وأرسل لي القيم — أُكمل ربط التطبيقين بالتسجيل التلقائي لرمز الجهاز.</li>
+    <li><b>المرحلة 5:</b> المساعد الذكي على خدمة ذكاء اصطناعي حقيقية (مع بقاء القواعد كبديل عند الانقطاع).</li>
+  </ul>
+</section>
+
+<div class="foot">المسار العالمي اللوجستي — تقرير المرحلة 3 · 22 نوفمبر 2026 · كل الأرقام من تشغيل فعلي للاختبارات.</div>
+</div>
+</body>
+</html>

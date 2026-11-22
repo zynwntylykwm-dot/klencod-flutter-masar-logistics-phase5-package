@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>شرح تفصيلي — نظام المسار العالمي اللوجستي</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 0 0 80px;
+    font-family: "Segoe UI", Tahoma, "Noto Naskh Arabic", Arial, sans-serif;
+    background: #eef1f6; color: #1a2a3a; line-height: 1.9; font-size: 16px;
+  }
+  .wrap { max-width: 1000px; margin: 0 auto; padding: 0 16px; }
+  header.hero {
+    background: linear-gradient(135deg, #0a2540 0%, #1a4a7a 60%, #d40511 160%);
+    color: #fff; padding: 42px 16px 34px; margin-bottom: 26px;
+    border-bottom: 6px solid #d40511;
+  }
+  header.hero .wrap { padding: 0 16px; }
+  header.hero .kicker { font-size: 13px; letter-spacing: 1px; opacity: .85; margin-bottom: 6px; }
+  header.hero h1 { margin: 0 0 10px; font-size: 30px; line-height: 1.4; }
+  header.hero p { margin: 0; opacity: .92; font-size: 15px; max-width: 780px; }
+  .badges { margin-top: 16px; display: flex; flex-wrap: wrap; gap: 8px; }
+  .badge { background: rgba(255,255,255,.14); border: 1px solid rgba(255,255,255,.28); padding: 5px 12px; border-radius: 20px; font-size: 12.5px; }
+  section.card {
+    background: #fff; border-radius: 18px; padding: 24px 26px; margin-bottom: 20px;
+    box-shadow: 0 6px 18px rgba(10,37,64,.07); border: 1px solid #e2e8f0;
+  }
+  h2 { font-size: 22px; margin: 0 0 14px; color: #0a2540; padding-bottom: 10px; border-bottom: 2px solid #eef1f6; }
+  h2 .num {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 32px; height: 32px; border-radius: 10px; background: #0a2540; color: #fff;
+    font-size: 15px; margin-left: 10px; vertical-align: middle;
+  }
+  h3 { font-size: 17.5px; color: #1a4a7a; margin: 22px 0 8px; }
+  h4 { font-size: 15.5px; color: #0a2540; margin: 16px 0 6px; }
+  p { margin: 8px 0; }
+  ul, ol { margin: 8px 0; padding-right: 22px; }
+  li { margin: 5px 0; }
+  table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 14.5px; }
+  th { background: #0a2540; color: #fff; text-align: right; padding: 10px 12px; font-weight: 600; }
+  td { padding: 9px 12px; border-bottom: 1px solid #e8edf3; vertical-align: top; }
+  tr:nth-child(even) td { background: #f8fafc; }
+  code { background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 6px; padding: 1px 6px; font-family: "Consolas", "Courier New", monospace; font-size: 13.5px; color: #b42318; direction: ltr; display: inline-block; }
+  pre { background: #0f172a; color: #e2e8f0; padding: 14px 16px; border-radius: 12px; overflow-x: auto; direction: ltr; text-align: left; font-size: 13px; line-height: 1.6; }
+  pre code { background: none; border: none; color: inherit; padding: 0; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  @media (max-width: 720px) { .grid2, .grid3 { grid-template-columns: 1fr; } }
+  .stat { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 14px; padding: 14px; text-align: center; }
+  .stat .v { font-size: 22px; font-weight: 800; color: #0a2540; }
+  .stat .l { font-size: 12.5px; color: #6b7280; margin-top: 2px; }
+  .callout { border-radius: 12px; padding: 12px 16px; margin: 14px 0; font-size: 14.5px; border-right: 5px solid; }
+  .info { background: #eff6ff; border-color: #2563eb; }
+  .warn { background: #fff7ed; border-color: #f59e0b; }
+  .danger { background: #fef2f2; border-color: #dc2626; }
+  .ok { background: #ecfdf5; border-color: #10b981; }
+  .tag { display: inline-block; font-size: 11.5px; padding: 2px 9px; border-radius: 20px; font-weight: 700; }
+  .t-blue { background: #e0ecff; color: #1d4ed8; }
+  .t-green { background: #d1fae5; color: #047857; }
+  .t-red { background: #fee2e2; color: #b91c1c; }
+  .t-amber { background: #fef3c7; color: #b45309; }
+  .t-gray { background: #e5e7eb; color: #374151; }
+  .flow { counter-reset: step; margin: 10px 0; padding: 0; list-style: none; }
+  .flow li { position: relative; padding-right: 40px; margin: 10px 0; }
+  .flow li::before {
+    counter-increment: step; content: counter(step);
+    position: absolute; right: 0; top: 2px; width: 26px; height: 26px; border-radius: 50%;
+    background: #1a4a7a; color: #fff; font-size: 13px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .toc { columns: 2; column-gap: 28px; font-size: 14.5px; }
+  @media (max-width: 620px) { .toc { columns: 1; } }
+  .toc a { color: #1a4a7a; text-decoration: none; display: block; padding: 3px 0; }
+  .toc a:hover { text-decoration: underline; }
+  .foot { text-align: center; color: #6b7280; font-size: 13px; margin-top: 26px; }
+  .kv { font-size: 14.5px; }
+  .kv b { color: #0a2540; }
+  .prio-h { color: #b91c1c; font-weight: 800; }
+  .prio-m { color: #b45309; font-weight: 800; }
+  .prio-l { color: #047857; font-weight: 800; }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="kicker">تحليل تقني ووثيقة شرح — إصدار المراجعة 1.0</div>
+    <h1>شرح تفصيلي لنظام «المسار العالمي اللوجستي»</h1>
+    <p>تحليل كامل لملف <code style="background:rgba(255,255,255,.15);border-color:rgba(255,255,255,.3);color:#fff">msaralugstealalmee.html</code>
+    — ما هو النظام، كيف بُني، ما وحداته والبيانات التي يخزّنها، وكيف تعمل مساراته الوظيفية، وأهم الملاحظات والمخاطر والتوصيات.</p>
+    <div class="badges">
+      <span class="badge">📄 ملف واحد مستقل</span>
+      <span class="badge">🌐 واجهة عربية RTL بتصميم تطبيق جوال</span>
+      <span class="badge">🧩 18 صفحة داخلية</span>
+      <span class="badge">⚙️ 174 دالة JavaScript</span>
+      <span class="badge">🗄️ تخزين محلي (localStorage)</span>
+      <span class="badge">🚫 بدون خادم أو قاعدة بيانات</span>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+<section class="card">
+  <h2><span class="num">١</span>خلاصة تنفيذية في دقيقة</h2>
+  <p>
+    الملف المرفق هو <b>تطبيق ويب كامل بصفحة واحدة (Single-Page Application)</b> يعمل بالكامل داخل المتصفح،
+    مكتوب بـ HTML + CSS + JavaScript خام (Vanilla) دون أي إطار عمل، ودون أي خادم خلفي.
+    يقدّم نفسه كنظام إدارة لوجستي متكامل لشركة شحن باسم «المسار العالمي اللوجستي»
+    (ويظهر في مواضع كثيرة الارتباط بهوية DHL في الشعار والنصوص والحقوق).
+  </p>
+  <p>
+    عمليًا: هو <b>نموذج أولي (Prototype) عالي التفصيل</b> يغطي دورة العمل اللوجستية من تسجيل المستخدم،
+    إلى طلب الشحن، التتبع على الخريطة، المحفظة والدفع، البوابة اللوجستية العالمية، التقارير،
+    وحتى إدارة العملاء والأسطول والشكاوى والعقود. كل البيانات تُحفظ في <code>localStorage</code> داخل متصفح المستخدم،
+    ولا تُرسل إلى أي مكان.
+  </p>
+  <div class="grid3" style="margin-top:16px">
+    <div class="stat"><div class="v">428 KB</div><div class="l">حجم الملف (437,956 بايت)</div></div>
+    <div class="stat"><div class="v">4,861</div><div class="l">سطرًا: CSS 477 / HTML 299 / JS 4,074</div></div>
+    <div class="stat"><div class="v">18</div><div class="l">صفحة داخلية (app-page)</div></div>
+    <div class="stat"><div class="v">174</div><div class="l">دالة JavaScript</div></div>
+    <div class="stat"><div class="v">208</div><div class="l">معالج حدث onclick مضمّن</div></div>
+    <div class="stat"><div class="v">90</div><div class="l">موقعًا خارجيًا في البوابة (6 تصنيفات)</div></div>
+    <div class="stat"><div class="v">37</div><div class="l">شحنة تجريبية مزروعة</div></div>
+    <div class="stat"><div class="v">8</div><div class="l">مستودعات حول العالم</div></div>
+    <div class="stat"><div class="v">61</div><div class="l">استدعاءً لـ localStorage</div></div>
+  </div>
+</section>
+
+<section class="card">
+  <h2><span class="num">٢</span>جدول المحتويات</h2>
+  <div class="toc">
+    <a href="#arch">٣. المعمارية العامة وكيف يُحمّل التطبيق</a>
+    <a href="#tech">٤. التقنيات والمكتبات الخارجية</a>
+    <a href="#auth">٥. بوابة الدخول: المصادقة والصلاحيات</a>
+    <a href="#pages">٦. خريطة الصفحات الـ 18</a>
+    <a href="#models">٧. نماذج البيانات (Data Models)</a>
+    <a href="#flows">٨. المسارات الوظيفية الرئيسية خطوة بخطوة</a>
+    <a href="#calc">٩. المعادلات الحسابية داخل النظام</a>
+    <a href="#storage">١٠. طبقة التخزين والحالة</a>
+    <a href="#ai">١١. «المساعد الذكي»: كيف يعمل فعليًا</a>
+    <a href="#ux">١٢. تجربة الاستخدام والتصميم</a>
+    <a href="#strength">١٣. نقاط القوة</a>
+    <a href="#risks">١٤. الثغرات والملاحظات الحرجة + التوصيات</a>
+    <a href="#roadmap">١٥. خطة تحويله إلى نظام إنتاجي حقيقي</a>
+    <a href="#run">١٦. دليل التشغيل والاختبار السريع</a>
+    <a href="#appendix">١٧. ملحق: خريطة الدوال حسب الوحدة</a>
+  </div>
+</section>
+
+<section class="card" id="arch">
+  <h2><span class="num">٣</span>المعمارية العامة وكيف يُحمّل التطبيق</h2>
+  <p>
+    البنية بسيطة جدًا: <b>مستند HTML واحد</b> يحتوي على كل شيء. لا يوجد Routing على مستوى الخادم ولا مُجمِّع (Bundler)،
+    والتنقل بين الشاشات يتم بإخفاء/إظهار عناصر <code>&lt;div class="app-page"&gt;</code> عبر دالة واحدة:
+  </p>
+<pre><code>function navigateTo(pageId) {
+  document.querySelectorAll('.app-page').forEach(p =&gt; p.style.display = 'none');
+  document.getElementById(pageId).style.display = 'block';
+  /* ثم استدعاء دالة التحميل الخاصة بالصفحة (load/render) */
+}</code></pre>
+
+  <h3>ترتيب التحميل عند فتح الملف</h3>
+  <ol class="flow">
+    <li>يُحمَّل <code>&lt;head&gt;</code>: خط Cairo + Font Awesome + Leaflet + Chart.js من CDNs خارجية، ثم 477 سطر CSS داخلي.</li>
+    <li>يُرسم جسم الصفحة: الحاوية <code>#appContainer</code> مخفية (<code>display:none</code>)، وشاشة الدخول <code>#loginOverlay</code> ظاهرة.</li>
+    <li>تُنفَّذ سكربتات التهيئة أسفل الملف بالترتيب: <code>loadSystemUsers()</code> ← تحميل الشحنات والمستودعات من التخزين ←
+        تحميل المحفظة والإشعارات ووحدات CRM والأسطول والعروض والشكاوى والعقود ← <code>checkAutoLogin()</code>.</li>
+    <li>إذا وُجد مستخدم محفوظ في <code>localStorage</code> (خيار «تذكرني») أو في <code>sessionStorage</code>، تُخفى شاشة الدخول
+        ويظهر التطبيق مباشرة، وتُطبَّق بيانات المستخدم وصلاحياته.</li>
+    <li>بعد نصف ثانية تظهر نافذة الترحيب (<code>welcomeModal</code>)، وتبدأ دورة تبديل البانر الإعلاني كل 5 ثوانٍ
+        (<code>setInterval(rotatePromoAd, 5000)</code>)، وتُطبع رسوم إحصائية في الـ Console.</li>
+  </ol>
+
+  <div class="callout info">
+    <b>ملاحظة معمارية مهمة:</b> كل «الصفحات» موجودة مسبقًا في الـ DOM، لكن محتواها يُبنى ديناميكيًا عبر
+    <code>innerHTML</code> من داخل JavaScript. لذلك حجم الـ HTML الظاهر صغير (299 سطرًا) بينما الحقيقة أن
+    أغلب الواجهة تُولَّد من نصوص قوالب (Template Literals) داخل الـ JS (468 قالبًا نصيًا).
+  </div>
+
+  <h3>نمط التصميم البرمجي المستخدم</h3>
+  <ul>
+    <li><b>حالة عالمية (Globals):</b> متغيرات مثل <code>shipments</code>, <code>warehouses</code>, <code>systemUsers</code>, <code>walletCards</code> معلّنة في النطاق العام، وأي تعديل عليها يتبعه استدعاء <code>save*()</code> ثم إعادة الرسم <code>render*()</code>.</li>
+    <li><b>أنماط module بادئة:</b> بادئات تسمية واضحة لكل وحدة: <code>wallet*</code> للمحفظة، <code>portal*</code> للبوابة، <code>crm*</code>, <code>fleet*</code>.</li>
+    <li><b>واجهة إلحاق بالنافذة:</b> بعض الدوال تُصدَّر يدويًا عبر <code>window.fn = fn</code> ليعمل استدعاؤها من سمات HTML المضمّنة (<code>onclick</code>).</li>
+    <li><b>مكوّنات مشتركة:</b> نافذة منبثقة موحّدة <code>#modal</code>، إشعار Toast <code>showToast()</code>، تأكيد/تحقق داخل المحفظة، وخريطة Leaflet.</li>
+  </ul>
+</section>
+
+<section class="card" id="tech">
+  <h2><span class="num">٤</span>التقنيات والمكتبات الخارجية</h2>
+  <table>
+    <tr><th style="width:22%">التقنية</th><th style="width:26%">المصدر</th><th>الاستخدام داخل النظام</th></tr>
+    <tr><td>HTML5 + CSS3</td><td>داخلي (477 سطرًا)</td><td>متغيّرات CSS (<code>:root</code>) لألوان الهوية، شكل تطبيق جوال بعرض أقصى 480px، حركات <code>fadeIn</code>، تصميم متجاوب.</td></tr>
+    <tr><td>JavaScript (ES6+)</td><td>داخلي (4,074 سطرًا)</td><td>كل منطق العمل: التنقل، النماذج، الحسابات، التخزين، الرسم، الإشعارات.</td></tr>
+    <tr><td>خط Cairo</td><td>Google Fonts</td><td>الخط العربي الأساسي بستة أوزان.</td></tr>
+    <tr><td>Font Awesome 6.4</td><td>cdnjs</td><td>كل الأيقونات (208 موضع استخدام).</td></tr>
+    <tr><td>Leaflet 1.9.4</td><td>unpkg</td><td>خريطة تتبع الشحنة (OpenStreetMap) وتحديد موقع المستودعات.</td></tr>
+    <tr><td>Chart.js</td><td>jsDelivr</td><td>مخطط دائري (حالات الشحنات) + مخطط أعمدة (الشحنات حسب البلد) + مخطط التحليلات.</td></tr>
+    <tr><td>Web APIs</td><td>المتصفح</td><td><code>localStorage</code>, <code>sessionStorage</code>, <code>FileReader</code> (رفع صور الهوية والشعار)، <code>navigator.clipboard</code>, <code>Blob</code> (تصدير JSON), <code>window.print()</code>.</td></tr>
+  </table>
+  <div class="callout warn">
+    <b>تبعية للشبكة:</b> الخط والأيقونات والخريطة والمخططات كلها من CDNs خارجية. إذا فُتح الملف بدون إنترنت
+    سيعمل منطق النظام ولكن ستختفي الأيقونات والخط والخريطة والمخططات. لتحويله إلى نظام يمكن توزيعه، يُنصح بتنزيل هذه المكتبات محليًا.
+  </div>
+</section>
+
+<section class="card" id="auth">
+  <h2><span class="num">٥</span>بوابة الدخول: المصادقة والصلاحيات</h2>
+  <p>تحتوي الشاشة الأولى على أربعة نماذج فرعية داخل بطاقة واحدة:</p>
+  <ul>
+    <li><b>تسجيل الدخول:</b> مُعرّف واحد يقبل اسم المستخدم أو البريد أو رقم الهاتف + كلمة المرور + «تذكرني».</li>
+    <li><b>إنشاء حساب:</b> الاسم الكامل، البريد، الهاتف، اسم المستخدم، كلمة المرور وتأكيدها، واختيار <b>الصلاحية</b>؛
+        ويظهر حقل إضافي حسب الدور المختار (مستندات الوكيل، أو الرقم الوظيفي للموظف).</li>
+    <li><b>نسيت كلمة المرور:</b> يُولّد النظام كلمة مرور مؤقتة في المتغير <code>tempResetData</code> ويعرضها للمستخدم ليُدخلها ثم يعيّن كلمة مرور جديدة.</li>
+    <li><b>الأدوار وحقولها:</b> دالة <code>toggleRoleFields()</code> تُظهر/تُخفي الحقول حسب الدور.</li>
+  </ul>
+
+  <h3>الأدوار المعرّفة في النظام</h3>
+  <table>
+    <tr><th>قيمة الدور</th><th>الاسم المعروض</th><th>طريقة التسجيل / القيد</th></tr>
+    <tr><td><code>super_admin</code></td><td>مدير عام</td><td>حساب مزروع في الكود فقط، ولا يمكن حذفه (محمي في <code>deleteUserFromSystem</code>).</td></tr>
+    <tr><td><code>user</code></td><td>مستخدم عادي</td><td>تسجيل مباشر ويحتاج موافقة إدارية (حالة <code>pending</code>).</td></tr>
+    <tr><td><code>agent</code></td><td>وكيل</td><td>يتطلب رقم هوية + سجل تجاري + رفع صورة الهوية وصورة السجل، وإلا يُرفض التسجيل.</td></tr>
+    <tr><td><code>shipping_staff</code></td><td>موظف شحن</td><td>يتطلب رقمًا وظيفيًا موجودًا في قائمة <code>validStaffNumbers</code> (30 رقمًا مثبّتة في الكود).</td></tr>
+    <tr><td><code>support_staff</code></td><td>دعم فني</td><td>نفس شرط الرقم الوظيفي.</td></tr>
+    <tr><td><code>branch_manager</code> / <code>warehouse_manager</code></td><td>مدير فرع / مدير مستودع</td><td>معرّفان في تسمية الشارات فقط، ولا يُنشآن من نموذج التسجيل.</td></tr>
+  </table>
+
+  <h3>دورة حياة الحساب</h3>
+  <ol class="flow">
+    <li>المستخدم يُنشئ حسابًا → يُضاف إلى مصفوفة <code>pendingUsers</code> بحالة <code>status: "pending"</code> ومعرّف يبدأ بـ <code>PND-</code>.</li>
+    <li>يُسجَّل إشعار للمسؤول: «طلب تسجيل جديد من …».</li>
+    <li>المدير العام يرى الطلبات المعلّقة في قائمة المستخدمين (داخل الإعدادات) ويضغط <b>موافقة</b> أو <b>رفض</b>
+        (دالتا <code>approvePendingUser</code> / <code>rejectPendingUser</code>).</li>
+    <li>بعد الموافقة يصبح المستخدم في <code>systemUsers</code> بحالة <code>active</code> ويستطيع الدخول؛ والحساب الموقوف
+        (<code>inactive</code>) يُرفض دخوله برسالة «هذا الحساب موقوف».</li>
+  </ol>
+
+  <h3>الجلسة والدخول التلقائي</h3>
+  <ul>
+    <li>«تذكرني» ✓ → يُخزَّن <code>{id, remember:true}</code> في <code>localStorage</code> (يبقى بعد إغلاق المتصفح).</li>
+    <li>«تذكرني» ✗ → يُخزَّن في <code>sessionStorage</code> (ينتهي بانتهاء الجلسة).</li>
+    <li><code>checkAutoLogin()</code> يقرأ المعرّف، يتأكد أن الحساب ما زال <code>active</code>، ثم يفتح التطبيق مباشرة دون كلمة مرور.</li>
+  </ul>
+
+  <h3>الصلاحيات الفعلية المطبَّقة في الواجهة</h3>
+  <p>الدالة <code>applyPermissions()</code> تُخفي/تُظهر عنصرين فقط:</p>
+  <ul>
+    <li>زر «الإعدادات» في الشريط السفلي: يظهر للمدير العام فقط، ويُخفى لغيره.</li>
+    <li>زر «إضافة مستودع»: للمدير العام فقط.</li>
+  </ul>
+  <p>
+    أما صفحة الإعدادات نفسها فمحمية بـ<b>ضغطة مطوّلة 7 ثوانٍ</b> على أيقونة الترس
+    (<code>startSettingsLongPress</code>)؛ الضغط العادي يُظهر رسالة «ليس لديك صلاحية بالدخول إلى الإعدادات».
+    وبالمثل، زر «طلب شحن» في الصفحة الرئيسية يفتح النموذج فقط عند <b>الضغط المطوّل</b>، والضغط العادي يُظهر تحذيرًا
+    «ليس لديك صلاحية… يرجى دفع رأس المال إلى حسابك البنكي».
+  </p>
+  <div class="callout danger">
+    <b>هذا ليس أمنًا:</b> الضغط المطوّل وإخفاء الأزرار مجرد «حجب بصري»؛ أي مستخدم يستطيع فتح أدوات المطوّر
+    وتنفيذ <code>navigateTo('settingsPage')</code> أو تعديل <code>localStorage</code> مباشرة. تفصيل ذلك في القسم ١٤.
+  </div>
+</section>
+
+<section class="card" id="pages">
+  <h2><span class="num">٦</span>خريطة الصفحات الـ 18</h2>
+  <p>كل صف يمثل شاشة مستقلة داخل التطبيق، مع وظيفتها والدوال المسؤولة عنها.</p>
+  <table>
+    <tr><th style="width:16%">الصفحة</th><th style="width:34%">الغرض والوظائف</th><th>الدوال الرئيسية</th></tr>
+    <tr>
+      <td><b>الرئيسية</b><br><span class="tag t-gray">mainPage</span></td>
+      <td>ترحيب بالمستخدم، شبكة 9 خدمات، بانر إعلاني متغير، أزرار الوحدات الست الجديدة (CRM، الأسطول، تحليلات، عروض، شكاوى، عقود)، جرس إشعارات، وصورة رمزية.</td>
+      <td><code>navigateTo</code>, <code>rotatePromoAd</code>, <code>toggleNotifications</code>, <code>showAvatarPopup</code></td>
+    </tr>
+    <tr>
+      <td><b>تتبع سريع</b><br><span class="tag t-gray">trackingPage</span></td>
+      <td>إدخال رقم تتبع (أو محاكاة مسح باركود بالكاميرا) لعرض بطاقة معلومات كاملة + خريطة Leaflet + زر مشاركة الموقع + طباعة البوليصة.</td>
+      <td><code>searchShipment</code>, <code>simulateBarcodeScan</code>, <code>shareShipmentLocation</code>, <code>printShipmentReport</code></td>
+    </tr>
+    <tr>
+      <td><b>شحناتي</b><br><span class="tag t-gray">myShipmentsPage</span></td>
+      <td>قائمة الشحنات مع فلاتر: الكل / في الطريق / قيد التجهيز / تم التسليم (مع فلترة بتاريخ التسليم) / في انتظار التسليم، وفتح تفاصيل كل شحنة وسجل تتبعها.</td>
+      <td><code>displayShipments</code>, <code>filterShipments</code>, <code>filterByDate</code>, <code>showShipmentDetails</code></td>
+    </tr>
+    <tr>
+      <td><b>طلب شحن</b><br><span class="tag t-gray">addShipmentPage</span></td>
+      <td>نموذج ضخم لإضافة شحنة: بيانات الشحنة، الإرسال، الاستلام، البضاعة، الرسوم المالية، بيانات التتبع، مسار رحلة من 5 محطات، مرفقات، معاينة وطباعة وإرسال إلى «شحناتي».</td>
+      <td><code>showFullAddShipmentForm</code>, <code>generateStopFields</code>, <code>previewShipment</code>, <code>saveNewShipment</code>, <code>sendShipmentToMyShipments</code></td>
+    </tr>
+    <tr>
+      <td><b>مستودعاتنا</b><br><span class="tag t-gray">warehousesPage</span></td>
+      <td>8 مستودعات في 6 دول، فلترة حسب الدولة وبحث، بطاقات إحصائية (عدد/سعة/شحنات)، تفاصيل مستودع، عرضه على الخريطة، وإضافة مستودع (للمدير).</td>
+      <td><code>displayWarehouses</code>, <code>displayWarehouseStats</code>, <code>showWarehouseDetails</code>, <code>showWarehouseMap</code>, <code>addNewWarehouse</code></td>
+    </tr>
+    <tr>
+      <td><b>حاسبة الشحن</b><br><span class="tag t-gray">calculatorPage</span></td>
+      <td>حساب تكلفة تقديرية حسب بلد التصدير والوصول والوزن ونوع البضاعة + رسوم جمركية 10% + تطبيق كود خصم.</td>
+      <td><code>loadCalculatorPage</code>, <code>calculateShipping</code>, <code>applyPromoCode</code></td>
+    </tr>
+    <tr>
+      <td><b>المحفظة</b><br><span class="tag t-gray">walletPage</span></td>
+      <td>بطاقات بنكية بأرصدة، إيداع/سحب/تحويل/دفع شحنة، سجل عمليات، بحث تتبع داخل المحفظة، تأكيد برمز تحقق، إخفاء الرصيد، والتراجع عن آخر عملية.</td>
+      <td><code>renderWalletPage</code>, <code>walletActionDeposit/Withdraw/Transfer/Shipment</code>, <code>walletShowVerify</code>, <code>walletUndoLastTransaction</code></td>
+    </tr>
+    <tr>
+      <td><b>المعتمدون</b><br><span class="tag t-gray">merchantsPage</span></td>
+      <td>بطاقات «تاجر موثّق» بتصميم شهادة/بطاقة: السجل التجاري، الرقم الضريبي، الحساب البنكي، رقم الهوية، تاريخ الالتحاق، وأزرار نسخ لكل رقم.</td>
+      <td><code>renderMerchantsPage</code>, <code>copyMerchantToClipboard</code></td>
+    </tr>
+    <tr>
+      <td><b>الإحصائيات</b><br><span class="tag t-gray">statisticsPage</span></td>
+      <td>8 بطاقات مؤشرات (إجمالي/في الطريق/مسلَّم/قيد التجهيز/منتظر/القيمة/المتبقي/المستودعات) + مخطط دائري للحالات + مخطط أعمدة للشحنات حسب بلد المنشأ.</td>
+      <td><code>loadStatisticsPage</code> (Chart.js)</td>
+    </tr>
+    <tr>
+      <td><b>البوابة اللوجستية</b><br><span class="tag t-gray">globalPortalPage</span></td>
+      <td>أكبر وحدة في النظام: 90 موقعًا عالميًا في 6 تصنيفات (متاجر، مزادات، شحن، إلكترونيات، معدات طبية، أدوية) + بحث + مفضلة + «مشترياتي» + شراء بفاتورة وطرق دفع متعددة.</td>
+      <td><code>renderGlobalPortalPage</code>, <code>buildPortalTabs</code>, <code>portalCalculateInvoice</code>, <code>portalFinalizePurchase</code></td>
+    </tr>
+    <tr>
+      <td><b>الفروع</b><br><span class="tag t-gray">branchesPage</span></td>
+      <td>3 فروع (صنعاء، عدن، دبي) بحالة نشط/غير نشط، مع فلترة وبحث.</td>
+      <td><code>loadBranchesPage</code>, <code>filterBranches</code>, <code>searchBranches</code></td>
+    </tr>
+    <tr>
+      <td><b>الإعدادات</b><br><span class="tag t-gray">settingsPage</span></td>
+      <td>9 أقسام قابلة للطي: الحساب الشخصي والصورة، الأمان وكلمة المرور والتحقق بخطوتين، إعدادات الشحن، المحفظة، اللغة والمظهر وحجم الخط، الإشعارات، النسخ الاحتياطي/الاستعادة/التصدير/الاستيراد، مشاركة التطبيق، الدعم الفني، وإدارة المستخدمين والطلبات المعلّقة وتسجيل الخروج.</td>
+      <td><code>loadSettingsPageEnhanced</code>, <code>saveProfileSettings</code>, <code>changePassword</code>, <code>createBackup</code>, <code>exportData</code>, <code>performLogout</code></td>
+    </tr>
+    <tr>
+      <td><b>التقارير</b><br><span class="tag t-gray">reportsPage</span></td>
+      <td>4 تقارير مجمّعة (مالي، مستودعات، محفظة، فروع) + طباعة.</td>
+      <td><code>loadReportsPage</code>, <code>printReports</code></td>
+    </tr>
+    <tr>
+      <td><b>CRM</b><br><span class="tag t-gray">crmPage</span></td>
+      <td>إدارة عملاء: إضافة/بحث/تفاصيل/حذف، عدد الطلبات والملاحظات.</td>
+      <td><code>loadCRMData</code>, <code>renderCRMPage</code>, <code>saveCRM</code>, <code>deleteCRM</code></td>
+    </tr>
+    <tr>
+      <td><b>الأسطول</b><br><span class="tag t-gray">fleetPage</span></td>
+      <td>إدارة مركبات: لوحة، موديل، سنة، سائق، حالة (نشط/صيانة/غير نشط)، فلترة.</td>
+      <td><code>loadFleetData</code>, <code>renderFleetPage</code>, <code>saveFleet</code>, <code>deleteFleet</code></td>
+    </tr>
+    <tr>
+      <td><b>التحليلات</b><br><span class="tag t-gray">analyticsPage</span></td>
+      <td>مؤشرات ومخطط تحليلي إضافي.</td>
+      <td><code>renderAnalyticsPage</code></td>
+    </tr>
+    <tr>
+      <td><b>العروض</b><br><span class="tag t-gray">promotionsPage</span></td>
+      <td>أكواد خصم: توليد كود، نسبة الخصم، حالة الاستخدام، تطبيقه في الحاسبة، وتعليمه كمستخدم.</td>
+      <td><code>loadPromoCodes</code>, <code>generatePromoCode</code>, <code>applyPromoCode</code>, <code>markPromoUsed</code></td>
+    </tr>
+    <tr>
+      <td><b>الشكاوى</b><br><span class="tag t-gray">feedbackPage</span></td>
+      <td>تقديم شكوى/اقتراح وتصنيفها (قيد المعالجة / تم الحل) مع بحث وحلّها.</td>
+      <td><code>loadFeedbackData</code>, <code>saveFeedback</code>, <code>filterFeedback</code>, <code>resolveFeedback</code></td>
+    </tr>
+    <tr>
+      <td><b>العقود</b><br><span class="tag t-gray">contractsPage</span></td>
+      <td>إدارة عقود الموردين: إضافة/عرض/حذف.</td>
+      <td><code>loadContractData</code>, <code>saveContract</code>, <code>deleteContract</code></td>
+    </tr>
+  </table>
+  <p class="kv"><b>ملاحظة:</b> توجد أيضًا صفحة تتبع مخصّصة داخل البوابة (<code>portalTrackingPage</code>)، وشريط تنقّل سفلي ثابت، ونافذة منبثقة موحّدة، ونظام إشعارات، ومساعد محادثة عائم.</p>
+</section>
+
+<section class="card" id="models">
+  <h2><span class="num">٧</span>نماذج البيانات (Data Models)</h2>
+  <p>كل الكيانات مصفوفات كائنات JavaScript تُحفظ كـ JSON. هذه أمثلة مقتطعة من الكود الحقيقي:</p>
+
+  <h3>1) المستخدم</h3>
+<pre><code>{
+  id: "USR-001",
+  fullName: "…", email: "…", phone: "…",
+  username: "…", password: "…",        // ⚠ نص صريح
+  role: "super_admin" | "user" | "agent" | "shipping_staff" | "support_staff",
+  status: "active" | "pending" | "inactive",
+  createdAt: "2026-…",
+  idNumber, commercialReg, staffNumber, hasIdImage, hasCommercialImage
+}</code></pre>
+
+  <h3>2) الشحنة (أهم كيان)</h3>
+<pre><code>{
+  trackingNumber: "HDTA6351661", referenceNumber: "REF-48392017",
+  status: "shipped", progress: 90,              // 0–100
+  source: "الولايات المتحدة الأمريكية", sourceCity: "شيكاغو",
+  destPort: "ميناء عدن", currentLocation: "جمارك نهم",
+  sender, senderPhone, receiver, receiverPhone, authorizedPerson, payer, payerPhone,
+  invoiceNo, invoiceValue: 147500,
+  shippingCost: 10000, additionalFees: 14000, customsFees: 14000,
+  paid: 7000, remaining: 7000, penalties: 0,
+  weight: 5000, pieces: 852, size: "600 × 400 × 300", goodsType, goods,
+  lat: 15.406811, lng: 45.327783, mapLink,
+  creationDate, expectedDeliveryDate, deliveryDate, shippingCompany, adminNotes,
+  history: [ { location, date, time, status } ]   // سجل التتبع
+}</code></pre>
+  <p class="kv">
+    <b>البيانات المزروعة:</b> 37 شحنة — 25 مسلَّمة، 8 في الطريق، 3 قيد التجهيز، 1 في انتظار التسليم.
+    الشحنة الأولى (<code>HDTA6351661</code>) هي «الشحنة النموذجية» الكاملة: 852 قطعة، 5 أطنان، سجل تتبع من 5 محطات
+    (شيكاغو → لوس أنجلوس → روتردام → جبل علي → عدن)، وإحداثيات حقيقية.
+  </p>
+
+  <h3>3) المستودع</h3>
+<pre><code>{ name, code: "UAE-JA-001", country: "UAE", countryFlag: "🇦🇪",
+  countryName, city, capacity: "30,000 م²", status: "متاح",
+  shipments: 5, lat, lng }</code></pre>
+  <p>المستودعات الثمانية: نيويورك، جبل علي، جوانزو، إسطنبول، صنعاء، منفذ شحن – المهرة، عدن المركزي، صلالة.</p>
+
+  <h3>4) المحفظة</h3>
+<pre><code>// بطاقة
+{ id: "card1", name, number: "5214 9082 4421 9921",
+  expiry: "12/31", cvv: "580", balance: 14655, hidden: false }
+
+// عملية
+{ id: "OP-…", type: "deposit"|"withdraw"|"transfer"|"shipment",
+  amount, fee, cardId, toCard, note, date, status }</code></pre>
+
+  <h3>5) الوحدات الإدارية</h3>
+  <table>
+    <tr><th>الكيان</th><th>الحقول الأساسية</th><th>مفتاح التخزين</th></tr>
+    <tr><td>عميل CRM</td><td><code>id, name, phone, email, orders, notes, createdAt</code></td><td><code>alshahd_crm</code></td></tr>
+    <tr><td>مركبة الأسطول</td><td><code>id, plate, model, year, status(active/maintenance/inactive), driver, notes</code></td><td><code>alshahd_fleet</code></td></tr>
+    <tr><td>كود خصم</td><td><code>code, discount, used, createdAt</code> ويُطبَّق بزر «تطبيق الخصم»</td><td><code>alshahd_promoCodes</code></td></tr>
+    <tr><td>شكوى/اقتراح</td><td><code>id, type, subject, message, status(pending/resolved), date</code></td><td><code>alshahd_feedback</code></td></tr>
+    <tr><td>عقد</td><td><code>id, supplier, title, startDate, endDate, value, status</code></td><td><code>alshahd_contracts</code></td></tr>
+    <tr><td>معتمد (تاجر)</td><td><code>name, registryValue, taxValue, bankAccount, idNumber, joinDate</code> — ثابتة في الكود</td><td>—</td></tr>
+    <tr><td>فرع</td><td><code>name, location, phone, status</code> — ثابتة في الكود</td><td>—</td></tr>
+    <tr><td>إشعار</td><td><code>icon, text, date, read</code></td><td><code>alshahd_notifications</code></td></tr>
+  </table>
+</section>
+
+<section class="card" id="flows">
+  <h2><span class="num">٨</span>المسارات الوظيفية الرئيسية خطوة بخطوة</h2>
+
+  <h3>أ) تتبع شحنة</h3>
+  <ol class="flow">
+    <li>المستخدم يُدخل رقم التتبع (مثال <code>HDTA6351661</code>) أو يضغط أيقونة الكاميرا لمحاكاة مسح باركود.</li>
+    <li><code>searchShipment()</code> يبحث في مصفوفة <code>shipments</code> بمطابقة تامة للرقم.</li>
+    <li>عند عدم وجوده: تُعرض رسالة الخطأ وتُخفى البطاقة والخريطة.</li>
+    <li>عند وجوده: تُبنى شبكة معلومات (الحالة بلون دلالي، الموقع الحالي، المرسل، المستلم، القيمة، المتبقي، الوزن، الوصف، الملاحظات).</li>
+    <li>إذا توفرت الإحداثيات، تُنشأ خريطة Leaflet بعلامة عند الموقع مع نافذة منبثقة، مع <code>invalidateSize()</code> لضبط الحجم بعد الرسم.</li>
+    <li>زر المشاركة يفتح موقع OpenStreetMap على نفس الإحداثيات، وزر الطباعة يستدعي <code>window.print()</code> بوليصة الشحنة.</li>
+  </ol>
+
+  <h3>ب) إضافة شحنة (محمية بضغط مطوّل)</h3>
+  <ol class="flow">
+    <li>الضغط العادي على بطاقة «طلب شحن» → رسالة «ليس لديك صلاحية…».</li>
+    <li>الضغط المستمر (~800 مللي ثانية) يستدعي <code>startLongPress()</code> الذي يُخفي التحذير ويبني النموذج الكامل.</li>
+    <li>يُولّد رقم التتبع تلقائيًا ويُعرض للقراءة فقط، ويُبنى قسم «مسار الرحلة» بخمس محطات ديناميكية.</li>
+    <li><code>previewShipment()</code> يعرض معاينة قبل الحفظ.</li>
+    <li>الحفظ: يُضاف الكائن إلى <code>shipments</code> ← يُحفظ في <code>alshahd_shipments</code> ← تُحدَّث القوائم والإحصائيات والإشعارات.</li>
+    <li>أزرار <code>editShipment</code> / <code>deleteShipment</code> / <code>addTrackingPoint</code> تسمح بتعديل الشحنة أو حذفها أو إضافة نقطة تتبع جديدة.</li>
+  </ol>
+
+  <h3>ج) المحفظة والدفع</h3>
+  <ol class="flow">
+    <li><code>renderWalletPage()</code> يرسم البطاقات والأرصدة وسجل العمليات (مع خيار إخفاء الرصيد).</li>
+    <li>اختيار بطاقة → اختيار عملية: إيداع، سحب، تحويل، أو دفع شحنة.</li>
+    <li>التحقق من المبلغ عبر <code>walletValidateAmount()</code> (موجب وأقل من 999,999,999.99)، وحساب العمولة
+        <code>walletCalculateFee(amount, 0.01)</code> = 1%.</li>
+    <li>نافذة تأكيد <code>walletShowConfirm()</code> ثم نافذة «رمز التحقق» <code>walletShowVerify()</code> التي تولّد رمزًا من 6 أرقام وتقارنه.</li>
+    <li>عند النجاح: تُسجَّل العملية بمعرّف <code>OP-…</code>، يُحدَّث رصيد البطاقة، وتُحفظ البيانات، ويظهر إشعار نجاح.</li>
+    <li>يمكن التراجع عن آخر عملية (<code>walletUndoLastTransaction</code>) لأن آخر عملية تُحفظ في متغير مستقل.</li>
+  </ol>
+
+  <h3>د) البوابة اللوجستية العالمية والشراء</h3>
+  <ol class="flow">
+    <li>تُبنى 6 تبويبات، كل تبويب 15 موقعًا (إجمالي 90) ببطاقات تحتوي الاسم والأيقونة والرابط.</li>
+    <li>بحث فوري داخل البطاقات + فلتر «المفضلة» (<code>portalShowFavorites</code>) + عدّاد للمفضلة.</li>
+    <li>قسم «مشترياتي»: إدخال رابط منتج → محاكاة جلب الاسم والسعر → إدخال الكمية والوزن واسم المستورد والدولة وشركة الشحن.</li>
+    <li><code>portalCalculateInvoice()</code> يحسب: مجموع المنتج + (الوزن × 25 دولارًا للكيلو) ويعرض فاتورة تفصيلية حيّة.</li>
+    <li>اختيار طريقة الدفع (تحويل بنكي، عملات مشفرة، دفع آجل…) → إدخال بيانات → توليد رمز تحقق/توكن دفع.</li>
+    <li><code>portalFinalizePurchase()</code> يُنشئ كائن شحنة برقم تتبع <code>TRK-XXXXXXXX</code> ورقم مرجعي، ويضيفه إلى حالة البوابة،
+        ثم يعرض شاشة نجاح قابلة للطباعة مع زر «تتبع الشحنة».</li>
+  </ol>
+
+  <h3>هـ) الإشعارات والبانر والمساعد</h3>
+  <ul>
+    <li>الإشعارات تُخزَّن في <code>alshahd_notifications</code> وتُعرض في نافذة منبثقة عند الضغط على الجرس، مع عدّاد غير المقروء.</li>
+    <li>البانر الإعلاني يتبدّل كل 5 ثوانٍ بين رسائل تسويقية (<code>rotatePromoAd</code>).</li>
+    <li>المساعد العائم: إدخال سؤال → <code>handleAIMessage()</code> → رد نصي بعد 400 مللي ثانية.</li>
+  </ul>
+</section>
+
+<section class="card" id="calc">
+  <h2><span class="num">٩</span>المعادلات الحسابية داخل النظام</h2>
+  <h3>حاسبة الشحن</h3>
+<pre><code>base      = الوزن × 15                       // دولار/كجم
+finalCost = base × sourceMultiplier × destMultiplier × typeMultiplier
+customs   = finalCost × 0.10                  // جمارك تقديرية 10%
+total     = finalCost + customs
+pricePerKg = total / الوزن</code></pre>
+  <table>
+    <tr><th>عامل بلد التصدير</th><th>القيمة</th><th>عامل بلد الوصول</th><th>القيمة</th><th>عامل نوع الشحنة</th><th>القيمة</th></tr>
+    <tr><td>الولايات المتحدة</td><td>1.2</td><td>اليمن</td><td>1.3</td><td>بضائع عامة</td><td>1.0</td></tr>
+    <tr><td>الصين</td><td>1.0</td><td>السعودية</td><td>1.0</td><td>إلكترونيات</td><td>1.1</td></tr>
+    <tr><td>تركيا</td><td>0.9</td><td>عمان</td><td>0.9</td><td>مركبات</td><td>1.5</td></tr>
+    <tr><td>الإمارات</td><td>0.8</td><td>—</td><td>—</td><td>معدات ثقيلة</td><td>2.0</td></tr>
+  </table>
+  <p class="kv"><b>مثال:</b> 100 كجم من الإمارات إلى عمان، معدات ثقيلة → 1500 × 0.8 × 0.9 × 2.0 = 2,160 دولارًا + 10% جمارك = <b>2,376 دولارًا</b>.</p>
+
+  <h3>الفاتورة في البوابة والمحفظة</h3>
+<pre><code>// البوابة
+subtotal = سعر الوحدة × الكمية
+shipping = الوزن × 25            // ثابت: 25 دولارًا لكل كجم
+total    = subtotal + shipping
+
+// المحفظة
+fee = amount × 0.01              // عمولة 1%</code></pre>
+  <div class="callout warn">
+    الأرقام (15$/كجم، 10% جمارك، 25$/كجم، 1% عمولة) <b>ثوابت مكتوبة داخل الكود</b> وليست مسحوبة من
+    جدول أسعار أو إعدادات. أي تغيير في سياسة التسعير يتطلب تعديل الكود يدويًا (أو نقلها إلى إعدادات/خادم).
+  </div>
+</section>
+
+<section class="card" id="storage">
+  <h2><span class="num">١٠</span>طبقة التخزين والحالة</h2>
+  <p>
+    لا توجد قاعدة بيانات. «قاعدة البيانات» هي <code>localStorage</code> (دائم لكل متصفح/نطاق) و
+    <code>sessionStorage</code> (لكل جلسة). كل مفتاح يحمل بادئة <code>alshahd_</code> أو <code>wallet_</code>.
+  </p>
+  <table>
+    <tr><th>المفتاح</th><th>المحتوى</th><th>ملاحظة</th></tr>
+    <tr><td><code>alshahd_system_users</code></td><td>كل المستخدمين (بما فيها كلمات المرور)</td><td>⚠ بيانات حساسة بنص صريح</td></tr>
+    <tr><td><code>alshahd_pending_users</code></td><td>طلبات التسجيل المعلّقة</td><td>تحتاج موافقة المدير</td></tr>
+    <tr><td><code>alshahd_logged_user</code></td><td>معرّف المستخدم الداخل + علم «تذكرني»</td><td>في localStorage أو sessionStorage</td></tr>
+    <tr><td><code>alshahd_shipments</code></td><td>كل الشحنات</td><td>يُكتب عند الإضافة/التعديل/الحذف</td></tr>
+    <tr><td><code>alshahd_warehouses</code></td><td>المستودعات بعد أي إضافة</td><td>الافتراضي 8 مستودعات</td></tr>
+    <tr><td><code>alshahd_crm</code> / <code>alshahd_fleet</code></td><td>العملاء / المركبات</td><td>بيانات أولية مزروعة</td></tr>
+    <tr><td><code>alshahd_promoCodes</code> / <code>alshahd_feedback</code> / <code>alshahd_contracts</code></td><td>العروض / الشكاوى / العقود</td><td>—</td></tr>
+    <tr><td><code>alshahd_notifications</code></td><td>الإشعارات</td><td>—</td></tr>
+    <tr><td><code>alshahd_system_settings</code></td><td>المستخدمون + إعدادات الإشعارات</td><td>مرآة جزئية للمستخدمين</td></tr>
+    <tr><td><code>alshahd_system_backup</code></td><td>لقطة كاملة للنسخ الاحتياطي</td><td>تُستخدم في الاستعادة</td></tr>
+    <tr><td><code>alshahd_user_data</code></td><td>الاسم/البريد/الهاتف/الصورة/التفضيلات</td><td>—</td></tr>
+    <tr><td><code>wallet_cards</code> / <code>wallet_transactions</code> / <code>wallet_shipments</code> / <code>wallet_active</code> / <code>wallet_hide_balance</code></td><td>بطاقات المحفظة، العمليات، شحنات المحفظة، البطاقة النشطة، إخفاء الرصيد</td><td>⚠ أرقام بطاقات وهمية لكن بالشكل الحقيقي</td></tr>
+  </table>
+  <p>
+    <b>النسخ الاحتياطي:</b> <code>createBackup()</code> يجمع (المستخدمون + الإعدادات + الشحنات + المستودعات + المعتمدون + المحفظة)
+    في كائن واحد داخل localStorage، و<code>exportData()</code> ينزّل نفس الكائن كملف JSON،
+    و<code>importSystemData()</code> يعيد تحميله من ملف. هذه أفضل ميزة معمارية في النظام لأنه يمنح مسار ترحيل بيانات واضح.
+  </p>
+</section>
+
+<section class="card" id="ai">
+  <h2><span class="num">١١</span>«المساعد الذكي»: كيف يعمل فعليًا</h2>
+  <p>
+    رغم الاسم والوصف في الـ Console («يعمل بنظام الذكاء الاصطناعي المتقدم»)، هو <b>مُصنِّف قواعد (Rule-Based Classifier)</b>
+    لا أكثر: يفحص نص السؤال بالكلمات المفتاحية ويرد بقوالب نصية جاهزة.
+  </p>
+  <ul>
+    <li><b>قاعدة معرفة محلية</b> <code>knowledgeBase</code> تضم أدوية، أجهزة طبية، إلكترونيات، سيارات، مزادات، وموردين.</li>
+    <li><b>شجرة شروط:</b> سلسلة <code>if (msg.includes('…'))</code> تغطي: التحية، الأدوية، الأجهزة، الإلكترونيات، السيارات والمزادات،
+        الروابط، طلب عرض سعر، تعريف النظام، قائمة الخدمات، التتبع (مع استخراج رقم الشحنة بتعبير نمطي)،
+        عدد الشحنات، المحفظة، المعتمدين، المستودعات، الحاسبة، الإحصائيات، الدعم، الإعدادات، تسجيل الخروج.</li>
+    <li><b>رد افتراضي</b> مؤدب بقائمة ما يستطيع المساعد مساعدتك به عندما لا يجد أي مطابقة.</li>
+    <li><b>«البحث على الإنترنت»</b> <code>searchOnline()</code> لا يتصل بالإنترنت فعليًا: يبحث في نفس القاعدة المحلية،
+        وإن لم يجد يعيد نصًا يحتوي روابط مواقع خارجية فقط.</li>
+    <li>الردود تُدرَج بـ <code>innerHTML</code> مباشرة، دون تنقية للمدخلات.</li>
+  </ul>
+  <div class="callout info">
+    <b>لتحويله إلى مساعد حقيقي:</b> استبدل <code>handleAIMessage</code> باستدعاء API لنموذج لغوي مع «Tool Calling»
+    على بيانات الشحنات والمحفظة، وأبقِ شجرة القواعد كـ Fallback عند تعذّر الاتصال.
+  </div>
+</section>
+
+<section class="card" id="ux">
+  <h2><span class="num">١٢</span>تجربة الاستخدام والتصميم</h2>
+  <ul>
+    <li><b>هوية بصرية:</b> أزرق داكن <code>#0a2540</code>، أزرق ثانوي <code>#1a4a7a</code>، أحمر <code>#d40511</code>، وأخضر نجاح <code>#10b981</code>، بزوايا دائرية 22px وظلال ناعمة.</li>
+    <li><b>موبايل-فيرست:</b> الحاوية بعرض أقصى 480px ومتمركزة، ما يجعل الملف يبدو كتطبيق جوال على الشاشات الكبيرة.</li>
+    <li><b>الشريط السفلي:</b> 5 عناصر مع زر «+» دائري بارز في الوسط.</li>
+    <li><b>استجابة فورية:</b> تأثير <code>:active { scale(.96) }</code> على البطاقات، ورسوم حركة دخول للصفحات، وإشعارات Toast.</li>
+    <li><b>تفاعلات غير معتادة:</b> الضغط المطوّل لمدة 7 ثوانٍ لفتح الإعدادات، والضغط المطوّل لفتح طلب شحن، وأزرار «لصق» تُولّد رموز تحقق بدلًا من لصقها.</li>
+    <li><b>إمكانية الوصول:</b> لا توجد سمات ARIA، ولا تنقّل بلوحة المفاتيح، وأزرار كثيرة بـ <code>div</code> بدل <code>button</code>،
+        والنصوص صغيرة (11–12px) في عدة مواضع — تحتاج تحسينًا.</li>
+  </ul>
+</section>
+
+<section class="card" id="strength">
+  <h2><span class="num">١٣</span>نقاط القوة</h2>
+  <ul>
+    <li><b>تغطية وظيفية واسعة جدًا</b> لواجهة واحدة: تتبع، محفظة، بوابة 90 موقعًا، إدارة عملاء وأسطول وعقود وشكاوى وتقارير.</li>
+    <li><b>عمل بلا خادم:</b> يمكن فتحه بأي متصفح أو استضافته على أي استضافة ثابتة (GitHub Pages / Netlify) دون إعداد.</li>
+    <li><b>قابلية نقل البيانات:</b> تصدير/استيراد JSON + نسخة احتياطية = مسار هجرة جاهز إلى قاعدة بيانات حقيقية.</li>
+    <li><b>تفاصيل واقعية:</b> نماذج بيانات غنية (37 شحنة، سجلات تتبع، إحداثيات، رسوم متعددة) تجعله صالحًا كعرض تجريبي للعملاء والمستثمرين.</li>
+    <li><b>عربي RTL كامل</b> من الأساس، لا ترجمة لاحقة.</li>
+    <li><b>فصل منطقي بالوحدات</b> عبر بادئات التسمية، ما يسهّل التقسيم لاحقًا إلى ملفات/مكوّنات.</li>
+  </ul>
+</section>
+
+<section class="card" id="risks">
+  <h2><span class="num">١٤</span>الثغرات والملاحظات الحرجة + التوصيات</h2>
+  <p>
+    هذا القسم هو الأهم إذا كان الهدف استخدام النظام فعليًا مع بيانات حقيقية. المشكلة الجوهرية:
+    <b>الأمن كله على جهة العميل (Client-Side) وغير موجود</b>، والنظام يحمل بيانات شخصية ومالية.
+  </p>
+
+  <table>
+    <tr><th style="width:5%">#</th><th style="width:30%">المشكلة</th><th style="width:30%">الأثر</th><th>التوصية</th></tr>
+    <tr>
+      <td class="prio-h">1</td>
+      <td><b>كلمات المرور بنص صريح</b> في <code>defaultUsers</code> وفي <code>localStorage</code>، ومقارنتها نصية مباشرة.</td>
+      <td>أي شخص يفتح الملف أو أدوات المطوّر يرى كل الحسابات. لا يوجد تشفير ولا Hash ولا Salt.</td>
+      <td>نقل المصادقة إلى خادم مع <code>bcrypt</code>/<code>argon2</code> + JWT أو جلسات HTTP-Only، وحذف الحسابات المزروعة من الكود.</td>
+    </tr>
+    <tr>
+      <td class="prio-h">2</td>
+      <td><b>بيانات دخول افتراضية مكتوبة في المصدر</b> (حساب مدير عام + مستخدم) مع أسماء وأرقام هواتف حقيقية.</td>
+      <td>أي نسخة تُشارَك = تسريب بيانات شخصية، ونقطة دخول جاهزة للمدير العام.</td>
+      <td>إزالة فورية، وتغيير أي كلمة مرور استُخدمت فعليًا، وإضافة بيانات تجريبية مجهولة الهوية فقط.</td>
+    </tr>
+    <tr>
+      <td class="prio-h">3</td>
+      <td><b>لا يوجد خادم ولا تحقق من الصلاحيات على الخادم</b>؛ <code>applyPermissions()</code> تُخفي أزرارًا فقط.</td>
+      <td>أي مستخدم يستطيع تنفيذ <code>navigateTo('settingsPage')</code> أو تعديل <code>localStorage</code> ورفع رصيده أو تغيير دوره إلى <code>super_admin</code>.</td>
+      <td>كل عمليات الكتابة الحساسة (الرصيد، الأدوار، الشحنات) عبر API مع تحقق صلاحيات على الخادم.</td>
+    </tr>
+    <tr>
+      <td class="prio-h">4</td>
+      <td><b>ثغرة XSS عبر <code>innerHTML</code></b> في الشات، والـ CRM، وملاحظات الشحنات، وأسماء المستخدمين، وتفاصيل العقود.</td>
+      <td>إدخال مثل <code>&lt;img src=x onerror=…&gt;</code> ينفّذ كودًا في متصفح المستخدم ويقرأ كل localStorage.</td>
+      <td>استخدام <code>textContent</code> أو دالة <code>escapeHtml()</code>، ومراجعة كل نقطة إدراج، وإضافة CSP.</td>
+    </tr>
+    <tr>
+      <td class="prio-m">5</td>
+      <td><b>«رموز التحقق» وهمية</b>: زر «لصق» يولّد الرمز ويعبّئه ويقارنه بنفسه (<code>walletShowVerify</code>، <code>generateTempPassword</code>).</td>
+      <td>لا يوجد تحقق ثانٍ فعلي، وأي عملية دفع تمر بلا تأكيد حقيقي. الشكل يوحي بأمان غير موجود.</td>
+      <td>OTP عبر SMS/Email من الخادم مع صلاحية زمنية ومحاولات محدودة (Rate Limit).</td>
+    </tr>
+    <tr>
+      <td class="prio-m">6</td>
+      <td><b>بيانات مالية وبطاقات بنكية</b> (أرقام، CVV) مخزّنة في localStorage، ومصفوفة أرصدة كبيرة.</td>
+      <td>تعارض مع أي معيار (PCI-DSS)، وخطر قانوني وسمعي كبير حتى لو كانت أرقامًا تجريبية.</td>
+      <td>حذف CVV نهائيًا، وعدم تخزين أرقام بطاقات، والاعتماد على بوابة دفع (Stripe/PayTabs…).</td>
+    </tr>
+    <tr>
+      <td class="prio-m">7</td>
+      <td><b>البيانات محصورة في متصفح واحد</b>: مسح بيانات المتصفح = فقدان كل الشحنات والمستخدمين. ولا مزامنة بين الأجهزة.</td>
+      <td>غير صالح للاستخدام الجماعي (المدير على جهازه لا يرى ما أنشأه العميل على جهازه).</td>
+      <td>قاعدة بيانات مركزية (PostgreSQL/Supabase/Firebase) من البداية.</td>
+    </tr>
+    <tr>
+      <td class="prio-m">8</td>
+      <td><b>الرقم الوظيفي هو كلمة السر الحقيقية</b>: قائمة 30 رقمًا مثبتة في الكود تمنح صلاحية موظف شحن/دعم.</td>
+      <td>أي شخص يقرأ الكود يصبح موظفًا. لا يمكن سحب الصلاحية ولا تدقيقها.</td>
+      <td>إدارة موظفين على الخادم، مع تعطيل/تدقيق وسجل عمليات (Audit Log).</td>
+    </tr>
+    <tr>
+      <td class="prio-l">9</td>
+      <td><b>تكرار تعريف الدوال:</b> <code>applyUserDataToUI</code> و<code>isUserSuperAdmin</code> و<code>applyPermissions</code> معرّفة مرتين في نفس الملف.</td>
+      <td>النسخة الأخيرة تُلغي الأولى (Hoisting) — سلوك يعتمد على الترتيب ويسبب أخطاء صيانة.</td>
+      <td>حذف التعريفات المكررة وتقسيم الكود إلى وحدات ملفات منفصلة.</td>
+    </tr>
+    <tr>
+      <td class="prio-l">10</td>
+      <td><b>حجم ملف واحد ضخم</b> (4,074 سطر JS) دون بناء أو مصغّر أو اختبارات.</td>
+      <td>صعوبة الصيانة والتعديل الآمن، وبطء أول تحميل على شبكات ضعيفة.</td>
+      <td>تقسيم إلى وحدات (ES Modules) أو الانتقال إلى إطار مثل React/Vue + Vite.</td>
+    </tr>
+    <tr>
+      <td class="prio-l">11</td>
+      <td><b>اعتماد كامل على CDNs</b> لخط وأيقونات وخريطة ومخططات.</td>
+      <td>انقطاع الإنترنت أو حجب CDN = واجهة بلا أيقونات ولا خرائط. كما أن تحميل سكربت خارجي = سطح هجوم إضافي.</td>
+      <td>تنزيل المكتبات محليًا، وإضافة <code>integrity</code> (SRI) عند الاستمرار على CDN.</td>
+    </tr>
+    <tr>
+      <td class="prio-l">12</td>
+      <td><b>هوية علامة غير متسقة:</b> اسم «المسار العالمي اللوجستي» مع شعار وحقوق «DHL ©2026».</td>
+      <td>مشكلة قانونية محتملة واستخدام علامة تجارية لطرف آخر.</td>
+      <td>توحيد الهوية أو إزالة أي إشارة لعلامة لا تخصّك قبل أي نشر.</td>
+    </tr>
+    <tr>
+      <td class="prio-l">13</td>
+      <td><b>ميزات «شكلية» تحتاج ربطًا:</b> التحقق بخطوتين، تغيير اللغة، إنشاء نسخة/استعادة جزئية، تحليلات، «بحث الإنترنت».</td>
+      <td>واجهات موجودة لكنها لا تؤدي وظيفة حقيقية (تبدّل نص Toast غالبًا فقط).</td>
+      <td>توضيح ما هو تجريبي، وإكمال ما سيُستخدم فعلًا أو إخفاؤه.</td>
+    </tr>
+  </table>
+
+  <div class="callout danger">
+    <b>الخلاصة الأمنية:</b> لا يجوز تشغيل هذا الملف في بيئة إنتاج مع بيانات عملاء حقيقية بصيغته الحالية.
+    هو <b>عرض تجريبي (Demo)</b> ممتاز، لكنه ليس نظامًا آمنًا: لا مصادقة حقيقية، لا صلاحيات حقيقية، لا تشفير، لا نسخ احتياطي مركزي.
+  </div>
+</section>
+
+<section class="card" id="roadmap">
+  <h2><span class="num">١٥</span>خطة تحويله إلى نظام إنتاجي حقيقي</h2>
+  <p>مسار عملي من 5 مراحل يحافظ على كل ما بُني في الواجهة:</p>
+  <table>
+    <tr><th style="width:14%">المرحلة</th><th style="width:36%">العمل</th><th>المخرَج</th></tr>
+    <tr>
+      <td><b>1. تنظيف</b><br><span class="tag t-green">أسبوع</span></td>
+      <td>حذف الحسابات والأرقام الوظيفية المزروعة، إزالة CVV، توحيد العلامة، إزالة الدوال المكررة، تنقية كل <code>innerHTML</code>.</td>
+      <td>نسخة آمنة للعرض دون بيانات شخصية.</td>
+    </tr>
+    <tr>
+      <td><b>2. فصل الطبقات</b><br><span class="tag t-green">1–2 أسبوع</span></td>
+      <td>تقسيم الملف إلى <code>index.html</code> + <code>/css</code> + <code>/js/*.js</code> (auth، shipments، wallet، portal…)،
+          وإنشاء طبقة <code>api.js</code> تُغلّف كل قراءة/كتابة بدل استدعاء localStorage المباشر.</td>
+      <td>بنية قابلة للصيانة، ونقطة واحدة للتحول إلى خادم.</td>
+    </tr>
+    <tr>
+      <td><b>3. خادم وقاعدة بيانات</b><br><span class="tag t-amber">3–5 أسابيع</span></td>
+      <td>Backend (Node/Express أو Supabase مباشرة) + PostgreSQL بجداول: users، roles، shipments، shipment_events،
+          warehouses، wallet_accounts، wallet_transactions، promos، feedback، contracts، audit_logs.
+          مصادقة JWT + bcrypt + حدود محاولات.</td>
+      <td>بيانات مركزية، تسجيل دخول حقيقي، صلاحيات محمية على الخادم.</td>
+    </tr>
+    <tr>
+      <td><b>4. أمن وامتثال</b><br><span class="tag t-amber">2–4 أسابيع</span></td>
+      <td>CSP، HTTPS إلزامي، تنقية مدخلات، سجل عمليات، تشفير حقول حساسة،
+          بوابة دفع معتمدة بدل المحفظة الذاتية، وسياسة خصوصية وشروط استخدام.</td>
+      <td>جاهزية لبيانات عملاء حقيقية.</td>
+    </tr>
+    <tr>
+      <td><b>5. تطوير وظيفي</b><br><span class="tag t-blue">مستمر</span></td>
+      <td>ربط خريطة تتبع حقيقية (شركات الشحن)، إشعارات Push/واتساب، مساعد ذكي عبر API، تقارير PDF،
+          تطبيق جوال (PWA أو React Native)، ولوحة ويب للمدير.</td>
+      <td>منتج لوجستي متكامل قابل للتسويق.</td>
+    </tr>
+  </table>
+  <div class="callout ok">
+    <b>أسرع طريق:</b> لأن البيانات كلها JSON منظّم، يمكنك تصدير نسخة من النظام
+    (<code>exportData()</code>) واستيرادها إلى جداول Supabase/Firebase بسكربت صغير، ثم استبدال
+    دوال <code>load* / save*</code> فقط — دون إعادة بناء الواجهة.
+  </div>
+</section>
+
+<section class="card" id="run">
+  <h2><span class="num">١٦</span>دليل التشغيل والاختبار السريع</h2>
+  <ol class="flow">
+    <li>افتح الملف مباشرة في متصفح، أو قدّمه عبر خادم ثابت (أفضل، لأن بعض المتصفحات تقيّد الملفات المحلية):<br>
+        <code>python3 -m http.server 8000</code> ثم <code>http://localhost:8000/msaralugstealalmee.html</code>.</li>
+    <li>سجّل الدخول بحساب من الحسابات المزروعة داخل الكود (يُنصح بحساب المستخدم العادي للاختبار،
+        وحساب المدير العام لتجربة الإعدادات وإدارة المستخدمين).</li>
+    <li>لاختبار التتبع: افتح «تتبع سريع» وأدخل <code>HDTA6351661</code> — ستظهر البطاقة الكاملة والخريطة.</li>
+    <li>لاختبار إضافة شحنة: <b>اضغط مطوّلًا</b> على بطاقة «طلب شحن» في الرئيسية.</li>
+    <li>لاختبار الإعدادات: <b>اضغط مطوّلًا 7 ثوانٍ</b> على أيقونة الترس في الشريط السفلي (وبحساب مدير عام).</li>
+    <li>لاختبار البوابة: «البوابة اللوجستية» ← أي تبويب ← «شراء» ← أدخل السعر والوزن ولاحظ الفاتورة تتحدث حيًا.</li>
+    <li>لإعادة ضبط كل شيء: افتح DevTools ← Console ← <code>localStorage.clear(); location.reload();</code>.</li>
+    <li>لأخذ نسخة كاملة: الإعدادات ← النسخ الاحتياطي ← «تصدير البيانات» (ينزّل JSON).</li>
+  </ol>
+</section>
+
+<section class="card" id="appendix">
+  <h2><span class="num">١٧</span>ملحق: خريطة الدوال حسب الوحدة</h2>
+  <table>
+    <tr><th style="width:24%">الوحدة</th><th style="width:10%">عدد الدوال</th><th>أبرز الدوال</th></tr>
+    <tr><td>المستخدمون والمصادقة</td><td>17</td><td><code>loadSystemUsers</code>, <code>performLogin</code>, <code>registerNewUser</code>, <code>checkAutoLogin</code>, <code>applyPermissions</code>, <code>renderUsersList</code></td></tr>
+    <tr><td>المستودعات</td><td>8</td><td><code>displayWarehouses</code>, <code>filterWarehouses</code>, <code>showWarehouseMap</code>, <code>addNewWarehouse</code></td></tr>
+    <tr><td>حاسبة الشحن</td><td>8</td><td><code>calculateShipping</code> + دوال العوامل والأسماء</td></tr>
+    <tr><td>المحفظة</td><td>24</td><td><code>loadWalletData</code>, <code>renderWalletPage</code>, <code>walletAction*</code>, <code>walletShowVerify</code>, <code>walletUndoLastTransaction</code></td></tr>
+    <tr><td>الشحنات والتتبع</td><td>20</td><td><code>displayShipments</code>, <code>searchShipment</code>, <code>showFullAddShipmentForm</code>, <code>saveNewShipment</code>, <code>printShipmentForm</code></td></tr>
+    <tr><td>التقارير والفروع والإحصاءات</td><td>9</td><td><code>loadStatisticsPage</code>, <code>loadReportsPage</code>, <code>loadBranchesPage</code> + فلترة وبحث</td></tr>
+    <tr><td>المساعد الذكي</td><td>3</td><td><code>handleAIMessage</code>, <code>sendAIMessage</code>, <code>searchOnline</code></td></tr>
+    <tr><td>الإعدادات</td><td>24</td><td><code>loadSettingsPageEnhanced</code>, <code>changePassword</code>, <code>createBackup</code>, <code>restoreBackup</code>, <code>exportData</code>, <code>performLogout</code></td></tr>
+    <tr><td>CRM / الأسطول</td><td>15</td><td><code>renderCRMPage</code>, <code>saveCRM</code>, <code>renderFleetPage</code>, <code>saveFleet</code></td></tr>
+    <tr><td>العروض / الشكاوى / العقود</td><td>17</td><td><code>renderPromotionsPage</code>, <code>applyPromoCode</code>, <code>renderFeedbackPage</code>, <code>saveContract</code></td></tr>
+    <tr><td>البوابة اللوجستية</td><td>14</td><td><code>renderGlobalPortalPage</code>, <code>buildPortalTabs</code>, <code>portalCalculateInvoice</code>, <code>portalFinalizePurchase</code></td></tr>
+    <tr><td>النظام العام والمساعدات</td><td>~15</td><td><code>navigateTo</code>, <code>showToast</code>, <code>closeModal</code>, <code>rotatePromoAd</code>, <code>addNotification</code>, <code>showAvatarPopup</code></td></tr>
+  </table>
+  <p class="kv"><b>الإجمالي:</b> 174 دالة، منها 10+ تُصدَّر على <code>window</code> ليعمل استدعاؤها من سمات <code>onclick</code> في HTML.</p>
+</section>
+
+<div class="foot">
+  وثيقة شرح أُعدّت بناءً على قراءة كاملة للكود المرفق (4,861 سطرًا) — لا تُعدّ تدقيقًا أمنيًا رسميًا،
+  لكنها تغطي البنية والوظائف والمخاطر الأساسية.
+</div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,80 @@
+[
+ {
+  "id": "e1666aa0-2867-4a5a-8a0f-313f645820ad",
+  "title": "اختبار إشعار 1795381073922",
+  "body": "أُرسل من اختبار التكامل",
+  "link": null,
+  "type": "admin",
+  "audience": "staff",
+  "audience_values": [],
+  "channels": [
+   "inapp"
+  ],
+  "created_by": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "created_by_name": "مدير النظام",
+  "target_count": 1,
+  "sent_count": 1,
+  "push_results": {
+   "inapp": 1,
+   "webpush": null,
+   "fcm": null,
+   "apns": null
+  },
+  "status": "sent",
+  "created_at": "2026-11-22T20:57:53.924Z",
+  "sent_at": "2026-11-22T20:57:53.924Z",
+  "updated_at": "2026-11-22T20:57:53.924Z"
+ },
+ {
+  "id": "b50beba2-eba0-4b68-a3b2-be171662408d",
+  "title": "اختبار إشعار 1795382284259",
+  "body": "أُرسل من اختبار التكامل",
+  "link": null,
+  "type": "admin",
+  "audience": "staff",
+  "audience_values": [],
+  "channels": [
+   "inapp"
+  ],
+  "created_by": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "created_by_name": "مدير النظام",
+  "target_count": 1,
+  "sent_count": 1,
+  "push_results": {
+   "inapp": 1,
+   "webpush": null,
+   "fcm": null,
+   "apns": null
+  },
+  "status": "sent",
+  "created_at": "2026-11-22T21:18:04.261Z",
+  "sent_at": "2026-11-22T21:18:04.261Z",
+  "updated_at": "2026-11-22T21:18:04.261Z"
+ },
+ {
+  "id": "f3a7b82c-9d82-40b5-aa0a-bbccf092ddcd",
+  "title": "اختبار إشعار 1795382417281",
+  "body": "أُرسل من اختبار التكامل",
+  "link": null,
+  "type": "admin",
+  "audience": "staff",
+  "audience_values": [],
+  "channels": [
+   "inapp"
+  ],
+  "created_by": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "created_by_name": "مدير النظام",
+  "target_count": 1,
+  "sent_count": 1,
+  "push_results": {
+   "inapp": 1,
+   "webpush": null,
+   "fcm": null,
+   "apns": null
+  },
+  "status": "sent",
+  "created_at": "2026-11-22T21:20:17.283Z",
+  "sent_at": "2026-11-22T21:20:17.283Z",
+  "updated_at": "2026-11-22T21:20:17.283Z"
+ }
+]

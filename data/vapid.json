@@ -1,0 +1,11 @@
+{
+ "public_key": "BIIyRV57Eto6VouCH4SQgGtXwOvEcQYvikE20e_77i2EYCy_iNzT0HIkX1jq91Ztg8N9B-hcwiGdGT23-5lwvcU",
+ "private_jwk": {
+  "kty": "EC",
+  "x": "gjJFXnsS2jpWi4IfhJCAa1fA68RxBi-KQTbR7_vuLYQ",
+  "y": "YCy_iNzT0HIkX1jq91Ztg8N9B-hcwiGdGT23-5lwvcU",
+  "crv": "P-256",
+  "d": "zIFQ8ll9AUrShRej3jrExTn18fOmjN81ZnSikFecJtg"
+ },
+ "created_at": "2026-11-22T20:11:45.451Z"
+}

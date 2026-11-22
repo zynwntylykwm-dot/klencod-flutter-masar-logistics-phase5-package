@@ -1,0 +1,32 @@
+======================================================================
+ أوامر الرفع إلى GitHub — انسخ والصق (داخل مجلد masar-api)
+======================================================================
+
+cd masar-api
+
+git init -b main
+git config user.name  "اسمك"
+git config user.email "بريدك@example.com"
+
+git status --porcelain | grep -E "data/|\.env$|node_modules" || echo "نظيف ✅"
+
+git add .
+git commit -m "خادم المسار العالمي اللوجستي — جاهز للنشر"
+
+git remote add origin https://github.com/<حسابك>/masar-api.git
+git push -u origin main
+
+--- أو بـ GitHub CLI ---
+gh auth login
+gh repo create masar-api --public --source=. --remote=origin --push
+
+======================================================================
+ بعد الرفع → Render:
+  1) New + → Blueprint → اختر المستودع → Apply
+  2) Environment: ADMIN_PASSWORD=كلمة قوية | PUBLIC_URL=رابطك
+  3) Deploy، ثم افتح: https://<اسم-خدمتك>.onrender.com/health
+  4) يجب أن يظهر: 200 و "persistent": true
+ ثم في التطبيق: الإعدادات ← 🌐 خادم النظام ← الصق الرابط (بدون :8080)
+
+ بديل فوري: cloudflared tunnel --url http://localhost:8080
+======================================================================

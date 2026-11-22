@@ -1,0 +1,139 @@
+/**
+ * store.js — طبقة تخزين حقيقية على القرص (بدون أي تبعيات خارجية)
+ * -----------------------------------------------------------------
+ * كل مجموعة بيانات تُحفظ في ملف JSON داخل مجلد data/ مع:
+ *   - كتابة ذرّية (ملف مؤقت ثم rename) لمنع تلف الملفات
+ *   - طابور كتابة متسلسل لكل ملف (يمنع تصادم الطلبات المتزامنة)
+ *   - نسخة احتياطية تلقائية قبل كل كتابة (ملف .bak)
+ *
+ * هذا ليس «قاعدة بيانات علائقية»، لكنه تخزين مركزي حقيقي دائم على الخادم،
+ * ومصمّم ليُستبدل بـ PostgreSQL لاحقًا عبر نفس الواجهة (load/save/insert/update/remove).
+ */
+'use strict';
+const fs = require('fs');
+const path = require('path');
+const crypto = require('crypto');
+
+const DATA_DIR = process.env.DATA_DIR || path.join(__dirname, '..', '..', 'data');
+
+class Collection {
+  constructor(name, defaults = []) {
+    this.name = name;
+    this.file = path.join(DATA_DIR, name + '.json');
+    this.defaults = defaults;
+    this.data = null;
+    this._queue = Promise.resolve();
+    this.load();
+  }
+
+  load() {
+    try {
+      if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
+      if (fs.existsSync(this.file)) {
+        const raw = fs.readFileSync(this.file, 'utf8');
+        this.data = raw.trim() ? JSON.parse(raw) : this.defaults;
+      } else {
+        this.data = this.defaults;
+        this._writeNow();
+      }
+    } catch (e) {
+      console.error(`[store] تعذّر تحميل ${this.name}:`, e.message);
+      this.data = this.defaults;
+    }
+    return this.data;
+  }
+
+  _writeNow() {
+    const tmp = this.file + '.tmp';
+    const json = JSON.stringify(this.data, null, 1);
+    fs.writeFileSync(tmp, json, 'utf8');
+    if (fs.existsSync(this.file)) {
+      try { fs.copyFileSync(this.file, this.file + '.bak'); } catch (_) {}
+    }
+    fs.renameSync(tmp, this.file);
+  }
+
+  persist() {
+    this._queue = this._queue.then(() => {
+      try { this._writeNow(); }
+      catch (e) { console.error(`[store] فشل حفظ ${this.name}:`, e.message); }
+    });
+    return this._queue;
+  }
+
+  all() { return this.data; }
+
+  find(pred) { return this.data.filter(pred); }
+
+  findOne(pred) { return this.data.find(pred); }
+
+  byId(id, key = 'id') { return this.data.find((x) => x[key] === id); }
+
+  insert(doc, idKey = 'id') {
+    if (!doc[idKey]) doc[idKey] = crypto.randomUUID();
+    doc.created_at = doc.created_at || new Date().toISOString();
+    this.data.push(doc);
+    this.persist();
+    return doc;
+  }
+
+  update(id, patch, key = 'id') {
+    const i = this.data.findIndex((x) => x[key] === id);
+    if (i === -1) return null;
+    this.data[i] = { ...this.data[i], ...patch, updated_at: new Date().toISOString() };
+    this.persist();
+    return this.data[i];
+  }
+
+  remove(id, key = 'id') {
+    const i = this.data.findIndex((x) => x[key] === id);
+    if (i === -1) return false;
+    this.data.splice(i, 1);
+    this.persist();
+    return true;
+  }
+
+  replaceAll(arr) { this.data = arr; return this.persist(); }
+}
+
+// مفاتيح موحّدة لكل مجلدات البيانات
+const db = {
+  users: new Collection('users', []),
+  sessions: new Collection('sessions', []),
+  shipments: new Collection('shipments', []),
+  favorites: new Collection('favorites', []),
+  reviews: new Collection('reviews', []),
+  notifications: new Collection('notifications', []),
+  audit: new Collection('audit', []),
+  auctions: new Collection('auctions', []),
+  bids: new Collection('bids', []),
+  wallet_accounts: new Collection('wallet_accounts', []),
+  wallet_entries: new Collection('wallet_entries', []),
+  wallet_holds: new Collection('wallet_holds', []),
+  visitors: new Collection('visitors', []),
+  push_subscriptions: new Collection('push_subscriptions', []),
+  device_tokens: new Collection('device_tokens', []),
+  campaigns: new Collection('campaigns', []),
+  notify_log: new Collection('notify_log', []),
+  settings: new Collection('settings', { updated_at: null }),
+  pricing_rules: new Collection('pricing_rules', []),
+  assistant_conversations: new Collection('assistant_conversations', []),
+  assistant_messages: new Collection('assistant_messages', []),
+  assistant_faq: new Collection('assistant_faq', []),
+  carrier_events: new Collection('carrier_events', []),
+  meta: new Collection('meta', { created_at: new Date().toISOString(), schema: 1 })
+};
+
+function audit(actor, action, entity, entityId, extra = {}) {
+  db.audit.insert({
+    id: crypto.randomUUID(),
+    actor_id: actor ? actor.id : null,
+    actor_name: actor ? actor.fullName : 'system',
+    action, entity, entity_id: entityId,
+    ip: extra.ip || null,
+    details: extra.details || null,
+    created_at: new Date().toISOString()
+  });
+}
+
+module.exports = { db, Collection, DATA_DIR, audit };

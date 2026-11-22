@@ -1,0 +1,23 @@
+{
+  "name": "المسار العالمي اللوجستي",
+  "short_name": "المسار اللوجستي",
+  "description": "منصة لوجستية: شحنات، تتبع، مزادات، محفظة، وإدارة كاملة",
+  "lang": "ar",
+  "dir": "rtl",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0a2540",
+  "theme_color": "#0a2540",
+  "categories": ["business", "productivity", "shopping"],
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "شحناتي", "url": "./index.html", "icons": [{ "src": "icons/icon-96.png", "sizes": "96x96" }] },
+    { "name": "المزادات", "url": "./index.html", "icons": [{ "src": "icons/icon-96.png", "sizes": "96x96" }] }
+  ]
+}

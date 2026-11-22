@@ -1,0 +1,17 @@
+{
+  "name": "masar-api",
+  "description": "خادم نظام المسار العالمي اللوجستي — مصادقة، شحنات، مزادات، محفظة، مساعد ذكي (Node.js بلا تبعيات)",
+  "keywords": ["logistics", "shipping", "express-alternative", "nodejs", "arabic"],
+  "website": "https://github.com/",
+  "repository": "https://github.com/",
+  "stack": "heroku-22",
+  "env": {
+    "ADMIN_PASSWORD": { "description": "كلمة مرور المدير العام عند أول تشغيل", "required": true },
+    "DATA_DIR": { "description": "مجلد البيانات (اجعل /data على قرص دائم)", "value": "/data", "required": false },
+    "PUBLIC_URL": { "description": "رابط الخدمة العام بعد النشر", "required": false },
+    "HOST": { "value": "0.0.0.0", "required": false },
+    "NODE_ENV": { "value": "production", "required": false }
+  },
+  "formation": { "web": { "quantity": 1 } },
+  "healthchecks": { "web": [ { "type": "web", "name": "health", "path": "/health" } ] }
+}

@@ -1,0 +1,88 @@
+# ============================================================================
+# تشغيل الخادم الحقيقي + HTTPS تلقائي (Caddy) + نسخ احتياطي يومي
+# الاستخدام:
+#   1) انسخ deploy/.env.example إلى deploy/.env وعدّل القيم
+#   2) docker compose -f deploy/docker-compose.yml --env-file deploy/.env up -d
+# ============================================================================
+services:
+  api:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile
+    image: masar-logistics:3.0
+    container_name: masar-api
+    restart: unless-stopped
+    environment:
+      PORT: 8080
+      HOST: 0.0.0.0
+      DATA_DIR: /data
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:?ضع ADMIN_PASSWORD في deploy/.env}
+      LOGIN_RATE_LIMIT: ${LOGIN_RATE_LIMIT:-40}
+      DEMO_MODE: ${DEMO_MODE:-true}
+      VAPID_SUBJECT: ${VAPID_SUBJECT:-mailto:admin@example.com}
+      FCM_SERVICE_ACCOUNT: ${FCM_SERVICE_ACCOUNT:-}
+      APNS_KEY_P8: ${APNS_KEY_P8:-}
+      APNS_KEY_ID: ${APNS_KEY_ID:-}
+      APNS_TEAM_ID: ${APNS_TEAM_ID:-}
+      # المساعد الذكي (المرحلة 5) — أي مفتاح واحد يكفي لتفعيل نموذج حقيقي
+      AI_API_KEY: ${AI_API_KEY:-}
+      AI_MODEL: ${AI_MODEL:-gpt-4o-mini}
+      AI_BASE_URL: ${AI_BASE_URL:-https://api.openai.com/v1}
+      OPENROUTER_API_KEY: ${OPENROUTER_API_KEY:-}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+      OLLAMA_HOST: ${OLLAMA_HOST:-}
+      APNS_BUNDLE_ID: ${APNS_BUNDLE_ID:-com.almasar.logistics}
+    volumes:
+      - masar-data:/data
+    networks: [masar]
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://127.0.0.1:8080/api/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  caddy:
+    image: caddy:2-alpine
+    container_name: masar-caddy
+    restart: unless-stopped
+    depends_on: [api]
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      DOMAIN: ${DOMAIN:?ضع DOMAIN مثل api.example.com}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+    networks: [masar]
+
+  backup:
+    image: alpine:3.20
+    container_name: masar-backup
+    restart: unless-stopped
+    depends_on: [api]
+    environment:
+      KEEP_DAYS: ${BACKUP_KEEP_DAYS:-14}
+    volumes:
+      - masar-data:/data:ro
+      - ./backups:/backups
+    command: >
+      sh -c "apk add --no-cache tar >/dev/null &&
+      while true; do
+        ts=$$(date +%Y%m%d-%H%M);
+        tar -czf /backups/masar-$$ts.tar.gz -C /data . ;
+        find /backups -name 'masar-*.tar.gz' -mtime +$$KEEP_DAYS -delete;
+        echo \"[backup] $$ts\";
+        sleep 86400;
+      done"
+
+volumes:
+  masar-data:
+  caddy-data:
+  caddy-config:
+
+networks:
+  masar:
+    driver: bridge

@@ -1,0 +1,793 @@
+{
+ "perPage": {
+  "mainPage": {
+   "handlers": 16
+  },
+  "trackingPage": {
+   "handlers": 5
+  },
+  "myShipmentsPage": {
+   "handlers": 81
+  },
+  "addShipmentPage": {
+   "handlers": 1
+  },
+  "warehousesPage": {
+   "handlers": 25
+  },
+  "calculatorPage": {
+   "handlers": 2
+  },
+  "walletPage": {
+   "handlers": 10
+  },
+  "merchantsPage": {
+   "handlers": 9
+  },
+  "statisticsPage": {
+   "handlers": 1
+  },
+  "globalPortalPage": {
+   "handlers": 103
+  },
+  "branchesPage": {
+   "handlers": 4
+  },
+  "settingsPage": {
+   "handlers": 36
+  },
+  "reportsPage": {
+   "handlers": 2
+  },
+  "crmPage": {
+   "handlers": 6
+  },
+  "fleetPage": {
+   "handlers": 8
+  },
+  "analyticsPage": {
+   "handlers": 1
+  },
+  "promotionsPage": {
+   "handlers": 7
+  },
+  "feedbackPage": {
+   "handlers": 7
+  },
+  "contractsPage": {
+   "handlers": 4
+  }
+ },
+ "broken": [
+  {
+   "h": "showAvatarPopup()",
+   "e": "Cannot read properties of null (reading 'click')"
+  },
+  {
+   "h": "event.stopPropagation();copyToClipboard('HDTA6351661')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation();copyToClipboard('USY20240918029')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation();copyToClipboard('USY20250911033')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation();copyToClipboard('USY20240710028')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation();copyToClipboard('USY20240426027')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation();copyToClipboard('USY20250422032')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation();copyToClipboard('USY20240212026')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation();copyToClipboard('DHL95467546')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation();copyToClipboard('DKD97694954')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation();copyToClipboard('DHL836945583')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation();copyToClipboard('USY20250115031')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation();copyToClipboard('USY20241125030')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation();copyToClipboard('USY20231117025')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation();copyToClipboard('USY20230829024')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation();copyToClipboard('USY20230614023')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation();copyToClipboard('USY20230325022')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation();copyToClipboard('USY20230118021')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation();copyToClipboard('USY20221130020')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation();copyToClipboard('USY20220923019')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation();copyToClipboard('USY20220712018')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation();copyToClipboard('USY20220428017')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation();copyToClipboard('USY20220215016')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation();copyToClipboard('USY20211222015')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation();copyToClipboard('USY20211018014')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation();copyToClipboard('USY20210830013')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation();copyToClipboard('USY20210614012')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation();copyToClipboard('USY20210327011')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation();copyToClipboard('USY20210112010')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation();copyToClipboard('USY20201125009')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation();copyToClipboard('USY20200909008')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation();copyToClipboard('USY20200618007')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation();copyToClipboard('USY20200422006')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation();copyToClipboard('USY20200214005')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation();copyToClipboard('USY20191221004')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation();copyToClipboard('USY20191105003')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation();copyToClipboard('USY20190918002')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation();copyToClipboard('USY20190812001')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation();showWarehouseMap('US-NY-001')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation();showWarehouseMap('UAE-JA-001')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation();showWarehouseMap('CN-GZ-001')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation();showWarehouseMap('TR-IST-001')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation();showWarehouseMap('YE-SAN-001')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation();showWarehouseMap('YE-SHN-001')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation();showWarehouseMap('YE-ADN-001')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation();showWarehouseMap('OM-SAL-001')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation(); portalToggleFavorite('Amazon')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation(); portalToggleFavorite('Alibaba')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation(); portalToggleFavorite('AliExpress')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation(); portalToggleFavorite('eBay')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation(); portalToggleFavorite('Temu')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation(); portalToggleFavorite('Walmart')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation(); portalToggleFavorite('Target')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation(); portalToggleFavorite('Etsy')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation(); portalToggleFavorite('Shein')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation(); portalToggleFavorite('Zara')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation(); portalToggleFavorite('H&M')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation(); portalToggleFavorite('Nike')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation(); portalToggleFavorite('Adidas')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation(); portalToggleFavorite('Sephora')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation(); portalToggleFavorite('BestBuy')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation(); portalToggleFavorite('Copart')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation(); portalToggleFavorite('IAAI')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation(); portalToggleFavorite('PLC')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation(); portalToggleFavorite('Manheim')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation(); portalToggleFavorite('BCA')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation(); portalToggleFavorite('Auto Auction')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation(); portalToggleFavorite('ADESA')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation(); portalToggleFavorite('Impact Auto')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation(); portalToggleFavorite('Carsnip')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation(); portalToggleFavorite('Ritchie Bros')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation(); portalToggleFavorite('Euro Auctions')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation(); portalToggleFavorite('Auction Export')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation(); portalToggleFavorite('BidCars')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation(); portalToggleFavorite('Car Auction')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation(); portalToggleFavorite('GovPlanet')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation(); portalToggleFavorite('DHL')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation(); portalToggleFavorite('FedEx')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation(); portalToggleFavorite('UPS')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation(); portalToggleFavorite('Aramex')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation(); portalToggleFavorite('Maersk')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation(); portalToggleFavorite('CMA CGM')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation(); portalToggleFavorite('Hapag-Lloyd')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation(); portalToggleFavorite('Ekart')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation(); portalToggleFavorite('SF Express')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation(); portalToggleFavorite('TNT')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation(); portalToggleFavorite('USPS')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation(); portalToggleFavorite('Royal Mail')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation(); portalToggleFavorite('Canada Post')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation(); portalToggleFavorite('Australia Post')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation(); portalToggleFavorite('Japan Post')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation(); portalToggleFavorite('Newegg')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation(); portalToggleFavorite('B&H')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation(); portalToggleFavorite('Micro Center')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation(); portalToggleFavorite('Dell')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation(); portalToggleFavorite('HP')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation(); portalToggleFavorite('Lenovo')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation(); portalToggleFavorite('Apple')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation(); portalToggleFavorite('Samsung')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation(); portalToggleFavorite('ASUS')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation(); portalToggleFavorite('Acer')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation(); portalToggleFavorite('MSI')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation(); portalToggleFavorite('Alienware')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation(); portalToggleFavorite('Razer')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation(); portalToggleFavorite('Logitech')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation(); portalToggleFavorite('Medtronic')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation(); portalToggleFavorite('GE Healthcare')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation(); portalToggleFavorite('Philips')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation(); portalToggleFavorite('Siemens')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation(); portalToggleFavorite('Dräger')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation(); portalToggleFavorite('Stryker')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation(); portalToggleFavorite('BD')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation(); portalToggleFavorite('Hologic')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation(); portalToggleFavorite('Fresenius')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation(); portalToggleFavorite('Boston Scientific')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation(); portalToggleFavorite('Abbott')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation(); portalToggleFavorite('Baxter')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation(); portalToggleFavorite('Becton Dickinson')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation(); portalToggleFavorite('Zoll')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation(); portalToggleFavorite('ResMed')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation(); portalToggleFavorite('Pfizer')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation(); portalToggleFavorite('Roche')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation(); portalToggleFavorite('Novartis')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation(); portalToggleFavorite('AstraZeneca')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation(); portalToggleFavorite('J&J')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation(); portalToggleFavorite('Merck')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation(); portalToggleFavorite('Sanofi')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation(); portalToggleFavorite('GSK')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation(); portalToggleFavorite('Bayer')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation(); portalToggleFavorite('Bristol Myers')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation(); portalToggleFavorite('Eli Lilly')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation(); portalToggleFavorite('AbbVie')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation(); portalToggleFavorite('Teva')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation(); portalToggleFavorite('Mylan')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "event.stopPropagation(); portalToggleFavorite('Sandoz')",
+   "e": "Cannot read properties of undefined (reading 'stopPropagation')"
+  },
+  {
+   "h": "toggleSettingsSection(this)",
+   "e": "header.querySelector is not a function"
+  },
+  {
+   "h": "exportData()",
+   "e": "URL.createObjectURL is not a function"
+  }
+ ],
+ "brokenChg": [],
+ "checks": [
+  {
+   "name": "filter shipments (all)",
+   "ok": true,
+   "v": 37
+  },
+  {
+   "name": "filter shipments (shipped)",
+   "ok": true,
+   "v": 8
+  },
+  {
+   "name": "filter delivered",
+   "ok": true,
+   "v": 25
+  },
+  {
+   "name": "filter by date",
+   "ok": true,
+   "v": 3
+  },
+  {
+   "name": "branches filter",
+   "ok": true,
+   "v": 3
+  },
+  {
+   "name": "branches search",
+   "ok": true,
+   "v": 1
+  },
+  {
+   "name": "warehouse filter YE",
+   "ok": false,
+   "v": 3
+  },
+  {
+   "name": "warehouse search",
+   "ok": true,
+   "v": 1
+  },
+  {
+   "name": "add shipment (long press path)",
+   "ok": true,
+   "v": 11110
+  },
+  {
+   "name": "generate tracking number",
+   "ok": true,
+   "v": "SHIP-5FUKW2K8"
+  },
+  {
+   "name": "save new shipment",
+   "ok": true,
+   "v": 38
+  },
+  {
+   "name": "statistics charts",
+   "ok": true,
+   "v": 8
+  },
+  {
+   "name": "reports render",
+   "ok": true,
+   "v": 2509
+  },
+  {
+   "name": "crm render",
+   "ok": true,
+   "v": 2
+  },
+  {
+   "name": "crm add",
+   "ok": true,
+   "v": 3
+  },
+  {
+   "name": "fleet render",
+   "ok": true,
+   "v": 2
+  },
+  {
+   "name": "feedback render",
+   "ok": true,
+   "v": 16
+  },
+  {
+   "name": "contracts render",
+   "ok": true,
+   "v": 14
+  },
+  {
+   "name": "promotions render",
+   "ok": false,
+   "v": 0
+  },
+  {
+   "name": "promo generate",
+   "ok": false,
+   "v": 4
+  },
+  {
+   "name": "analytics render",
+   "ok": false,
+   "v": "ERR: Cannot read properties of null (reading 'innerHTML')"
+  },
+  {
+   "name": "merchants render",
+   "ok": true,
+   "v": 2
+  },
+  {
+   "name": "wallet deposit math",
+   "ok": true,
+   "v": 100
+  },
+  {
+   "name": "wallet total balance",
+   "ok": true,
+   "v": 36755
+  },
+  {
+   "name": "notifications render",
+   "ok": true,
+   "v": 571
+  },
+  {
+   "name": "AI: tracking query",
+   "ok": true,
+   "v": "🔍 تفاصيل الشحنة HDTA6351661:\n• الحالة: في الطريق\n• الموقع: جمارك نهم\n• المستلم: طه ثابت محمد الموشكي\n• القيمة: $147,500\n• المتبقي: $7,000\n• الوزن: 5000 كجم"
+  },
+  {
+   "name": "AI: unknown query fallback",
+   "ok": true,
+   "v": "📌 سؤالك: \"سؤال غريب تماما\"\n\nأنا المساعد الذكي لنظام المسار العالمي اللوجستي. يمكنني مساعدتك في:\n• تتبع الشحنات\n• معلومات الأدوية والمعدات الطبية\n• الإلكترونيات والهواتف\n• السيارات والمزادات\n• روابط المواقع الموثوقة\n• معلومات الشحنات والمحفظة\n• الأسئلة عن الخدمات والمنتجات\n• طلب عروض الأسعار\n• معلومات المستودعات والمعتمدين\n• الدعم الفني والإعدادات\n\nيرجى توضيح سؤالك بشكل أكثر دقة."
+  },
+  {
+   "name": "backup roundtrip",
+   "ok": true,
+   "v": 20849
+  },
+  {
+   "name": "export data (blob)",
+   "ok": true,
+   "v": "function"
+  },
+  {
+   "name": "portal invoice calc",
+   "ok": true,
+   "v": 275
+  },
+  {
+   "name": "portal favorites toggle",
+   "ok": false,
+   "v": "ERR: portalState is not defined"
+  },
+  {
+   "name": "portal search filter",
+   "ok": true
+  },
+  {
+   "name": "settings sections",
+   "ok": false,
+   "v": 12
+  },
+  {
+   "name": "change password wrong current",
+   "ok": true,
+   "v": "12580taha"
+  },
+  {
+   "name": "theme change",
+   "ok": true,
+   "v": true
+  },
+  {
+   "name": "font size change",
+   "ok": true,
+   "v": "18px"
+  }
+ ]
+}

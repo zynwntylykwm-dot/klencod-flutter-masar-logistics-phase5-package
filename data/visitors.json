@@ -1,0 +1,111 @@
+[
+ {
+  "id": "86d062a3-1135-4c5e-b7f9-9bb07cbb5ea2",
+  "first_seen": "2026-11-22T20:57:40.019Z",
+  "last_seen": "2026-11-22T20:57:55.139Z",
+  "hits": 5,
+  "pages": [
+   "/app/index.html",
+   "/auctionsPage",
+   "/settingsPage",
+   "/adminPage",
+   "/e2eTestPage"
+  ],
+  "referrer": null,
+  "last_referrer": null,
+  "ua": "node",
+  "ip_hash": "bdcfe0263cbddf46839c7a52",
+  "device": "desktop",
+  "platform": "أخرى",
+  "user_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "screen": "e2eTestPage",
+  "blocked": false,
+  "created_at": "2026-11-22T20:57:40.019Z",
+  "updated_at": "2026-11-22T20:57:55.139Z"
+ },
+ {
+  "id": "6518fac9-6f97-4f03-8d7e-62423edb9b21",
+  "first_seen": "2026-11-22T21:18:23.994Z",
+  "last_seen": "2026-11-22T21:18:23.994Z",
+  "hits": 1,
+  "pages": [
+   "/app/index.html?page=admin"
+  ],
+  "referrer": null,
+  "last_referrer": null,
+  "ua": "node",
+  "ip_hash": "bdcfe0263cbddf46839c7a52",
+  "device": "desktop",
+  "platform": "أخرى",
+  "user_id": null,
+  "screen": "mainPage",
+  "blocked": false,
+  "created_at": "2026-11-22T21:18:23.994Z"
+ },
+ {
+  "id": "a3ed9130-2d33-4c23-82e5-5df9a7f2822c",
+  "first_seen": "2026-11-22T21:18:37.943Z",
+  "last_seen": "2026-11-22T21:18:43.879Z",
+  "hits": 3,
+  "pages": [
+   "/app/index.html?page=admin",
+   "/adminPage"
+  ],
+  "referrer": null,
+  "last_referrer": null,
+  "ua": "node",
+  "ip_hash": "bdcfe0263cbddf46839c7a52",
+  "device": "desktop",
+  "platform": "أخرى",
+  "user_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "screen": "adminPage",
+  "blocked": false,
+  "created_at": "2026-11-22T21:18:37.943Z",
+  "updated_at": "2026-11-22T21:18:43.879Z"
+ },
+ {
+  "id": "4a432b5d-3e1d-4947-b5bd-4029f017d745",
+  "first_seen": "2026-11-22T21:18:52.172Z",
+  "last_seen": "2026-11-22T21:18:56.164Z",
+  "hits": 3,
+  "pages": [
+   "/app/index.html?page=admin",
+   "/adminPage"
+  ],
+  "referrer": null,
+  "last_referrer": null,
+  "ua": "node",
+  "ip_hash": "bdcfe0263cbddf46839c7a52",
+  "device": "desktop",
+  "platform": "أخرى",
+  "user_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "screen": "adminPage",
+  "blocked": false,
+  "created_at": "2026-11-22T21:18:52.172Z",
+  "updated_at": "2026-11-22T21:18:56.164Z"
+ },
+ {
+  "id": "fb3a041e-3f21-4931-8352-2078c0b75493",
+  "first_seen": "2026-11-22T21:20:03.354Z",
+  "last_seen": "2026-11-22T21:20:18.501Z",
+  "hits": 5,
+  "pages": [
+   "/app/index.html",
+   "/auctionsPage",
+   "/settingsPage",
+   "/adminPage",
+   "/e2eTestPage"
+  ],
+  "referrer": null,
+  "last_referrer": null,
+  "ua": "node",
+  "ip_hash": "bdcfe0263cbddf46839c7a52",
+  "device": "desktop",
+  "platform": "أخرى",
+  "user_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "screen": "e2eTestPage",
+  "blocked": false,
+  "created_at": "2026-11-22T21:20:03.355Z",
+  "updated_at": "2026-11-22T21:20:18.501Z"
+ }
+]

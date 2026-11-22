@@ -1,0 +1,1112 @@
+[
+ {
+  "id": "960ec9bd-550c-45cd-b9d3-574feb06d185",
+  "actor_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "actor_name": "مدير النظام",
+  "action": "login",
+  "entity": "user",
+  "entity_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "ip": "127.0.0.1",
+  "details": null,
+  "created_at": "2026-11-22T19:39:49.945Z"
+ },
+ {
+  "id": "eef41c00-2230-44f3-bc3b-a1038b808f18",
+  "actor_id": null,
+  "actor_name": "زائر",
+  "action": "login_failed",
+  "entity": "user",
+  "entity_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "ip": "127.0.0.1",
+  "details": null,
+  "created_at": "2026-11-22T19:39:52.940Z"
+ },
+ {
+  "id": "eef3031f-fd85-44bd-88ad-58ff7273bb05",
+  "actor_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "actor_name": "مدير النظام",
+  "action": "login",
+  "entity": "user",
+  "entity_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "ip": "127.0.0.1",
+  "details": null,
+  "created_at": "2026-11-22T19:39:53.588Z"
+ },
+ {
+  "id": "d12695b0-9906-483f-83bd-1c4fee6c3571",
+  "actor_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "actor_name": "مدير النظام",
+  "action": "login",
+  "entity": "user",
+  "entity_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "ip": "127.0.0.1",
+  "details": null,
+  "created_at": "2026-11-22T19:51:39.501Z"
+ },
+ {
+  "id": "f5745956-41bc-4eb5-9617-be3e5964cc66",
+  "actor_id": null,
+  "actor_name": "زائر",
+  "action": "login_failed",
+  "entity": "user",
+  "entity_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "ip": "127.0.0.1",
+  "details": null,
+  "created_at": "2026-11-22T19:51:42.435Z"
+ },
+ {
+  "id": "be018941-8ed1-4daf-9773-2f630cc65ba9",
+  "actor_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "actor_name": "مدير النظام",
+  "action": "login",
+  "entity": "user",
+  "entity_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "ip": "127.0.0.1",
+  "details": null,
+  "created_at": "2026-11-22T19:51:43.079Z"
+ },
+ {
+  "id": "6d062cc0-1eb2-4333-9212-ed10d838e4d5",
+  "actor_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "actor_name": "مدير النظام",
+  "action": "login",
+  "entity": "user",
+  "entity_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "ip": "127.0.0.1",
+  "details": null,
+  "created_at": "2026-11-22T19:52:38.661Z"
+ },
+ {
+  "id": "9fc6294d-de05-499f-b710-2fd601f6dfb9",
+  "actor_id": null,
+  "actor_name": "زائر",
+  "action": "login_failed",
+  "entity": "user",
+  "entity_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "ip": "127.0.0.1",
+  "details": null,
+  "created_at": "2026-11-22T19:52:41.619Z"
+ },
+ {
+  "id": "d48e9b19-35f9-41cc-a230-b73cf9f903a6",
+  "actor_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "actor_name": "مدير النظام",
+  "action": "login",
+  "entity": "user",
+  "entity_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "ip": "127.0.0.1",
+  "details": null,
+  "created_at": "2026-11-22T19:52:42.266Z"
+ },
+ {
+  "id": "323b7bc3-7d97-4529-b1b9-1edf00c07048",
+  "actor_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "actor_name": "مدير النظام",
+  "action": "auction_create",
+  "entity": "auction",
+  "entity_id": "ecb90f8d-147a-44ed-8d7f-5c39721ca062",
+  "ip": null,
+  "details": {
+   "title": "شحنة تجهيزات مكتبية — اختبار تلقائي 1795377165508",
+   "startPrice": 150000,
+   "demo": false
+  },
+  "created_at": "2026-11-22T19:52:45.511Z"
+ },
+ {
+  "id": "28e88809-b5be-4c7a-95fa-6c12ae5fe0b5",
+  "actor_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "actor_name": "مدير النظام",
+  "action": "auction_create_route",
+  "entity": "auction",
+  "entity_id": "ecb90f8d-147a-44ed-8d7f-5c39721ca062",
+  "ip": "127.0.0.1",
+  "details": null,
+  "created_at": "2026-11-22T19:52:45.511Z"
+ },
+ {
+  "id": "dd78c635-03ee-453e-9eca-588bab91cbd7",
+  "actor_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "actor_name": "مدير النظام",
+  "action": "login",
+  "entity": "user",
+  "entity_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "ip": "127.0.0.1",
+  "details": null,
+  "created_at": "2026-11-22T19:52:49.464Z"
+ },
+ {
+  "id": "c6706795-6cbf-4bb2-b744-b8b3953e4c85",
+  "actor_id": null,
+  "actor_name": "زائر",
+  "action": "login_failed",
+  "entity": "user",
+  "entity_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "ip": "127.0.0.1",
+  "details": null,
+  "created_at": "2026-11-22T19:52:52.450Z"
+ },
+ {
+  "id": "2529af93-5f8b-498d-909b-83441019ad12",
+  "actor_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "actor_name": "مدير النظام",
+  "action": "login",
+  "entity": "user",
+  "entity_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "ip": "127.0.0.1",
+  "details": null,
+  "created_at": "2026-11-22T19:52:53.121Z"
+ },
+ {
+  "id": "c5c69fef-c932-410e-94be-ff739cb5b8d8",
+  "actor_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "actor_name": "مدير النظام",
+  "action": "auction_create",
+  "entity": "auction",
+  "entity_id": "4e64d7dd-87ae-4890-b950-2f8582df717c",
+  "ip": null,
+  "details": {
+   "title": "شحنة تجهيزات مكتبية — اختبار تلقائي 1795377177973",
+   "startPrice": 150000,
+   "demo": false
+  },
+  "created_at": "2026-11-22T19:52:57.980Z"
+ },
+ {
+  "id": "7e49b1e9-984f-41b3-bcdc-56f3a7b1ef8d",
+  "actor_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "actor_name": "مدير النظام",
+  "action": "auction_create_route",
+  "entity": "auction",
+  "entity_id": "4e64d7dd-87ae-4890-b950-2f8582df717c",
+  "ip": "127.0.0.1",
+  "details": null,
+  "created_at": "2026-11-22T19:52:57.980Z"
+ },
+ {
+  "id": "b377d83d-faf5-4666-9cef-d6a3ed691de3",
+  "actor_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "actor_name": "مدير النظام",
+  "action": "login",
+  "entity": "user",
+  "entity_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "ip": "127.0.0.1",
+  "details": null,
+  "created_at": "2026-11-22T19:53:05.512Z"
+ },
+ {
+  "id": "a1bff35a-1a66-4288-9e2c-064a944e6a0b",
+  "actor_id": null,
+  "actor_name": "زائر",
+  "action": "login_failed",
+  "entity": "user",
+  "entity_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "ip": "127.0.0.1",
+  "details": null,
+  "created_at": "2026-11-22T19:53:08.474Z"
+ },
+ {
+  "id": "d6a2cf89-34e4-40dd-ba90-b7a9d5875262",
+  "actor_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "actor_name": "مدير النظام",
+  "action": "login",
+  "entity": "user",
+  "entity_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "ip": "127.0.0.1",
+  "details": null,
+  "created_at": "2026-11-22T19:53:09.134Z"
+ },
+ {
+  "id": "82b7a194-88d9-45cb-a3ec-8320d464e292",
+  "actor_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "actor_name": "مدير النظام",
+  "action": "auction_create",
+  "entity": "auction",
+  "entity_id": "e7c237ee-d5fa-4d28-9f61-363cf507a1fe",
+  "ip": null,
+  "details": {
+   "title": "شحنة تجهيزات مكتبية — اختبار تلقائي 1795377193985",
+   "startPrice": 150000,
+   "demo": false
+  },
+  "created_at": "2026-11-22T19:53:13.990Z"
+ },
+ {
+  "id": "6c9bbd37-7937-43b2-8250-7ff1ddd5cd3d",
+  "actor_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "actor_name": "مدير النظام",
+  "action": "auction_create_route",
+  "entity": "auction",
+  "entity_id": "e7c237ee-d5fa-4d28-9f61-363cf507a1fe",
+  "ip": "127.0.0.1",
+  "details": null,
+  "created_at": "2026-11-22T19:53:13.990Z"
+ },
+ {
+  "id": "ccb9ff22-8cc8-4223-9cef-8fa4f4748d68",
+  "actor_id": null,
+  "actor_name": "scheduler",
+  "action": "auction_close",
+  "entity": "auction",
+  "entity_id": "72b4b358-f73b-499a-b68f-7335dbd13896",
+  "ip": null,
+  "details": {
+   "outcome": "no_bids"
+  },
+  "created_at": "2026-11-22T20:16:42.146Z"
+ },
+ {
+  "id": "303cb324-9f23-45c5-8bff-4845a239b86d",
+  "actor_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "actor_name": "مدير النظام",
+  "action": "login",
+  "entity": "user",
+  "entity_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "ip": "127.0.0.1",
+  "details": null,
+  "created_at": "2026-11-22T20:17:20.108Z"
+ },
+ {
+  "id": "e8e5ecf2-4e5a-4bef-94d5-03b8260c149b",
+  "actor_id": null,
+  "actor_name": "زائر",
+  "action": "login_failed",
+  "entity": "user",
+  "entity_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "ip": "127.0.0.1",
+  "details": null,
+  "created_at": "2026-11-22T20:17:23.077Z"
+ },
+ {
+  "id": "500d6e37-26a1-4f98-9a3c-bb9bbcac5fe3",
+  "actor_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "actor_name": "مدير النظام",
+  "action": "login",
+  "entity": "user",
+  "entity_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "ip": "127.0.0.1",
+  "details": null,
+  "created_at": "2026-11-22T20:17:23.723Z"
+ },
+ {
+  "id": "3698a68e-f481-4331-aa0f-ee305462d803",
+  "actor_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "actor_name": "مدير النظام",
+  "action": "auction_create",
+  "entity": "auction",
+  "entity_id": "bf2c6c42-0671-44bd-99ba-04d46cd099b8",
+  "ip": null,
+  "details": {
+   "title": "شحنة تجهيزات مكتبية — اختبار تلقائي 1795378648572",
+   "startPrice": 150000,
+   "demo": false
+  },
+  "created_at": "2026-11-22T20:17:28.575Z"
+ },
+ {
+  "id": "8dbbd11f-2405-4e87-ba5b-17f2932f1a10",
+  "actor_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "actor_name": "مدير النظام",
+  "action": "auction_create_route",
+  "entity": "auction",
+  "entity_id": "bf2c6c42-0671-44bd-99ba-04d46cd099b8",
+  "ip": "127.0.0.1",
+  "details": null,
+  "created_at": "2026-11-22T20:17:28.575Z"
+ },
+ {
+  "id": "0ec25315-483a-4839-8cf3-101d16909c66",
+  "actor_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "actor_name": "مدير النظام",
+  "action": "admin_campaign_send",
+  "entity": "campaign",
+  "entity_id": "495ed51c-a79b-4131-83df-bce54b69ae27",
+  "ip": null,
+  "details": {
+   "audience": "staff",
+   "recipients": 1,
+   "channels": [
+    "inapp"
+   ]
+  },
+  "created_at": "2026-11-22T20:17:34.392Z"
+ },
+ {
+  "id": "c5e0d272-ccf4-4663-8ef4-baa1e1a3c71f",
+  "actor_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "actor_name": "مدير النظام",
+  "action": "login",
+  "entity": "user",
+  "entity_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "ip": "127.0.0.1",
+  "details": null,
+  "created_at": "2026-11-22T20:18:18.579Z"
+ },
+ {
+  "id": "64cf225f-606d-447d-a188-2617e2779c5b",
+  "actor_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "actor_name": "مدير النظام",
+  "action": "pricing_rule_create",
+  "entity": "pricing_rule",
+  "entity_id": "c15edea6-bbad-496a-ba63-382631b313b9",
+  "ip": null,
+  "details": {
+   "name": "شحن جوي قياسي (حتى 100 كجم)"
+  },
+  "created_at": "2026-11-22T20:28:30.777Z"
+ },
+ {
+  "id": "08299784-301d-40d8-ad96-0017535b1f0b",
+  "actor_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "actor_name": "مدير النظام",
+  "action": "pricing_rule_create",
+  "entity": "pricing_rule",
+  "entity_id": "5c1ddacb-edf7-476e-8b9c-c64ba445b282",
+  "ip": null,
+  "details": {
+   "name": "شحن جوي ثقيل (أكثر من 100 كجم)"
+  },
+  "created_at": "2026-11-22T20:28:30.777Z"
+ },
+ {
+  "id": "36208a53-339a-4234-9221-fd80e2655d36",
+  "actor_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "actor_name": "مدير النظام",
+  "action": "pricing_rule_create",
+  "entity": "pricing_rule",
+  "entity_id": "b3cdecec-c13f-46f0-9931-6a53bff557b8",
+  "ip": null,
+  "details": {
+   "name": "شحن بحري — حاويات"
+  },
+  "created_at": "2026-11-22T20:28:30.777Z"
+ },
+ {
+  "id": "e46da409-347b-48d7-b324-cdac80c303e6",
+  "actor_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "actor_name": "مدير النظام",
+  "action": "pricing_rule_create",
+  "entity": "pricing_rule",
+  "entity_id": "d6e2d9e8-e685-442b-abfb-64cf93f3c462",
+  "ip": null,
+  "details": {
+   "name": "شحن بري محلي"
+  },
+  "created_at": "2026-11-22T20:28:30.777Z"
+ },
+ {
+  "id": "4777c552-4604-4c5d-ab5e-8f24dd33360f",
+  "actor_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "actor_name": "مدير النظام",
+  "action": "pricing_rule_create",
+  "entity": "pricing_rule",
+  "entity_id": "2a8fdcb3-3c53-4137-8cbf-0108c9aecabc",
+  "ip": null,
+  "details": {
+   "name": "عملاء الوكلاء — خصم عام"
+  },
+  "created_at": "2026-11-22T20:28:30.777Z"
+ },
+ {
+  "id": "a14aaad2-8f3b-466d-975d-20f455e928d0",
+  "actor_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "actor_name": "مدير النظام",
+  "action": "login",
+  "entity": "user",
+  "entity_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "ip": "127.0.0.1",
+  "details": null,
+  "created_at": "2026-11-22T20:28:31.113Z"
+ },
+ {
+  "id": "1b3f842c-52a2-479f-ac8a-302f7c7fe48f",
+  "actor_id": null,
+  "actor_name": "زائر",
+  "action": "login_failed",
+  "entity": "user",
+  "entity_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "ip": "127.0.0.1",
+  "details": null,
+  "created_at": "2026-11-22T20:28:34.084Z"
+ },
+ {
+  "id": "f9bbd281-712a-4f3f-b439-107910076c77",
+  "actor_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "actor_name": "مدير النظام",
+  "action": "login",
+  "entity": "user",
+  "entity_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "ip": "127.0.0.1",
+  "details": null,
+  "created_at": "2026-11-22T20:28:34.733Z"
+ },
+ {
+  "id": "87f21f4f-e6d4-4d08-91cc-fb2d48fae800",
+  "actor_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "actor_name": "مدير النظام",
+  "action": "auction_create",
+  "entity": "auction",
+  "entity_id": "e8ac64ef-faa5-42e2-830e-168f99d733be",
+  "ip": null,
+  "details": {
+   "title": "شحنة تجهيزات مكتبية — اختبار تلقائي 1795379319583",
+   "startPrice": 150000,
+   "demo": false
+  },
+  "created_at": "2026-11-22T20:28:39.587Z"
+ },
+ {
+  "id": "f9e1179f-f8f3-4cfa-a83d-32c2eef336f8",
+  "actor_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "actor_name": "مدير النظام",
+  "action": "auction_create_route",
+  "entity": "auction",
+  "entity_id": "e8ac64ef-faa5-42e2-830e-168f99d733be",
+  "ip": "127.0.0.1",
+  "details": null,
+  "created_at": "2026-11-22T20:28:39.587Z"
+ },
+ {
+  "id": "98e408e7-cf7b-457e-b17b-178a1ae9a148",
+  "actor_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "actor_name": "مدير النظام",
+  "action": "admin_campaign_send",
+  "entity": "campaign",
+  "entity_id": "47e45918-4b67-462f-98b3-581d83631366",
+  "ip": null,
+  "details": {
+   "audience": "staff",
+   "recipients": 1,
+   "channels": [
+    "inapp"
+   ]
+  },
+  "created_at": "2026-11-22T20:28:45.431Z"
+ },
+ {
+  "id": "1860910e-3753-4788-8769-bb1fa36db0d2",
+  "actor_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "actor_name": "مدير النظام",
+  "action": "report_export",
+  "entity": "report",
+  "entity_id": "shipments",
+  "ip": "127.0.0.1",
+  "details": null,
+  "created_at": "2026-11-22T20:28:50.279Z"
+ },
+ {
+  "id": "67513d79-d5c5-4ff4-ab35-0027e722af1d",
+  "actor_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "actor_name": "مدير النظام",
+  "action": "login",
+  "entity": "user",
+  "entity_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "ip": "127.0.0.1",
+  "details": null,
+  "created_at": "2026-11-22T20:29:11.580Z"
+ },
+ {
+  "id": "a6c5e9e3-5d14-4a16-aa2f-fcae3def99d9",
+  "actor_id": null,
+  "actor_name": "زائر",
+  "action": "login_failed",
+  "entity": "user",
+  "entity_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "ip": "127.0.0.1",
+  "details": null,
+  "created_at": "2026-11-22T20:29:14.528Z"
+ },
+ {
+  "id": "c5967585-4bbc-4ecf-ade3-b26a73d77831",
+  "actor_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "actor_name": "مدير النظام",
+  "action": "login",
+  "entity": "user",
+  "entity_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "ip": "127.0.0.1",
+  "details": null,
+  "created_at": "2026-11-22T20:29:15.180Z"
+ },
+ {
+  "id": "8bc29388-6758-473b-8ea8-563712fd35a0",
+  "actor_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "actor_name": "مدير النظام",
+  "action": "auction_create",
+  "entity": "auction",
+  "entity_id": "67d39598-aa00-486f-983b-c74ce699a8dd",
+  "ip": null,
+  "details": {
+   "title": "شحنة تجهيزات مكتبية — اختبار تلقائي 1795379360035",
+   "startPrice": 150000,
+   "demo": false
+  },
+  "created_at": "2026-11-22T20:29:20.039Z"
+ },
+ {
+  "id": "29b83717-4af5-4130-b749-cbae0aa1fc3e",
+  "actor_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "actor_name": "مدير النظام",
+  "action": "auction_create_route",
+  "entity": "auction",
+  "entity_id": "67d39598-aa00-486f-983b-c74ce699a8dd",
+  "ip": "127.0.0.1",
+  "details": null,
+  "created_at": "2026-11-22T20:29:20.039Z"
+ },
+ {
+  "id": "9d19f9fc-becf-4245-bf01-e2dc9d9cf6eb",
+  "actor_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "actor_name": "مدير النظام",
+  "action": "admin_campaign_send",
+  "entity": "campaign",
+  "entity_id": "5e9c7a74-f5c5-4b3c-b45e-2cefc8c52162",
+  "ip": null,
+  "details": {
+   "audience": "staff",
+   "recipients": 1,
+   "channels": [
+    "inapp"
+   ]
+  },
+  "created_at": "2026-11-22T20:29:25.857Z"
+ },
+ {
+  "id": "aec19851-73a4-4f4a-9638-61315cb51d3a",
+  "actor_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "actor_name": "مدير النظام",
+  "action": "report_export",
+  "entity": "report",
+  "entity_id": "shipments",
+  "ip": "127.0.0.1",
+  "details": null,
+  "created_at": "2026-11-22T20:29:30.700Z"
+ },
+ {
+  "id": "5906ac52-7e6c-476b-ba79-8365b54a5fd4",
+  "actor_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "actor_name": "مدير النظام",
+  "action": "login",
+  "entity": "user",
+  "entity_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "ip": "127.0.0.1",
+  "details": null,
+  "created_at": "2026-11-22T20:30:19.273Z"
+ },
+ {
+  "id": "ee7fb3f7-dd97-41f8-8e7f-7f62beaae387",
+  "actor_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "actor_name": "مدير النظام",
+  "action": "login",
+  "entity": "user",
+  "entity_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "ip": "127.0.0.1",
+  "details": null,
+  "created_at": "2026-11-22T20:31:24.175Z"
+ },
+ {
+  "id": "bcfa95d4-f311-4239-9cd0-bb4a374c13e7",
+  "actor_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "actor_name": "مدير النظام",
+  "action": "login",
+  "entity": "user",
+  "entity_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "ip": "127.0.0.1",
+  "details": null,
+  "created_at": "2026-11-22T20:31:28.887Z"
+ },
+ {
+  "id": "382a099f-b8eb-454f-93be-4dead26e7bf3",
+  "actor_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "actor_name": "مدير النظام",
+  "action": "login",
+  "entity": "user",
+  "entity_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "ip": "127.0.0.1",
+  "details": null,
+  "created_at": "2026-11-22T20:45:44.032Z"
+ },
+ {
+  "id": "417d68ab-1fbb-4a4d-a3e1-11b437eed62e",
+  "actor_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "actor_name": "مدير النظام",
+  "action": "login",
+  "entity": "user",
+  "entity_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "ip": "127.0.0.1",
+  "details": null,
+  "created_at": "2026-11-22T20:45:55.213Z"
+ },
+ {
+  "id": "e610bdb0-118b-4cbf-b2bd-e269cf2e5934",
+  "actor_id": null,
+  "actor_name": "زائر",
+  "action": "login_failed",
+  "entity": "user",
+  "entity_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "ip": "127.0.0.1",
+  "details": null,
+  "created_at": "2026-11-22T20:45:58.254Z"
+ },
+ {
+  "id": "706540b4-865f-47bd-b969-4d0c686803b0",
+  "actor_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "actor_name": "مدير النظام",
+  "action": "login",
+  "entity": "user",
+  "entity_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "ip": "127.0.0.1",
+  "details": null,
+  "created_at": "2026-11-22T20:45:58.905Z"
+ },
+ {
+  "id": "ab26cbd1-cfcd-4056-81c1-d782081530b8",
+  "actor_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "actor_name": "مدير النظام",
+  "action": "auction_create",
+  "entity": "auction",
+  "entity_id": "4fc7d717-7a56-4507-af40-1cd167d089dc",
+  "ip": null,
+  "details": {
+   "title": "شحنة تجهيزات مكتبية — اختبار تلقائي 1795380363752",
+   "startPrice": 150000,
+   "demo": false
+  },
+  "created_at": "2026-11-22T20:46:03.757Z"
+ },
+ {
+  "id": "37b8e490-60ac-4ea0-b8cb-2a52e6cb24d3",
+  "actor_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "actor_name": "مدير النظام",
+  "action": "auction_create_route",
+  "entity": "auction",
+  "entity_id": "4fc7d717-7a56-4507-af40-1cd167d089dc",
+  "ip": "127.0.0.1",
+  "details": null,
+  "created_at": "2026-11-22T20:46:03.758Z"
+ },
+ {
+  "id": "0587c01c-0027-4ba0-a9d5-faa91b533f45",
+  "actor_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "actor_name": "مدير النظام",
+  "action": "admin_campaign_send",
+  "entity": "campaign",
+  "entity_id": "d468a628-a801-4c3b-85c8-a5af0adf9d2d",
+  "ip": null,
+  "details": {
+   "audience": "staff",
+   "recipients": 1,
+   "channels": [
+    "inapp"
+   ]
+  },
+  "created_at": "2026-11-22T20:46:09.599Z"
+ },
+ {
+  "id": "ee3268b7-9677-40b9-a2fd-13cefddd94dd",
+  "actor_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "actor_name": "مدير النظام",
+  "action": "report_export",
+  "entity": "report",
+  "entity_id": "shipments",
+  "ip": "127.0.0.1",
+  "details": null,
+  "created_at": "2026-11-22T20:46:14.454Z"
+ },
+ {
+  "id": "339d1e6b-c9b9-4f02-888f-24ddba5a0186",
+  "actor_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "actor_name": "مدير النظام",
+  "action": "login",
+  "entity": "user",
+  "entity_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "ip": "127.0.0.1",
+  "details": null,
+  "created_at": "2026-11-22T20:46:52.806Z"
+ },
+ {
+  "id": "9db1a9bb-99a5-46a9-90c6-866d4247197b",
+  "actor_id": null,
+  "actor_name": "زائر",
+  "action": "login_failed",
+  "entity": "user",
+  "entity_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "ip": "127.0.0.1",
+  "details": null,
+  "created_at": "2026-11-22T20:46:55.820Z"
+ },
+ {
+  "id": "1c892fc8-a722-4d62-84d0-6a271587c4b5",
+  "actor_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "actor_name": "مدير النظام",
+  "action": "login",
+  "entity": "user",
+  "entity_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "ip": "127.0.0.1",
+  "details": null,
+  "created_at": "2026-11-22T20:46:56.468Z"
+ },
+ {
+  "id": "eda85cc3-2c04-4507-a116-eac01e025b11",
+  "actor_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "actor_name": "مدير النظام",
+  "action": "auction_create",
+  "entity": "auction",
+  "entity_id": "933b9195-f319-446d-9809-628f8bd56d25",
+  "ip": null,
+  "details": {
+   "title": "شحنة تجهيزات مكتبية — اختبار تلقائي 1795380421321",
+   "startPrice": 150000,
+   "demo": false
+  },
+  "created_at": "2026-11-22T20:47:01.325Z"
+ },
+ {
+  "id": "a4040196-5b6d-4fda-8ff4-75086974ff0a",
+  "actor_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "actor_name": "مدير النظام",
+  "action": "auction_create_route",
+  "entity": "auction",
+  "entity_id": "933b9195-f319-446d-9809-628f8bd56d25",
+  "ip": "127.0.0.1",
+  "details": null,
+  "created_at": "2026-11-22T20:47:01.325Z"
+ },
+ {
+  "id": "cfbbb2b2-5e04-4cb1-9860-e914e580fad1",
+  "actor_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "actor_name": "مدير النظام",
+  "action": "admin_campaign_send",
+  "entity": "campaign",
+  "entity_id": "0ab682c0-0373-4478-ae55-d620428df6e9",
+  "ip": null,
+  "details": {
+   "audience": "staff",
+   "recipients": 1,
+   "channels": [
+    "inapp"
+   ]
+  },
+  "created_at": "2026-11-22T20:47:07.173Z"
+ },
+ {
+  "id": "db18c390-50df-43f5-8099-ad44f98aa29b",
+  "actor_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "actor_name": "مدير النظام",
+  "action": "report_export",
+  "entity": "report",
+  "entity_id": "shipments",
+  "ip": "127.0.0.1",
+  "details": null,
+  "created_at": "2026-11-22T20:47:12.020Z"
+ },
+ {
+  "id": "b0304d8a-5cd5-40e5-9a72-798bebcf1d58",
+  "actor_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "actor_name": "مدير النظام",
+  "action": "login",
+  "entity": "user",
+  "entity_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "ip": "127.0.0.1",
+  "details": null,
+  "created_at": "2026-11-22T20:49:07.345Z"
+ },
+ {
+  "id": "50cea3dd-4e5a-4d88-808a-ec0695260999",
+  "actor_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "actor_name": "مدير النظام",
+  "action": "login",
+  "entity": "user",
+  "entity_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "ip": "127.0.0.1",
+  "details": null,
+  "created_at": "2026-11-22T20:57:39.621Z"
+ },
+ {
+  "id": "d47c1965-3d85-4d6a-ad9b-388582b02756",
+  "actor_id": null,
+  "actor_name": "زائر",
+  "action": "login_failed",
+  "entity": "user",
+  "entity_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "ip": "127.0.0.1",
+  "details": null,
+  "created_at": "2026-11-22T20:57:42.590Z"
+ },
+ {
+  "id": "41b72e09-0612-41ec-a116-f476aa482a7d",
+  "actor_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "actor_name": "مدير النظام",
+  "action": "login",
+  "entity": "user",
+  "entity_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "ip": "127.0.0.1",
+  "details": null,
+  "created_at": "2026-11-22T20:57:43.238Z"
+ },
+ {
+  "id": "ae1d9323-cc98-4579-858c-9faa803ae88a",
+  "actor_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "actor_name": "مدير النظام",
+  "action": "auction_create",
+  "entity": "auction",
+  "entity_id": "b4300878-ce55-4533-96f5-2491ff4630e2",
+  "ip": null,
+  "details": {
+   "title": "شحنة تجهيزات مكتبية — اختبار تلقائي 1795381068086",
+   "startPrice": 150000,
+   "demo": false
+  },
+  "created_at": "2026-11-22T20:57:48.091Z"
+ },
+ {
+  "id": "548a8737-c350-450e-812d-8d5ee013a3be",
+  "actor_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "actor_name": "مدير النظام",
+  "action": "auction_create_route",
+  "entity": "auction",
+  "entity_id": "b4300878-ce55-4533-96f5-2491ff4630e2",
+  "ip": "127.0.0.1",
+  "details": null,
+  "created_at": "2026-11-22T20:57:48.092Z"
+ },
+ {
+  "id": "e9a5f53e-8225-4bc4-b5cf-d15528a4bda0",
+  "actor_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "actor_name": "مدير النظام",
+  "action": "admin_campaign_send",
+  "entity": "campaign",
+  "entity_id": "e1666aa0-2867-4a5a-8a0f-313f645820ad",
+  "ip": null,
+  "details": {
+   "audience": "staff",
+   "recipients": 1,
+   "channels": [
+    "inapp"
+   ]
+  },
+  "created_at": "2026-11-22T20:57:53.924Z"
+ },
+ {
+  "id": "3f1e7060-1356-4794-ad7f-913057d1ded9",
+  "actor_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "actor_name": "مدير النظام",
+  "action": "report_export",
+  "entity": "report",
+  "entity_id": "shipments",
+  "ip": "127.0.0.1",
+  "details": null,
+  "created_at": "2026-11-22T20:57:58.770Z"
+ },
+ {
+  "id": "7a516bef-71a0-4f23-937b-de47c4e01a77",
+  "actor_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "actor_name": "مدير النظام",
+  "action": "login",
+  "entity": "user",
+  "entity_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "ip": "127.0.0.1",
+  "details": null,
+  "created_at": "2026-11-22T20:58:58.441Z"
+ },
+ {
+  "id": "19065472-e7f5-4f09-ac6a-851ccc3f2a79",
+  "actor_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "actor_name": "مدير النظام",
+  "action": "login",
+  "entity": "user",
+  "entity_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "ip": "136.69.167.203",
+  "details": null,
+  "created_at": "2026-11-22T21:10:26.782Z"
+ },
+ {
+  "id": "19d96599-63a5-4cb3-8a62-1de77b5d848e",
+  "actor_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "actor_name": "مدير النظام",
+  "action": "login",
+  "entity": "user",
+  "entity_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "ip": "136.69.167.203",
+  "details": null,
+  "created_at": "2026-11-22T21:11:05.550Z"
+ },
+ {
+  "id": "0f006ab7-dbfc-4473-ac67-4ae671d22f09",
+  "actor_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "actor_name": "مدير النظام",
+  "action": "login",
+  "entity": "user",
+  "entity_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "ip": "136.69.167.203",
+  "details": null,
+  "created_at": "2026-11-22T21:11:05.693Z"
+ },
+ {
+  "id": "eace6a7f-b737-45e2-8eac-62dadc6c4db5",
+  "actor_id": null,
+  "actor_name": "scheduler",
+  "action": "auction_close",
+  "entity": "auction",
+  "entity_id": "f76ee8d9-1837-4b0e-8da2-b67996fa13e3",
+  "ip": null,
+  "details": {
+   "outcome": "no_bids"
+  },
+  "created_at": "2026-11-22T21:16:41.644Z"
+ },
+ {
+  "id": "277bbeef-22f0-4089-8e0f-8476ea58cfaa",
+  "actor_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "actor_name": "مدير النظام",
+  "action": "login",
+  "entity": "user",
+  "entity_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "ip": "136.69.167.203",
+  "details": null,
+  "created_at": "2026-11-22T21:16:52.772Z"
+ },
+ {
+  "id": "ae81b5f2-2333-4c4f-b1c0-0fb50bf3f9e1",
+  "actor_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "actor_name": "مدير النظام",
+  "action": "login",
+  "entity": "user",
+  "entity_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "ip": "127.0.0.1",
+  "details": null,
+  "created_at": "2026-11-22T21:18:26.499Z"
+ },
+ {
+  "id": "8ac4d9c9-443b-46b9-b8dd-2beb5f6a4ec4",
+  "actor_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "actor_name": "مدير النظام",
+  "action": "login",
+  "entity": "user",
+  "entity_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "ip": "127.0.0.1",
+  "details": null,
+  "created_at": "2026-11-22T21:18:40.465Z"
+ },
+ {
+  "id": "6c80bd9a-ea9e-4549-ad26-4df3f144594e",
+  "actor_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "actor_name": "مدير النظام",
+  "action": "login",
+  "entity": "user",
+  "entity_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "ip": "127.0.0.1",
+  "details": null,
+  "created_at": "2026-11-22T21:18:54.697Z"
+ },
+ {
+  "id": "f80bf2cf-e89b-4d1d-82fa-db4a0d93a7c0",
+  "actor_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "actor_name": "مدير النظام",
+  "action": "login",
+  "entity": "user",
+  "entity_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "ip": "136.69.167.203",
+  "details": null,
+  "created_at": "2026-11-22T21:19:25.344Z"
+ },
+ {
+  "id": "c15591fa-5b72-435b-896d-47c0757b5c2b",
+  "actor_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "actor_name": "مدير النظام",
+  "action": "admin_backup",
+  "entity": "system",
+  "entity_id": null,
+  "ip": "136.69.167.203",
+  "details": {
+   "collections": 17
+  },
+  "created_at": "2026-11-22T21:19:26.547Z"
+ },
+ {
+  "id": "87f1d3db-3e4f-45d9-a0d4-7acb7781f541",
+  "actor_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "actor_name": "مدير النظام",
+  "action": "login",
+  "entity": "user",
+  "entity_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "ip": "127.0.0.1",
+  "details": null,
+  "created_at": "2026-11-22T21:20:02.886Z"
+ },
+ {
+  "id": "2c1cc293-8a12-4dad-b14b-7ad8128b968d",
+  "actor_id": null,
+  "actor_name": "زائر",
+  "action": "login_failed",
+  "entity": "user",
+  "entity_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "ip": "127.0.0.1",
+  "details": null,
+  "created_at": "2026-11-22T21:20:05.911Z"
+ },
+ {
+  "id": "fd70d272-6298-49ef-8650-0c213337570a",
+  "actor_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "actor_name": "مدير النظام",
+  "action": "login",
+  "entity": "user",
+  "entity_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "ip": "127.0.0.1",
+  "details": null,
+  "created_at": "2026-11-22T21:20:06.564Z"
+ },
+ {
+  "id": "56898a6e-85ce-4bda-873b-c8dafe741758",
+  "actor_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "actor_name": "مدير النظام",
+  "action": "auction_create",
+  "entity": "auction",
+  "entity_id": "da93e4c6-d798-45a2-91dc-077324152a3c",
+  "ip": null,
+  "details": {
+   "title": "شحنة تجهيزات مكتبية — اختبار تلقائي 1795382411421",
+   "startPrice": 150000,
+   "demo": false
+  },
+  "created_at": "2026-11-22T21:20:11.426Z"
+ },
+ {
+  "id": "c982fc4c-568d-4d8a-8383-173e9592dc08",
+  "actor_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "actor_name": "مدير النظام",
+  "action": "auction_create_route",
+  "entity": "auction",
+  "entity_id": "da93e4c6-d798-45a2-91dc-077324152a3c",
+  "ip": "127.0.0.1",
+  "details": null,
+  "created_at": "2026-11-22T21:20:11.426Z"
+ },
+ {
+  "id": "79580126-2dc1-47a6-af22-12a114cd35ac",
+  "actor_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "actor_name": "مدير النظام",
+  "action": "admin_campaign_send",
+  "entity": "campaign",
+  "entity_id": "f3a7b82c-9d82-40b5-aa0a-bbccf092ddcd",
+  "ip": null,
+  "details": {
+   "audience": "staff",
+   "recipients": 1,
+   "channels": [
+    "inapp"
+   ]
+  },
+  "created_at": "2026-11-22T21:20:17.283Z"
+ },
+ {
+  "id": "3b730ef9-bb8b-4392-b744-75456e097f86",
+  "actor_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "actor_name": "مدير النظام",
+  "action": "report_export",
+  "entity": "report",
+  "entity_id": "shipments",
+  "ip": "127.0.0.1",
+  "details": null,
+  "created_at": "2026-11-22T21:20:22.135Z"
+ }
+]

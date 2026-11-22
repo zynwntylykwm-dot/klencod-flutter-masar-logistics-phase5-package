@@ -1,0 +1,39 @@
+# ============ لا ترفع هذه إلى GitHub أبدًا ============
+# البيانات الحقيقية (مستخدمون، محفظة، مزادات، جلسات، إشعارات)
+data/
+audit/*.json
+backups/
+
+# الأسرار
+.env
+.env.*
+!.env.example
+deploy/.env
+*.pem
+*.p8
+*.keystore
+*.jks
+BOOTSTRAP_ADMIN.txt
+
+# مخرجات البناء والتشغيل
+node_modules/
+android/build/
+android/build/gen/
+*.apk
+*.aab
+*.idsig
+ios/build/
+ios/MasarApp.xcodeproj/
+build/
+dist/
+coverage/
+*.log
+npm-debug.log*
+.DS_Store
+Thumbs.db
+
+# أدوات محلية
+.cache/
+.local/
+.vscode/
+.idea/

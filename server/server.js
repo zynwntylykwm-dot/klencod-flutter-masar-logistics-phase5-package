@@ -1,0 +1,1125 @@
+#!/usr/bin/env node
+/**
+ * server.js — الخادم الخلفي لنظام «المسار العالمي اللوجستي» (المرحلة 1)
+ * ---------------------------------------------------------------------
+ * • بدون أي تبعيات خارجية (Node 20+ فقط) — يعمل بـ: node server/server.js
+ * • يقدّم الواجهة من مجلد app/ ويوفر واجهة REST تحت /api
+ * • مصادقة حقيقية (scrypt + رموز موقّعة) وصلاحيات على الخادم
+ * • بث لحظي SSE لتحديثات الشحنات والإشعارات
+ * • بوابة بيانات حية مع وسم المصدر ووقت الجلب
+ */
+'use strict';
+const http = require('http');
+const fs = require('fs');
+const path = require('path');
+const crypto = require('crypto');
+const { URL } = require('url');
+
+const { db, audit, DATA_DIR, flush: flushStore, writable } = require('./lib/store');
+const A = require('./lib/auth');
+const live = require('./lib/live');
+const auctions = require('./lib/auctions');
+const wallet = require('./lib/wallet');
+const admin = require('./lib/admin');
+const push = require('./lib/push');
+const visitors = require('./lib/visitors');
+const pricing = require('./lib/pricing');
+const reports = require('./lib/reports');
+const carriers = require('./lib/carriers');
+const assistant = require('./lib/assistant');
+
+// هل مجلد البيانات على قرص دائم؟ (يُضبط تلقائيًا على المنصّات المعروفة)
+const ON_RENDER = !!process.env.RENDER;
+const ON_RAILWAY = !!process.env.RAILWAY_ENVIRONMENT;
+const STORAGE_PERSISTENT = process.env.STORAGE_PERSISTENT
+  ? process.env.STORAGE_PERSISTENT === 'true'
+  : (ON_RENDER || ON_RAILWAY) ? /^\/(data|var\/data)/.test(process.env.DATA_DIR || '') : true;
+
+const PORT = +(process.env.PORT || 8080);
+const HOST = process.env.HOST || '0.0.0.0';
+const APP_DIR = path.join(__dirname, '..', 'app');
+const VERSION = '1.0.0-phase5';
+const PUBLIC_URL = (process.env.PUBLIC_URL || process.env.RENDER_EXTERNAL_URL || '').replace(/\/$/, '');
+const CORS_ORIGINS = (process.env.CORS_ORIGINS || '*').trim();
+
+// ============================ أدوات مساعدة ============================
+const json = (res, code, obj) => {
+  const body = JSON.stringify(obj);
+  res.writeHead(code, {
+    'content-type': 'application/json; charset=utf-8',
+    'content-length': Buffer.byteLength(body),
+    'cache-control': 'no-store',
+    'access-control-allow-origin': '*',
+    'access-control-allow-headers': 'content-type,authorization',
+    'access-control-allow-methods': 'GET,POST,PATCH,DELETE,OPTIONS'
+  });
+  res.end(body);
+};
+const fail = (res, code, message, extra = {}) => json(res, code, { ok: false, error: message, ...extra });
+const ok = (res, data = {}, code = 200) => json(res, code, { ok: true, ...data });
+
+function readBody(req, limit = 2 * 1024 * 1024) {
+  return new Promise((resolve, reject) => {
+    let size = 0; const chunks = [];
+    req.on('data', (c) => {
+      size += c.length;
+      if (size > limit) { reject(Object.assign(new Error('حجم الطلب كبير جدًا'), { status: 413 })); req.destroy(); return; }
+      chunks.push(c);
+    });
+    req.on('end', () => {
+      if (!chunks.length) return resolve({});
+      try { resolve(JSON.parse(Buffer.concat(chunks).toString('utf8'))); }
+      catch (e) { reject(Object.assign(new Error('صيغة JSON غير صحيحة'), { status: 400 })); }
+    });
+    req.on('error', reject);
+  });
+}
+
+const ipOf = (req) => (req.headers['x-forwarded-for'] || '').split(',')[0].trim() || req.socket.remoteAddress || 'unknown';
+const nowIso = () => new Date().toISOString();
+
+// ============================ البث اللحظي (SSE) ============================
+const streams = new Set();
+function broadcast(topic, event, payload) {
+  const msg = `event: ${event}\ndata: ${JSON.stringify({ topic, at: nowIso(), payload })}\n\n`;
+  for (const s of streams) {
+    if (s.topics.includes('*') || s.topics.some((t) => topic.startsWith(t))) {
+      try { s.res.write(msg); } catch (_) { streams.delete(s); }
+    }
+  }
+}
+setInterval(() => { for (const s of streams) { try { s.res.write(':ping\n\n'); } catch (_) { streams.delete(s); } } }, 25000).unref();
+
+function notify(userId, title, body, link = null, type = 'system') {
+  const n = db.notifications.insert({ id: crypto.randomUUID(), user_id: userId, type, title, body, link, read_at: null, created_at: nowIso() });
+  broadcast('notifications:' + userId, 'notification', n);
+  return n;
+}
+
+// ============================ الصلاحيات ============================
+function requireAuth(req, res, minRole = 'user') {
+  const user = A.userFromRequest(req);
+  if (!user) { fail(res, 401, 'مطلوب تسجيل الدخول (رمز غير صالح أو منتهٍ)'); return null; }
+  if (!A.hasRole(user, minRole)) { fail(res, 403, 'لا تملك صلاحية لهذا الإجراء'); return null; }
+  return user;
+}
+
+// ============================ التسجيل الأول للمدير ============================
+function bootstrapAdmin() {
+  if (db.users.all().length > 0) return;
+  const password = process.env.ADMIN_PASSWORD || crypto.randomBytes(9).toString('base64url');
+  const admin = db.users.insert({
+    id: crypto.randomUUID(),
+    fullName: 'مدير النظام',
+    email: 'admin@almasar.local',
+    phone: '',
+    username: 'admin',
+    password_hash: A.hashPassword(password),
+    role: 'super_admin',
+    status: 'active',
+    created_at: nowIso()
+  });
+  wallet.accounts.ensure(admin.id);
+  const file = path.join(DATA_DIR, 'BOOTSTRAP_ADMIN.txt');
+  fs.mkdirSync(DATA_DIR, { recursive: true });
+  fs.writeFileSync(file, `اسم المستخدم: admin\nكلمة المرور: ${password}\nتاريخ الإنشاء: ${nowIso()}\n\nغيّر كلمة المرور بعد أول دخول، ثم احذف هذا الملف.\n`, { mode: 0o600 });
+  console.log('\n=================================================');
+  console.log(' تم إنشاء حساب المدير العام لأول مرة:');
+  console.log('   اسم المستخدم: admin');
+  console.log('   كلمة المرور : ' + password);
+  console.log(' (محفوظة أيضًا في ' + file + ')');
+  console.log('=================================================\n');
+  return admin;
+}
+
+// استيراد بيانات الشحنات التجريبية مرة واحدة بوسم demo
+function seedDemoShipments() {
+  if (db.shipments.all().length > 0) return;
+  const f = path.join(DATA_DIR, 'seed-shipments.json');
+  if (!fs.existsSync(f)) return;
+  try {
+    const rows = JSON.parse(fs.readFileSync(f, 'utf8'));
+    for (const r of rows) db.shipments.insert({ ...r, demo: true, data_source: 'بيانات تجريبية من النظام السابق' });
+    console.log(`[seed] تم استيراد ${rows.length} شحنة تجريبية موسومة demo=true`);
+  } catch (e) { console.error('[seed] فشل الاستيراد:', e.message); }
+}
+
+// ============================ المعالجات ============================
+async function handleApi(req, res, url) {
+  const p = url.pathname.replace(/\/+$/, '') || '/api';
+  const m = req.method;
+  const q = url.searchParams;
+
+  // ---------- صحة الخدمة ----------
+  if (p === '/api/health' && m === 'GET') {
+    return ok(res, {
+      ...healthPayload(),
+      users: db.users.all().length, shipments: db.shipments.all().length,
+      live_sources: ['fx', 'weather', 'news', 'crypto', 'macro'], realtime: 'SSE'
+    });
+  }
+
+  // ---------- المصادقة ----------
+  if (p === '/api/auth/register' && m === 'POST') {
+    const b = await readBody(req);
+    const need = ['fullName', 'email', 'phone', 'username', 'password'];
+    for (const k of need) if (!b[k] || String(b[k]).trim().length < 3) return fail(res, 400, `الحقل ${k} مطلوب`);
+    if (String(b.password).length < 8) return fail(res, 400, 'كلمة المرور يجب أن تكون 8 أحرف على الأقل');
+    if (db.users.findOne((u) => u.username === b.username || u.email === b.email || u.phone === b.phone))
+      return fail(res, 409, 'اسم المستخدم أو البريد أو الهاتف مستخدم بالفعل');
+    const role = ['user', 'agent'].includes(b.role) ? b.role : 'user'; // الأدوار الإدارية لا تُمنح ذاتيًا
+    const user = db.users.insert({
+      id: crypto.randomUUID(), fullName: String(b.fullName).trim(), email: String(b.email).trim().toLowerCase(),
+      phone: String(b.phone).trim(), username: String(b.username).trim(),
+      password_hash: A.hashPassword(b.password), role, status: 'pending',
+      idNumber: b.idNumber || null, commercialReg: b.commercialReg || null, created_at: nowIso()
+    });
+    wallet.accounts.ensure(user.id);
+    db.users.all().filter((u) => u.role === 'super_admin').forEach((adm) => notify(adm.id, 'طلب تسجيل جديد', `${user.fullName} (${role}) بانتظار الموافقة`, '#settings', 'user'));
+    audit({ id: null, fullName: 'زائر' }, 'register', 'user', user.id, { ip: ipOf(req) });
+    return ok(res, { user: publicUser(user), message: 'تم إنشاء الطلب، بانتظار موافقة الإدارة' }, 201);
+  }
+
+  if (p === '/api/auth/login' && m === 'POST') {
+    const rl = A.rateLimit('login:' + ipOf(req), +(process.env.LOGIN_RATE_LIMIT || 40), 15 * 60e3);
+    if (!rl.ok) return fail(res, 429, 'محاولات كثيرة، أعد المحاولة لاحقًا', { retry_after: rl.retryAfter });
+    const b = await readBody(req);
+    const id = String(b.identifier || '').trim().toLowerCase();
+    if (!id || !b.password) return fail(res, 400, 'أدخل اسم المستخدم وكلمة المرور');
+    const user = db.users.findOne((u) => u.username?.toLowerCase() === id || u.email?.toLowerCase() === id || u.phone === id);
+    if (!user || !A.verifyPassword(b.password, user.password_hash)) {
+      audit({ id: null, fullName: 'زائر' }, 'login_failed', 'user', user ? user.id : null, { ip: ipOf(req) });
+      return fail(res, 401, 'بيانات الدخول غير صحيحة');
+    }
+    if (user.status !== 'active') return fail(res, 403, user.status === 'pending' ? 'الحساب بانتظار موافقة الإدارة' : 'الحساب موقوف');
+    const tokens = A.issueSession(user, { ip: ipOf(req), ua: req.headers['user-agent'] });
+    audit(user, 'login', 'user', user.id, { ip: ipOf(req) });
+    return ok(res, { ...tokens, user: publicUser(user) });
+  }
+
+  if (p === '/api/auth/refresh' && m === 'POST') {
+    const b = await readBody(req);
+    const body = A.verifyToken(b.refresh_token);
+    if (!body || body.typ !== 'refresh') return fail(res, 401, 'رمز التحديث غير صالح');
+    // لا يكفي أن يكون التوقيع صحيحًا: يجب أن تكون الجلسة ما زالت قائمة في الخادم
+    // (يمنع إعادة استخدام رمز بعد تجديده أو بعد تسجيل الخروج)
+    if (!A.sessionExists(b.refresh_token)) return fail(res, 401, 'الجلسة منتهية أو أُبطلت، سجّل الدخول من جديد');
+    const user = db.users.byId(body.sub);
+    if (!user || user.status !== 'active') return fail(res, 401, 'المستخدم غير متاح');
+    A.revokeRefresh(b.refresh_token);
+    return ok(res, { ...A.issueSession(user, { ip: ipOf(req) }), user: publicUser(user) });
+  }
+
+  if (p === '/api/auth/logout' && m === 'POST') {
+    const b = await readBody(req);
+    if (b.refresh_token) A.revokeRefresh(b.refresh_token);
+    return ok(res, { message: 'تم تسجيل الخروج' });
+  }
+
+  if (p === '/api/auth/me' && m === 'GET') {
+    const user = requireAuth(req, res);
+    if (!user) return;
+    return ok(res, { user: publicUser(user) });
+  }
+
+  if (p === '/api/auth/change-password' && m === 'POST') {
+    const user = requireAuth(req, res); if (!user) return;
+    const b = await readBody(req);
+    if (!A.verifyPassword(b.current_password || '', user.password_hash)) return fail(res, 400, 'كلمة المرور الحالية غير صحيحة');
+    if (!b.new_password || String(b.new_password).length < 8) return fail(res, 400, 'كلمة المرور الجديدة قصيرة');
+    db.users.update(user.id, { password_hash: A.hashPassword(b.new_password), password_changed_at: nowIso() });
+    audit(user, 'change_password', 'user', user.id, { ip: ipOf(req) });
+    return ok(res, { message: 'تم تغيير كلمة المرور' });
+  }
+
+  // ---------- الشحنات ----------
+  if (p === '/api/shipments' && m === 'GET') {
+    const user = requireAuth(req, res); if (!user) return;
+    let rows = db.shipments.all().slice();
+    const status = q.get('status'), term = (q.get('q') || '').trim().toLowerCase();
+    if (status && status !== 'all') rows = rows.filter((s) => s.status === status);
+    if (term) rows = rows.filter((s) => [s.trackingNumber, s.referenceNumber, s.sender, s.receiver, s.goods, s.currentLocation, s.destPort]
+      .filter(Boolean).some((v) => String(v).toLowerCase().includes(term)));
+    const from = q.get('from'), to = q.get('to');
+    if (from) rows = rows.filter((s) => (s.creationDate || '') >= from);
+    if (to) rows = rows.filter((s) => (s.creationDate || '') <= to);
+    rows.sort((a, b) => String(b.creationDate || '').localeCompare(String(a.creationDate || '')));
+    const total = rows.length;
+    const page = Math.max(1, +(q.get('page') || 1)), limit = Math.min(200, Math.max(1, +(q.get('limit') || 50)));
+    rows = rows.slice((page - 1) * limit, page * limit);
+    return ok(res, { total, page, limit, items: rows });
+  }
+
+  if (p === '/api/shipments' && m === 'POST') {
+    const user = requireAuth(req, res, 'shipping_staff'); if (!user) return;
+    const b = await readBody(req);
+    if (!b.trackingNumber) return fail(res, 400, 'رقم الشحنة مطلوب');
+    if (db.shipments.findOne((s) => s.trackingNumber === b.trackingNumber)) return fail(res, 409, 'رقم الشحنة موجود مسبقًا');
+    let priced = null;
+    if (!b.shippingCost && (b.weight || b.service)) {
+      try {
+        const quote = pricing.quoteForShipment(b, user.role);
+        if (quote.matched) {
+          priced = { total: quote.total, rule: quote.rule, breakdown: quote.breakdown, quoted_at: nowIso() };
+        }
+      } catch (_) { /* التسعير لا يمنع إنشاء الشحنة */ }
+    }
+    const ship = db.shipments.insert({
+      ...b,
+      ...(priced ? { shippingCost: priced.total, price_quote: priced } : {}),
+      id: crypto.randomUUID(), created_by: user.id, demo: false, data_source: 'إدخال يدوي عبر النظام', created_at: nowIso()
+    });
+    broadcast('shipments', 'shipment_created', ship);
+    notify(user.id, 'تم إنشاء شحنة', `الشحنة ${ship.trackingNumber} أُضيفت بنجاح`, '#/shipment/' + ship.trackingNumber, 'shipment');
+    audit(user, 'create', 'shipment', ship.trackingNumber, { ip: ipOf(req) });
+    return ok(res, { shipment: ship }, 201);
+  }
+
+  const shipMatch = p.match(/^\/api\/shipments\/([^/]+)$/);
+  if (shipMatch) {
+    const code = decodeURIComponent(shipMatch[1]);
+    const ship = db.shipments.findOne((s) => s.trackingNumber === code);
+    if (!ship) return fail(res, 404, 'الشحنة غير موجودة');
+    if (m === 'GET') {
+      const user = requireAuth(req, res); if (!user) return;
+      return ok(res, { shipment: ship });
+    }
+    if (m === 'PATCH') {
+      const user = requireAuth(req, res, 'shipping_staff'); if (!user) return;
+      const b = await readBody(req);
+      const updated = db.shipments.update(ship.id, b);
+      broadcast('shipments', 'shipment_updated', updated);
+      audit(user, 'update', 'shipment', code, { details: Object.keys(b), ip: ipOf(req) });
+      return ok(res, { shipment: updated });
+    }
+    if (m === 'DELETE') {
+      const user = requireAuth(req, res, 'super_admin'); if (!user) return;
+      db.shipments.remove(ship.id);
+      broadcast('shipments', 'shipment_deleted', { trackingNumber: code });
+      audit(user, 'delete', 'shipment', code, { ip: ipOf(req) });
+      return ok(res, { message: 'تم الحذف' });
+    }
+  }
+
+  // ---------- المستخدمون (إدارة) ----------
+  if (p === '/api/users' && m === 'GET') {
+    const user = requireAuth(req, res, 'super_admin'); if (!user) return;
+    return ok(res, { items: db.users.all().map(publicUser) });
+  }
+  const userMatch = p.match(/^\/api\/users\/([^/]+)$/);
+  if (userMatch && (m === 'PATCH' || m === 'DELETE')) {
+    const admin = requireAuth(req, res, 'super_admin'); if (!admin) return;
+    const target = db.users.byId(userMatch[1]);
+    if (!target) return fail(res, 404, 'المستخدم غير موجود');
+    if (target.role === 'super_admin' && target.id !== admin.id) return fail(res, 403, 'لا يمكن تعديل مدير عام آخر');
+    if (m === 'PATCH') {
+      const b = await readBody(req);
+      const patch = {};
+      if (b.status && ['active', 'pending', 'inactive'].includes(b.status)) patch.status = b.status;
+      if (b.role && A.ROLE_RANK[b.role]) patch.role = b.role;
+      if (b.fullName) patch.fullName = b.fullName;
+      const updated = db.users.update(target.id, patch);
+      audit(admin, 'update_user', 'user', target.id, { details: patch, ip: ipOf(req) });
+      notify(target.id, 'تحديث الحساب', 'تم تحديث حالة/صلاحية حسابك', '#settings', 'user');
+      return ok(res, { user: publicUser(updated) });
+    }
+    if (m === 'DELETE') {
+      if (target.id === admin.id) return fail(res, 400, 'لا يمكن حذف حسابك');
+      db.users.remove(target.id);
+      audit(admin, 'delete_user', 'user', target.id, { ip: ipOf(req) });
+      return ok(res, { message: 'تم حذف المستخدم' });
+    }
+  }
+
+  // ---------- المفضلة ----------
+  if (p === '/api/favorites' && m === 'GET') {
+    const user = requireAuth(req, res); if (!user) return;
+    return ok(res, { items: db.favorites.find((f) => f.user_id === user.id) });
+  }
+  if (p === '/api/favorites' && m === 'POST') {
+    const user = requireAuth(req, res); if (!user) return;
+    const b = await readBody(req);
+    if (!b.item_type || !b.item_id) return fail(res, 400, 'نوع العنصر ومعرّفه مطلوبان');
+    const exists = db.favorites.findOne((f) => f.user_id === user.id && f.item_type === b.item_type && String(f.item_id) === String(b.item_id));
+    if (exists) return ok(res, { favorite: exists, duplicate: true });
+    const fav = db.favorites.insert({ id: crypto.randomUUID(), user_id: user.id, item_type: b.item_type, item_id: String(b.item_id), meta: b.meta || null, created_at: nowIso() });
+    return ok(res, { favorite: fav }, 201);
+  }
+  if (p.startsWith('/api/favorites/') && m === 'DELETE') {
+    const user = requireAuth(req, res); if (!user) return;
+    const [type, ...rest] = decodeURIComponent(p.replace('/api/favorites/', '')).split('/');
+    const id = rest.join('/');
+    const fav = db.favorites.findOne((f) => f.user_id === user.id && f.item_type === type && f.item_id === id);
+    if (!fav) return fail(res, 404, 'غير موجود في المفضلة');
+    db.favorites.remove(fav.id);
+    return ok(res, { message: 'تم الحذف من المفضلة' });
+  }
+
+  // ---------- التقييمات ----------
+  if (p === '/api/reviews' && m === 'GET') {
+    const type = q.get('item_type'), id = q.get('item_id');
+    let rows = db.reviews.all().slice();
+    if (type) rows = rows.filter((r) => r.item_type === type);
+    if (id) rows = rows.filter((r) => r.item_id === String(id));
+    const avg = rows.length ? +(rows.reduce((s, r) => s + r.rating, 0) / rows.length).toFixed(2) : null;
+    return ok(res, { items: rows.sort((a, b) => b.created_at.localeCompare(a.created_at)), average: avg, count: rows.length });
+  }
+  if (p === '/api/reviews' && m === 'POST') {
+    const user = requireAuth(req, res); if (!user) return;
+    const b = await readBody(req);
+    const rating = Math.round(Number(b.rating));
+    if (!b.item_type || !b.item_id) return fail(res, 400, 'العنصر مطلوب');
+    if (!(rating >= 1 && rating <= 5)) return fail(res, 400, 'التقييم من 1 إلى 5');
+    const dup = db.reviews.findOne((r) => r.user_id === user.id && r.item_type === b.item_type && r.item_id === String(b.item_id));
+    if (dup) return fail(res, 409, 'لقد قيّمت هذا العنصر مسبقًا');
+    const rev = db.reviews.insert({
+      id: crypto.randomUUID(), user_id: user.id, user_name: user.fullName,
+      item_type: b.item_type, item_id: String(b.item_id), rating,
+      comment: String(b.comment || '').slice(0, 1000), created_at: nowIso()
+    });
+    audit(user, 'review', b.item_type, b.item_id, { details: { rating }, ip: ipOf(req) });
+    return ok(res, { review: rev }, 201);
+  }
+
+  // ---------- الإشعارات ----------
+  if (p === '/api/notifications' && m === 'GET') {
+    const user = requireAuth(req, res); if (!user) return;
+    const items = db.notifications.find((n) => n.user_id === user.id).sort((a, b) => b.created_at.localeCompare(a.created_at)).slice(0, 100);
+    return ok(res, { items, unread: items.filter((n) => !n.read_at).length });
+  }
+  if (p === '/api/notifications/read' && m === 'POST') {
+    const user = requireAuth(req, res); if (!user) return;
+    const b = await readBody(req);
+    let n = 0;
+    for (const item of db.notifications.find((x) => x.user_id === user.id)) {
+      if (!item.read_at && (!b.id || item.id === b.id)) { db.notifications.update(item.id, { read_at: nowIso() }); n++; }
+    }
+    return ok(res, { marked: n });
+  }
+
+  // ---------- البيانات الحية ----------
+  const liveMatch = p.match(/^\/api\/live\/(fx|weather|news|crypto|macro)$/);
+  if (liveMatch && m === 'GET') {
+    try {
+      const data = await live.get(liveMatch[1]);
+      return ok(res, { kind: liveMatch[1], ...data });
+    } catch (e) {
+      return fail(res, e.status || 502, e.message);
+    }
+  }
+  if (p === '/api/live/ports' && m === 'GET') return ok(res, { ports: live.PORTS });
+
+  // ---------- البث اللحظي ----------
+  // ========================================================================
+  // ================== المرحلة 3: تتبّع الزوار + الإشعارات + الإدارة ==================
+  // ========================================================================
+
+  // ---------- تتبّع زيارة (عام، بلا مصادقة) ----------
+  if (p === '/api/track/visit' && m === 'POST') {
+    const b = await readBody(req, 16 * 1024);
+    const who = A.userFromRequest(req);
+    const r = visitors.track({
+      visitor_id: b.visitor_id, path: b.path, referrer: b.referrer, screen: b.screen,
+      ua: req.headers['user-agent'], ip: ipOf(req), user_id: who ? who.id : null
+    });
+    return ok(res, { visitor_id: r.visitor.id, blocked: !!r.visitor.blocked, created: !!r.created });
+  }
+  if (p === '/api/track/ping' && m === 'POST') {
+    const b = await readBody(req, 4 * 1024);
+    const who = A.userFromRequest(req);
+    const r = visitors.track({ visitor_id: b.visitor_id, path: b.path || '/ping', ua: req.headers['user-agent'], ip: ipOf(req), user_id: who ? who.id : null });
+    return ok(res, { ok: true, blocked: !!r.visitor.blocked });
+  }
+
+  // ---------- إشعارات الويب (Web Push) ----------
+  if (p === '/api/push/public-key' && m === 'GET') {
+    return ok(res, { public_key: push.publicVapidKey(), subject: process.env.VAPID_SUBJECT || 'mailto:admin@almasar.local' });
+  }
+  if (p === '/api/push/subscribe' && m === 'POST') {
+    const user = requireAuth(req, res, 'user'); if (!user) return;
+    const b = await readBody(req, 16 * 1024);
+    try {
+      const sub = push.saveSubscription(user, { ...b, ua: req.headers['user-agent'] });
+      audit(user, 'push_subscribe', 'push_subscription', sub.id, { ip: ipOf(req) });
+      return ok(res, { subscription: { id: sub.id, platform: sub.platform } });
+    } catch (e) { return fail(res, e.status || 400, e.message); }
+  }
+  if (p === '/api/push/unsubscribe' && m === 'POST') {
+    const user = requireAuth(req, res, 'user'); if (!user) return;
+    const b = await readBody(req, 8 * 1024);
+    const done = push.removeSubscription(b.endpoint);
+    return ok(res, { removed: done });
+  }
+  if (p === '/api/push/test' && m === 'POST') {
+    const user = requireAuth(req, res, 'user'); if (!user) return;
+    const title = 'إشعار تجريبي من المسار اللوجستي';
+    const body = 'إن وصل هذا الإشعار إلى جهازك فقناة الدفع تعمل ✅';
+    notify(user.id, title, body, '#settings', 'test');
+    const subs = db.push_subscriptions.find((s) => s.user_id === user.id && s.active);
+    let sent = 0, failed = 0; const errors = [];
+    for (const sub of subs) {
+      try { await push.sendWebPush(sub, { title, body, url: '/' }); sent++; }
+      catch (e) { failed++; errors.push(String(e.message).slice(0, 160)); }
+    }
+    return ok(res, { subscriptions: subs.length, sent, failed, errors: errors.slice(0, 3) });
+  }
+  if (p === '/api/push/device' && m === 'POST') {
+    const user = requireAuth(req, res, 'user'); if (!user) return;
+    const b = await readBody(req, 8 * 1024);
+    try { return ok(res, { device: push.saveDeviceToken(user, b) }); }
+    catch (e) { return fail(res, e.status || 400, e.message); }
+  }
+  if (p === '/api/push/status' && m === 'GET') {
+    const user = requireAuth(req, res, 'user'); if (!user) return;
+    return ok(res, {
+      channels: push.channelsStatus(),
+      my_subscriptions: db.push_subscriptions.find((s) => s.user_id === user.id).length,
+      my_devices: db.device_tokens.find((d) => d.user_id === user.id).length
+    });
+  }
+
+  // ---------- لوحة الإدارة: المستخدمون ----------
+  if (p === '/api/admin/users' && m === 'GET') {
+    const user = requireAuth(req, res, 'branch_manager'); if (!user) return;
+    return ok(res, admin.listUsers({
+      role: q.get('role') || null, status: q.get('status') || null, kind: q.get('kind') || null,
+      q: q.get('q') || null, page: +(q.get('page') || 1), limit: Math.min(100, +(q.get('limit') || 50))
+    }));
+  }
+  if (p === '/api/admin/users' && m === 'POST') {
+    const user = requireAuth(req, res, 'branch_manager'); if (!user) return;
+    const b = await readBody(req);
+    try { return ok(res, { user: admin.createUser(b, user) }, 201); }
+    catch (e) { return fail(res, e.status || 400, e.message); }
+  }
+  const adminUserMatch = p.match(/^\/api\/admin\/users\/([^/]+)$/);
+  if (adminUserMatch && m === 'GET') {
+    const user = requireAuth(req, res, 'branch_manager'); if (!user) return;
+    try { return ok(res, admin.userDetail(adminUserMatch[1])); }
+    catch (e) { return fail(res, e.status || 404, e.message); }
+  }
+  if (adminUserMatch && m === 'PATCH') {
+    const user = requireAuth(req, res, 'branch_manager'); if (!user) return;
+    const b = await readBody(req);
+    try { return ok(res, { user: admin.updateUser(adminUserMatch[1], b, user) }); }
+    catch (e) { return fail(res, e.status || 400, e.message); }
+  }
+  if (adminUserMatch && m === 'DELETE') {
+    const user = requireAuth(req, res, 'super_admin'); if (!user) return;
+    try { return ok(res, admin.deleteUser(adminUserMatch[1], user)); }
+    catch (e) { return fail(res, e.status || 400, e.message); }
+  }
+  const adminResetMatch = p.match(/^\/api\/admin\/users\/([^/]+)\/reset-password$/);
+  if (adminResetMatch && m === 'POST') {
+    const user = requireAuth(req, res, 'super_admin'); if (!user) return;
+    const b = await readBody(req, 8 * 1024);
+    try { return ok(res, admin.resetPassword(adminResetMatch[1], user, b.password || null)); }
+    catch (e) { return fail(res, e.status || 400, e.message); }
+  }
+  if (p === '/api/admin/clients' && m === 'GET') {
+    const user = requireAuth(req, res, 'branch_manager'); if (!user) return;
+    return ok(res, admin.listClients({ q: q.get('q') || null, status: q.get('status') || null, page: +(q.get('page') || 1), limit: Math.min(100, +(q.get('limit') || 50)) }));
+  }
+
+  // ---------- لوحة الإدارة: الزوار ----------
+  if (p === '/api/admin/visitors' && m === 'GET') {
+    const user = requireAuth(req, res, 'branch_manager'); if (!user) return;
+    return ok(res, visitors.list({ q: q.get('q') || null, page: +(q.get('page') || 1), limit: Math.min(200, +(q.get('limit') || 50)), device: q.get('device') || null }));
+  }
+  if (p === '/api/admin/visitors/stats' && m === 'GET') {
+    const user = requireAuth(req, res, 'branch_manager'); if (!user) return;
+    return ok(res, visitors.stats(+(q.get('days') || 14)));
+  }
+  const visitorBlockMatch = p.match(/^\/api\/admin\/visitors\/([^/]+)\/block$/);
+  if (visitorBlockMatch && m === 'POST') {
+    const user = requireAuth(req, res, 'branch_manager'); if (!user) return;
+    const b = await readBody(req, 4 * 1024);
+    try {
+      const v = visitors.setBlocked(visitorBlockMatch[1], b.blocked !== false);
+      audit(user, b.blocked === false ? 'admin_visitor_unblock' : 'admin_visitor_block', 'visitor', v.id, { ip: ipOf(req) });
+      return ok(res, { visitor: v });
+    } catch (e) { return fail(res, e.status || 400, e.message); }
+  }
+
+  // ---------- لوحة الإدارة: حملات الإشعارات ----------
+  if (p === '/api/admin/notifications' && m === 'POST') {
+    const user = requireAuth(req, res, 'branch_manager'); if (!user) return;
+    const b = await readBody(req, 64 * 1024);
+    try {
+      const out = await admin.sendCampaign(b, user, { notify });
+      return ok(res, out, 201);
+    } catch (e) { return fail(res, e.status || 400, e.message); }
+  }
+  if (p === '/api/admin/notifications' && m === 'GET') {
+    const user = requireAuth(req, res, 'branch_manager'); if (!user) return;
+    return ok(res, admin.listCampaigns({ page: +(q.get('page') || 1), limit: Math.min(100, +(q.get('limit') || 30)) }));
+  }
+  if (p === '/api/admin/notifications/log' && m === 'GET') {
+    const user = requireAuth(req, res, 'branch_manager'); if (!user) return;
+    return ok(res, { items: db.notify_log.all().slice().reverse().slice(0, 200) });
+  }
+
+  // ========================================================================
+  // ================== المرحلة 4: التسعير · التقارير · التتبّع · التصدير ==================
+  // ========================================================================
+
+  // ---------- قواعد التسعير ----------
+  if (p === '/api/pricing/rules' && m === 'GET') {
+    const user = requireAuth(req, res, 'shipping_staff'); if (!user) return;
+    return ok(res, { items: pricing.list({ active: q.get('active') === null ? null : q.get('active') === 'true', q: q.get('q') || null }) });
+  }
+  if (p === '/api/pricing/rules' && m === 'POST') {
+    const user = requireAuth(req, res, 'branch_manager'); if (!user) return;
+    const b = await readBody(req);
+    try { return ok(res, { rule: pricing.create(b, user) }, 201); }
+    catch (e) { return fail(res, e.status || 400, e.message); }
+  }
+  const pricingMatch = p.match(/^\/api\/pricing\/rules\/([^/]+)$/);
+  if (pricingMatch && m === 'PATCH') {
+    const user = requireAuth(req, res, 'branch_manager'); if (!user) return;
+    const b = await readBody(req);
+    try { return ok(res, { rule: pricing.update(pricingMatch[1], b, user) }); }
+    catch (e) { return fail(res, e.status || 400, e.message); }
+  }
+  if (pricingMatch && m === 'DELETE') {
+    const user = requireAuth(req, res, 'super_admin'); if (!user) return;
+    try { return ok(res, pricing.remove(pricingMatch[1], user)); }
+    catch (e) { return fail(res, e.status || 400, e.message); }
+  }
+  if (p === '/api/pricing/quote' && m === 'POST') {
+    const user = requireAuth(req, res, 'user'); if (!user) return;
+    const b = await readBody(req, 16 * 1024);
+    try { return ok(res, { quote: pricing.quote({ ...b, client_role: b.client_role || user.role }) }); }
+    catch (e) { return fail(res, e.status || 400, e.message); }
+  }
+  if (p === '/api/pricing/services' && m === 'GET') {
+    return ok(res, { services: pricing.SERVICES, labels: pricing.SERVICE_LABEL });
+  }
+
+  // ---------- المساعد الذكي: معاينة عامة للحالة (بلا بيانات) ----------
+  if (p === '/api/assistant/public' && m === 'GET') {
+    const st = assistant.status();
+    return ok(res, { status: { ai_ready: st.ai_ready, engine: st.engine, active_name: st.active_name, enabled: st.enabled } });
+  }
+
+  // ---------- المساعد الذكي (المرحلة 5) ----------
+  if (p === '/api/assistant/status' && m === 'GET') {
+    const user = requireAuth(req, res, 'user'); if (!user) return;
+    return ok(res, { status: assistant.status() });
+  }
+  if (p === '/api/assistant/chat' && m === 'POST') {
+    const user = requireAuth(req, res, 'user'); if (!user) return;
+    const rl = A.rateLimit('assistant:' + user.id, 20, 60000);
+    if (!rl.ok) return fail(res, 429, `هدّئ قليلًا — جرّب بعد ${rl.retryAfter} ثانية`, { retry_after: rl.retryAfter });
+    const b = await readBody(req, 32 * 1024);
+    try {
+      const r = await assistant.chat({ user, message: b.message, conversation_id: b.conversation_id || null, channel: b.channel || 'web' });
+      broadcast('assistant:' + user.id, 'assistant_reply', { at: nowIso(), engine: r.engine, conversation_id: r.conversation_id });
+      return ok(res, r);
+    } catch (e) { return fail(res, e.status || 500, e.message, e.quota ? { quota: e.quota } : {}); }
+  }
+  if (p === '/api/assistant/conversations' && m === 'GET') {
+    const user = requireAuth(req, res, 'user'); if (!user) return;
+    return ok(res, { items: assistant.myConversations(user) });
+  }
+  if (p === '/api/assistant/conversations' && m === 'POST') {
+    const user = requireAuth(req, res, 'user'); if (!user) return;
+    const b = await readBody(req, 8 * 1024);
+    try { return ok(res, assistant.chat({ user, message: b.message || 'مرحبًا', conversation_id: null, channel: 'web' })); }
+    catch (e) { return fail(res, e.status || 500, e.message); }
+  }
+  const asstConv = p.match(/^\/api\/assistant\/conversations\/([^/]+)$/);
+  if (asstConv && m === 'GET') {
+    const user = requireAuth(req, res, 'user'); if (!user) return;
+    try { return ok(res, { conversation: assistant.conversation(user, asstConv[1]) }); }
+    catch (e) { return fail(res, e.status || 400, e.message); }
+  }
+  if (p === '/api/assistant/feedback' && m === 'POST') {
+    const user = requireAuth(req, res, 'user'); if (!user) return;
+    const b = await readBody(req, 8 * 1024);
+    try { return ok(res, assistant.feedback(b.message_id, b.value === undefined ? null : b.value, user)); }
+    catch (e) { return fail(res, e.status || 400, e.message); }
+  }
+  // إدارة المساعد
+  if (p === '/api/admin/assistant/status' && m === 'GET') {
+    const user = requireAuth(req, res, 'branch_manager'); if (!user) return;
+    return ok(res, { status: assistant.status() });
+  }
+  if (p === '/api/admin/assistant/settings' && m === 'PATCH') {
+    const user = requireAuth(req, res, 'super_admin'); if (!user) return;
+    const b = await readBody(req, 8 * 1024);
+    try { return ok(res, { settings: assistant.saveSettings(b, user), status: assistant.status() }); }
+    catch (e) { return fail(res, e.status || 400, e.message); }
+  }
+  if (p === '/api/admin/assistant/stats' && m === 'GET') {
+    const user = requireAuth(req, res, 'branch_manager'); if (!user) return;
+    return ok(res, { stats: assistant.stats({ days: Math.min(180, +(q.get('days') || 30)) }) });
+  }
+  if (p === '/api/admin/assistant/conversations' && m === 'GET') {
+    const user = requireAuth(req, res, 'branch_manager'); if (!user) return;
+    return ok(res, assistant.adminConversations({
+      page: Math.max(1, +(q.get('page') || 1)), limit: Math.min(100, +(q.get('limit') || 20)),
+      engine: q.get('engine') || null, q: q.get('q') || null
+    }));
+  }
+  const asstAdminConv = p.match(/^\/api\/admin\/assistant\/conversations\/([^/]+)$/);
+  if (asstAdminConv && m === 'GET') {
+    const user = requireAuth(req, res, 'branch_manager'); if (!user) return;
+    try { return ok(res, { conversation: assistant.conversation(user, asstAdminConv[1], { isAdmin: true }) }); }
+    catch (e) { return fail(res, e.status || 400, e.message); }
+  }
+  if (p === '/api/admin/assistant/test' && m === 'POST') {
+    const user = requireAuth(req, res, 'branch_manager'); if (!user) return;
+    const b = await readBody(req, 16 * 1024);
+    try { return ok(res, await assistant.chat({ user, message: String(b.message || 'اختبار'), conversation_id: null, channel: 'admin_test' })); }
+    catch (e) { return fail(res, e.status || 500, e.message); }
+  }
+  if (p === '/api/admin/assistant/faq' && m === 'GET') {
+    const user = requireAuth(req, res, 'branch_manager'); if (!user) return;
+    return ok(res, { items: assistant.listFaq({ q: q.get('q') || null, active: q.get('active') }) });
+  }
+  if (p === '/api/admin/assistant/faq' && m === 'POST') {
+    const user = requireAuth(req, res, 'branch_manager'); if (!user) return;
+    const b = await readBody(req, 16 * 1024);
+    try { return ok(res, { item: assistant.createFaq(b, user) }, 201); }
+    catch (e) { return fail(res, e.status || 400, e.message); }
+  }
+  const faqMatch = p.match(/^\/api\/admin\/assistant\/faq\/([^/]+)$/);
+  if (faqMatch && m === 'PATCH') {
+    const user = requireAuth(req, res, 'branch_manager'); if (!user) return;
+    const b = await readBody(req, 16 * 1024);
+    try { return ok(res, { item: assistant.updateFaq(faqMatch[1], b, user) }); }
+    catch (e) { return fail(res, e.status || 400, e.message); }
+  }
+  if (faqMatch && m === 'DELETE') {
+    const user = requireAuth(req, res, 'super_admin'); if (!user) return;
+    try { return ok(res, assistant.removeFaq(faqMatch[1], user)); }
+    catch (e) { return fail(res, e.status || 400, e.message); }
+  }
+
+  // ---------- التقارير المالية ----------
+  if (p === '/api/admin/reports/summary' && m === 'GET') {
+    const user = requireAuth(req, res, 'branch_manager'); if (!user) return;
+    return ok(res, reports.summary({ days: +(q.get('days') || 30) }));
+  }
+  if (p === '/api/admin/reports/series' && m === 'GET') {
+    const user = requireAuth(req, res, 'branch_manager'); if (!user) return;
+    return ok(res, { series: reports.series({ days: Math.min(180, +(q.get('days') || 30)) }) });
+  }
+  if (p === '/api/admin/reports/top-clients' && m === 'GET') {
+    const user = requireAuth(req, res, 'branch_manager'); if (!user) return;
+    return ok(res, { items: reports.topClients({ limit: Math.min(50, +(q.get('limit') || 10)), by: q.get('by') || 'paid' }) });
+  }
+  if (p === '/api/admin/reports/export' && m === 'GET') {
+    const user = requireAuth(req, res, 'branch_manager'); if (!user) return;
+    const type = q.get('type') || 'entries';
+    let body;
+    try { body = reports.csv(type); } catch (e) { return fail(res, e.status || 400, e.message); }
+    audit(user, 'report_export', 'report', type, { ip: ipOf(req) });
+    res.writeHead(200, {
+      'content-type': 'text/csv; charset=utf-8',
+      'content-disposition': `attachment; filename="masar-${type}-${new Date().toISOString().slice(0, 10)}.csv"`,
+      'content-length': Buffer.byteLength(body),
+      'access-control-allow-origin': '*'
+    });
+    return res.end(body);
+  }
+
+  // ---------- سجل التدقيق المتقدّم ----------
+  if (p === '/api/admin/audit/query' && m === 'GET') {
+    const user = requireAuth(req, res, 'branch_manager'); if (!user) return;
+    return ok(res, reports.auditQuery({
+      action: q.get('action') || null, actor: q.get('actor') || null, entity: q.get('entity') || null,
+      from: q.get('from') || null, to: q.get('to') || null, q: q.get('q') || null,
+      page: +(q.get('page') || 1), limit: Math.min(200, +(q.get('limit') || 50))
+    }));
+  }
+
+  // ---------- شركات الشحن والتتبّع ----------
+  if (p === '/api/admin/carriers' && m === 'GET') {
+    const user = requireAuth(req, res, 'shipping_staff'); if (!user) return;
+    return ok(res, { providers: carriers.status(), active: carriers.activeProvider() });
+  }
+  if (p === '/api/admin/carriers/events' && m === 'POST') {
+    const user = requireAuth(req, res, 'shipping_staff'); if (!user) return;
+    const b = await readBody(req, 16 * 1024);
+    try { return ok(res, { event: carriers.addManualEvent(b, user) }, 201); }
+    catch (e) { return fail(res, e.status || 400, e.message); }
+  }
+  if (p === '/api/admin/carriers/track' && m === 'POST') {
+    const user = requireAuth(req, res, 'shipping_staff'); if (!user) return;
+    const b = await readBody(req, 8 * 1024);
+    try { return ok(res, { result: await carriers.track(b.tracking_number, { provider: b.provider || null }) }); }
+    catch (e) { return fail(res, e.status || 400, e.message); }
+  }
+
+  // ---------- لوحة الإدارة: حالة الخادم والنسخ الاحتياطي ----------
+  if (p === '/api/admin/server' && m === 'GET') {
+    const user = requireAuth(req, res, 'branch_manager'); if (!user) return;
+    return ok(res, admin.serverStatus({ uptime_s: Math.round(process.uptime()) }));
+  }
+  if (p === '/api/admin/backup' && m === 'GET') {
+    const user = requireAuth(req, res, 'super_admin'); if (!user) return;
+    const bundle = admin.backupBundle();
+    const body = JSON.stringify(bundle, null, 1);
+    audit(user, 'admin_backup', 'system', null, { ip: ipOf(req), details: { collections: bundle.collections } });
+    res.writeHead(200, {
+      'content-type': 'application/json; charset=utf-8',
+      'content-disposition': `attachment; filename="masar-backup-${new Date().toISOString().slice(0, 10)}.json"`,
+      'content-length': Buffer.byteLength(body),
+      'access-control-allow-origin': '*'
+    });
+    return res.end(body);
+  }
+
+  if (p === '/api/stream' && m === 'GET') {
+    const user = A.userFromRequest(req);
+    if (!user) return fail(res, 401, 'مطلوب تسجيل الدخول للبث');
+    res.writeHead(200, {
+      'content-type': 'text/event-stream; charset=utf-8',
+      'cache-control': 'no-cache, no-transform',
+      connection: 'keep-alive',
+      'x-accel-buffering': 'no'
+    });
+    const topics = (q.get('topics') || 'shipments,notifications:' + user.id).split(',').map((s) => s.trim()).filter(Boolean);
+    const client = { res, topics, user: user.id };
+    streams.add(client);
+    res.write(`event: hello\ndata: ${JSON.stringify({ topics, at: nowIso(), user: user.id })}\n\n`);
+    req.on('close', () => streams.delete(client));
+    return; // لا نُغلق الاتصال
+  }
+
+  // ---------- إدارة: سجل التدقيق والاستيراد ----------
+  if (p === '/api/admin/audit' && m === 'GET') {
+    const user = requireAuth(req, res, 'super_admin'); if (!user) return;
+    return ok(res, { items: db.audit.all().slice().reverse().slice(0, 200) });
+  }
+  if (p === '/api/admin/stats' && m === 'GET') {
+    const user = requireAuth(req, res, 'super_admin'); if (!user) return;
+    const ships = db.shipments.all();
+    return ok(res, {
+      users: db.users.all().length,
+      pending: db.users.find((u) => u.status === 'pending').length,
+      shipments: ships.length,
+      demo_shipments: ships.filter((s) => s.demo).length,
+      favorites: db.favorites.all().length,
+      reviews: db.reviews.all().length,
+      notifications: db.notifications.all().length,
+      audit_events: db.audit.all().length
+    });
+  }
+  if (p === '/api/admin/import' && m === 'POST') {
+    const user = requireAuth(req, res, 'super_admin'); if (!user) return;
+    const b = await readBody(req, 8 * 1024 * 1024);
+    const out = { users: 0, shipments: 0, warehouses: 0 };
+    if (Array.isArray(b.shipments)) {
+      for (const s of b.shipments) {
+        if (!s.trackingNumber) continue;
+        if (db.shipments.findOne((x) => x.trackingNumber === s.trackingNumber)) continue;
+        db.shipments.insert({ ...s, id: crypto.randomUUID(), demo: false, data_source: 'مستورد من النظام السابق' });
+        out.shipments++;
+      }
+    }
+    if (Array.isArray(b.systemUsers)) {
+      for (const u of b.systemUsers) {
+        if (!u.username || !u.password) continue; // كلمة مرور قديمة بنص صريح → لا تُنقل، يُطلب إعادة تعيينها
+        if (db.users.findOne((x) => x.username === u.username)) continue;
+        db.users.insert({
+          id: crypto.randomUUID(), fullName: u.fullName || u.name || u.username, email: u.email || '',
+          phone: u.phone || '', username: u.username, password_hash: A.hashPassword(u.password),
+          role: ['super_admin', 'branch_manager', 'warehouse_manager', 'shipping_staff', 'support_staff', 'agent', 'user'].includes(u.role) ? u.role : 'user',
+          status: 'active', migrated_from: 'legacy-local', created_at: nowIso()
+        });
+        out.users++;
+      }
+    }
+    audit(user, 'import', 'system', null, { details: out, ip: ipOf(req) });
+    return ok(res, out);
+  }
+
+  // ============================ المزادات (المرحلة 2) ============================
+  if (p === '/api/auctions/mine/bids' && m === 'GET') {
+    const user = requireAuth(req, res); if (!user) return;
+    const mine = db.bids.find((b) => b.user_id === user.id).sort((a, b) => b.created_at.localeCompare(a.created_at)).slice(0, 100);
+    const items = mine.map((b) => {
+      const a = db.auctions.byId(b.auction_id);
+      return { ...b, amount: auctions.toMoney(b.amount), auction: a ? auctions.publicAuction(a, user) : null };
+    });
+    return ok(res, { items });
+  }
+
+  if (p === '/api/auctions' && m === 'GET') {
+    const user = A.userFromRequest(req);
+    const data = auctions.list({
+      status: q.get('status') || 'active', category: q.get('category') || null,
+      q: q.get('q') || null, sort: q.get('sort') || 'ending',
+      page: +(q.get('page') || 1), limit: Math.min(60, +(q.get('limit') || 30)), viewer: user
+    });
+    return ok(res, data);
+  }
+
+  if (p === '/api/auctions' && m === 'POST') {
+    const user = requireAuth(req, res, 'shipping_staff'); if (!user) return;
+    const b = await readBody(req);
+    try {
+      const a = auctions.create(b, user, { demo: !!b.demo });
+      broadcast('auctions', 'auction_created', auctions.publicAuction(a, null));
+      audit(user, 'auction_create_route', 'auction', a.id, { ip: ipOf(req) });
+      return ok(res, { auction: auctions.publicAuction(a, user) }, 201);
+    } catch (e) { return fail(res, e.status || 400, e.message); }
+  }
+
+  const aucIdMatch = p.match(/^\/api\/auctions\/([^/]+)$/);
+  if (aucIdMatch && m === 'GET') {
+    const user = A.userFromRequest(req);
+    try { return ok(res, { auction: auctions.detail(aucIdMatch[1], user) }); }
+    catch (e) { return fail(res, e.status || 404, e.message); }
+  }
+
+  const bidMatch = p.match(/^\/api\/auctions\/([^/]+)\/bids$/);
+  if (bidMatch && m === 'POST') {
+    const user = requireAuth(req, res); if (!user) return;
+    const b = await readBody(req);
+    try {
+      const result = auctions.placeBid(bidMatch[1], user, b.amount, ipOf(req));
+      const payload = { auction_id: bidMatch[1], current_bid: result.auction.current_bid, bid_count: result.auction.bid_count, min_next_bid: result.auction.min_next_bid, ends_at: result.auction.ends_at, extended: result.extended };
+      broadcast('auctions', 'auction_bid', payload);
+      broadcast('auction:' + bidMatch[1], 'auction_bid', payload);
+      if (result.previous && result.previous.id) {
+        notify(result.previous.id, 'تم تجاوز مزايدتك', `مزاد «${result.auction.title}» — السعر الآن ${result.auction.current_bid} $`, '#/auction/' + bidMatch[1], 'auction');
+      }
+      return ok(res, { auction: result.auction, bid: result.bid, extended: result.extended, balance: wallet.balance(user.id) });
+    } catch (e) { return fail(res, e.status || 400, e.message, e.min_next ? { min_next: e.min_next } : {}); }
+  }
+
+  const cancelMatch = p.match(/^\/api\/auctions\/([^/]+)\/cancel$/);
+  if (cancelMatch && m === 'POST') {
+    const user = requireAuth(req, res); if (!user) return;
+    try {
+      const a = auctions.cancel(cancelMatch[1], user);
+      broadcast('auctions', 'auction_closed', { id: a.id, outcome: 'cancelled' });
+      return ok(res, { auction: auctions.publicAuction(a, user) });
+    } catch (e) { return fail(res, e.status || 400, e.message); }
+  }
+
+  const watchMatch = p.match(/^\/api\/auctions\/([^/]+)\/watch$/);
+  if (watchMatch && (m === 'POST' || m === 'DELETE')) {
+    const user = requireAuth(req, res); if (!user) return;
+    const a = db.auctions.byId(watchMatch[1]);
+    if (!a) return fail(res, 404, 'المزاد غير موجود');
+    const existing = db.favorites.findOne((f) => f.user_id === user.id && f.item_type === 'auction' && f.item_id === a.id);
+    if (m === 'POST') {
+      if (!existing) db.favorites.insert({ id: crypto.randomUUID(), user_id: user.id, item_type: 'auction', item_id: a.id, meta: { title: a.title }, created_at: nowIso() });
+      return ok(res, { watching: true });
+    }
+    if (existing) db.favorites.remove(existing.id);
+    return ok(res, { watching: false });
+  }
+
+  // ============================ المحفظة (المرحلة 2) ============================
+  if (p === '/api/wallet/me' && m === 'GET') {
+    const user = requireAuth(req, res); if (!user) return;
+    const b = wallet.balance(user.id);
+    return ok(res, { balance: { available: +(b.available_cents / 100).toFixed(2), held: +(b.held_cents / 100).toFixed(2), currency: b.currency } });
+  }
+  if (p === '/api/wallet/entries' && m === 'GET') {
+    const user = requireAuth(req, res); if (!user) return;
+    const items = wallet.entries(user.id, 100).map((e) => ({ ...e, amount: +(e.amount_cents / 100).toFixed(2) }));
+    return ok(res, { items });
+  }
+  if (p === '/api/wallet/demo-credit' && m === 'POST') {
+    const user = requireAuth(req, res); if (!user) return;
+    if (process.env.DEMO_MODE === 'false') return fail(res, 403, 'الرصيد التجريبي معطّل في هذه البيئة');
+    const b = await readBody(req);
+    const amount = Math.min(50000, Math.max(1, Number(b.amount) || 5000));
+    const r = wallet.credit(user.id, Math.round(amount * 100), { ref_type: 'demo_credit', note: 'رصيد تجريبي — بيئة عرض (ليس مالًا حقيقيًا)', demo: true });
+    audit(user, 'demo_credit', 'wallet', user.id, { details: { amount }, ip: ipOf(req) });
+    return ok(res, { balance: { available: +(r.account.available_cents / 100).toFixed(2), held: +(r.account.held_cents / 100).toFixed(2) }, demo: true, warning: 'هذا رصيد تجريبي للعرض فقط ولا يمثل مالًا حقيقيًا' });
+  }
+  if (p === '/api/admin/credit' && m === 'POST') {
+    const admin = requireAuth(req, res, 'super_admin'); if (!admin) return;
+    const b = await readBody(req);
+    const target = db.users.byId(b.user_id);
+    if (!target) return fail(res, 404, 'المستخدم غير موجود');
+    const amount = Math.round(Number(b.amount) * 100);
+    if (!(amount > 0)) return fail(res, 400, 'المبلغ غير صالح');
+    const r = wallet.credit(target.id, amount, { ref_type: 'admin_credit', note: b.note || 'شحن إداري', demo: !!b.demo });
+    audit(admin, 'wallet_credit', 'user', target.id, { details: { amount: b.amount, note: b.note }, ip: ipOf(req) });
+    notify(target.id, 'شحن رصيد', `تم شحن محفظتك بمبلغ ${b.amount} $`, null, 'wallet');
+    return ok(res, { user_id: target.id, balance: { available: +(r.account.available_cents / 100).toFixed(2), held: +(r.account.held_cents / 100).toFixed(2) } });
+  }
+  if (p === '/api/admin/wallet' && m === 'GET') {
+    const admin = requireAuth(req, res, 'super_admin'); if (!admin) return;
+    return ok(res, { accounts: db.wallet_accounts.all().map((a) => ({ user_id: a.user_id, available: +(a.available_cents / 100).toFixed(2), held: +(a.held_cents / 100).toFixed(2) })) });
+  }
+
+  return fail(res, 404, 'المسار غير موجود: ' + p);
+}
+
+// ============================ الملفات الثابتة ============================
+const MIME = { '.html': 'text/html; charset=utf-8', '.js': 'application/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8', '.json': 'application/json; charset=utf-8', '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.svg': 'image/svg+xml', '.ico': 'image/x-icon', '.woff2': 'font/woff2' };
+
+function serveStatic(req, res, pathname) {
+  let rel = decodeURIComponent(pathname);
+  if (rel === '/' || rel === '') rel = '/index.html';
+  const file = path.join(APP_DIR, path.normalize(rel).replace(/^(\.\.[/\\])+/, ''));
+  if (!file.startsWith(APP_DIR)) { res.writeHead(403); return res.end('Forbidden'); }
+  fs.stat(file, (err, st) => {
+    if (err || !st.isFile()) {
+      // توجيه أي مسار غير معروف إلى التطبيق (روابط عميقة لاحقًا)
+      const fallback = path.join(APP_DIR, 'index.html');
+      return fs.readFile(fallback, (e2, buf) => {
+        if (e2) { res.writeHead(404); return res.end('Not found'); }
+        res.writeHead(200, { 'content-type': MIME['.html'] });
+        res.end(buf);
+      });
+    }
+    const ext = path.extname(file).toLowerCase();
+    res.writeHead(200, { 'content-type': MIME[ext] || 'application/octet-stream', 'cache-control': ext === '.html' ? 'no-cache' : 'public, max-age=3600' });
+    fs.createReadStream(file).pipe(res);
+  });
+}
+
+// ============================ الخادم ============================
+// ---------- CORS: يُطبَّق على كل استجابة (API + الملفات) لدعم تطبيق الهاتف ----------
+function corsHeaders(req) {
+  const origin = req.headers.origin || '';
+  let allow = '*';
+  if (CORS_ORIGINS !== '*') {
+    const list = CORS_ORIGINS.split(',').map((x) => x.trim()).filter(Boolean);
+    allow = list.includes(origin) ? origin : list[0] || '';
+  }
+  return {
+    'access-control-allow-origin': allow,
+    'access-control-allow-methods': 'GET,POST,PATCH,DELETE,OPTIONS',
+    'access-control-allow-headers': 'content-type,authorization,accept,origin',
+    'access-control-max-age': '86400',
+    'access-control-expose-headers': 'content-length,content-type',
+    ...(allow !== '*' ? { vary: 'Origin' } : {})
+  };
+}
+
+/** فحص صحة الخادم — يستخدمه Render/Railway/Docker */
+function healthPayload() {
+  const mem = process.memoryUsage();
+  return {
+    ok: true,
+    status: 'ok',
+    version: VERSION,
+    uptime_s: Math.round(process.uptime()),
+    node: process.version,
+    time: nowIso(),
+    storage: { type: 'filesystem-json', dir: DATA_DIR, writable: writable(), persistent: STORAGE_PERSISTENT },
+    public_url: PUBLIC_URL || null,
+    counts: {
+      users: db.users.all().length,
+      shipments: db.shipments.all().length,
+      auctions: db.auctions.all().length,
+      wallet_entries: db.wallet_entries.all().length
+    }
+  };
+}
+
+const server = http.createServer(async (req, res) => {
+  const url = new URL(req.url, `http://${req.headers.host || 'localhost'}`);
+  // ترويسات CORS على كل استجابة
+  const ch = corsHeaders(req);
+  for (const [k, v] of Object.entries(ch)) { try { res.setHeader(k, v); } catch (_) {} }
+  if (req.method === 'OPTIONS') { res.writeHead(204, ch); return res.end(); }
+
+  // فحص الصحة: /health و /healthz (نص/JSON) — وأيضًا / بشرط قبول JSON فقط
+  if ((url.pathname === '/health' || url.pathname === '/healthz') && (req.method === 'GET' || req.method === 'HEAD')) {
+    const body = JSON.stringify(healthPayload());
+    res.writeHead(200, { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store', 'content-length': Buffer.byteLength(body) });
+    return res.end(req.method === 'HEAD' ? undefined : body);
+  }
+  const wantsJson = String(req.headers.accept || '').includes('application/json') && !String(req.headers.accept || '').includes('text/html');
+  if (url.pathname === '/' && wantsJson) {
+    const body = JSON.stringify(healthPayload());
+    res.writeHead(200, { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' });
+    return res.end(body);
+  }
+
+  if (url.pathname.startsWith('/api/')) {
+    try { await handleApi(req, res, url); }
+    catch (e) {
+      console.error('[api]', req.method, url.pathname, e.message);
+      if (!res.headersSent) fail(res, e.status || 500, e.message || 'خطأ داخلي');
+    }
+    return;
+  }
+  serveStatic(req, res, url.pathname);
+});
+
+const adminForSeed = bootstrapAdmin() || db.users.findOne((u) => u.role === 'super_admin');
+seedDemoShipments();
+try {
+  const seededAuctions = auctions.seedDemo(adminForSeed || db.users.findOne((u) => u.role === 'super_admin'));
+  if (seededAuctions) console.log(`[seed] تم إنشاء ${seededAuctions} مزادات تجريبية موسومة demo=true`);
+  for (const u of db.users.all()) wallet.accounts.ensure(u.id);
+  const seededRules = pricing.seedDefaults(adminForSeed || db.users.findOne((u) => u.role === 'super_admin'));
+  if (seededRules) console.log(`[seed] تم إنشاء ${seededRules} قاعدة تسعير افتراضية قابلة للتعديل`);
+  const seededFaq = assistant.seedFaq();
+  if (seededFaq) console.log(`[seed] ${seededFaq} سؤالًا شائعًا جاهزًا للمساعد الذكي`);
+} catch (e) { console.error('[seed] فشل تهيئة المزادات:', e.message); }
+
+server.listen(PORT, HOST, () => {
+  console.log(`✅ خادم المسار العالمي اللوجستي يعمل على http://${HOST}:${PORT}`);
+  console.log(`   الإصدار: ${VERSION} | التخزين: ${DATA_DIR}`);
+  if (PUBLIC_URL) console.log(`   الرابط العام (HTTPS): ${PUBLIC_URL}`);
+  console.log(`   الواجهة: /  | فحص الصحة: /health  (وأيضًا /api/health)`);
+  const canWrite = writable();
+  console.log(`   قاعدة البيانات: ملفات JSON محلية ${canWrite ? '(قابلة للكتابة ✅)' : '(غير قابلة للكتابة ❌ — البيانات لن تُحفظ!)'}`);
+  if (!STORAGE_PERSISTENT) {
+    console.log('');
+    console.log('   ⚠️  تنبيه: هذا التخزين يبدو غير دائم (قرص مؤقت).');
+    console.log('      على Render/Railway أضف قرصًا دائمًا واضبط DATA_DIR=/data');
+    console.log('      وإلا ستضيع المستخدمون والمزادات والمحفظة عند كل إعادة نشر.');
+    console.log('');
+  }
+});
+
+// ---------- إغلاق آمن: تفريغ الكتابة على القرص قبل الخروج (SIGTERM في السحابة) ----------
+let shuttingDown = false;
+async function shutdown(signal) {
+  if (shuttingDown) return;
+  shuttingDown = true;
+  console.log(`\n[shutdown] وصل ${signal} — حفظ البيانات ثم إغلاق...`);
+  try { server.close(); } catch (_) {}
+  try { await flushStore(); console.log('[shutdown] تم حفظ كل المجموعات ✅'); }
+  catch (e) { console.error('[shutdown] فشل الحفظ:', e.message); }
+  process.exit(0);
+}
+process.on('SIGTERM', () => shutdown('SIGTERM'));
+process.on('SIGINT', () => shutdown('SIGINT'));
+
+// ============================ مجدول إغلاق المزادات (كل ثانية) ============================
+setInterval(() => {
+  try {
+    auctions.tick({
+      onClosed: (r) => {
+        const money = auctions.toMoney(r.amount || 0);
+        const payload = { id: r.auction.id, title: r.auction.title, outcome: r.outcome, winner_id: r.winner_id || null, amount: r.amount ? money : 0 };
+        broadcast('auctions', 'auction_closed', payload);
+        broadcast('auction:' + r.auction.id, 'auction_closed', payload);
+        if (r.outcome === 'sold') {
+          notify(r.winner_id, '🎉 فزت بالمزاد', `فزت بمزاد «${r.auction.title}» بمبلغ ${money} $ — رُحّل المبلغ إلى حساب الضمان`, '#/auction/' + r.auction.id, 'auction');
+          if (r.seller_id) notify(r.seller_id, 'تم بيع مزادك', `«${r.auction.title}» أُغلق بمبلغ ${money} $`, '#/auction/' + r.auction.id, 'auction');
+        } else if (r.seller_id) {
+          notify(r.seller_id, 'انتهى المزاد دون بيع', `«${r.auction.title}» — ${r.outcome === 'reserve_not_met' ? 'لم يُستوفَ سعر الحجز' : 'لا مزايدات'}`, '#/auction/' + r.auction.id, 'auction');
+        }
+      }
+    });
+  } catch (e) { console.error('[scheduler]', e.message); }
+}, 1000).unref();
+
+process.on('SIGTERM', () => { server.close(() => process.exit(0)); });
+process.on('SIGINT', () => { server.close(() => process.exit(0)); });
+
+function publicUser(u) {
+  if (!u) return null;
+  const { password_hash, ...rest } = u;
+  return rest;
+}
+
+module.exports = { server };

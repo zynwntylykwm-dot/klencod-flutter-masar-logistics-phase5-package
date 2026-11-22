@@ -1,0 +1,217 @@
+{
+ "pages": [
+  {
+   "page": "mainPage",
+   "displayed": "block",
+   "error": "",
+   "textLen": 244
+  },
+  {
+   "page": "trackingPage",
+   "displayed": "block",
+   "error": "",
+   "textLen": 114
+  },
+  {
+   "page": "myShipmentsPage",
+   "displayed": "block",
+   "error": "",
+   "textLen": 4770
+  },
+  {
+   "page": "addShipmentPage",
+   "displayed": "block",
+   "error": "",
+   "textLen": 92
+  },
+  {
+   "page": "warehousesPage",
+   "displayed": "block",
+   "error": "",
+   "textLen": 1136
+  },
+  {
+   "page": "calculatorPage",
+   "displayed": "block",
+   "error": "",
+   "textLen": 329
+  },
+  {
+   "page": "walletPage",
+   "displayed": "block",
+   "error": "",
+   "textLen": 1281
+  },
+  {
+   "page": "merchantsPage",
+   "displayed": "block",
+   "error": "",
+   "textLen": 535
+  },
+  {
+   "page": "statisticsPage",
+   "displayed": "block",
+   "error": "",
+   "textLen": 258
+  },
+  {
+   "page": "globalPortalPage",
+   "displayed": "block",
+   "error": "",
+   "textLen": 2596
+  },
+  {
+   "page": "branchesPage",
+   "displayed": "block",
+   "error": "",
+   "textLen": 182
+  },
+  {
+   "page": "settingsPage",
+   "displayed": "block",
+   "error": "",
+   "textLen": 1150
+  },
+  {
+   "page": "reportsPage",
+   "displayed": "block",
+   "error": "",
+   "textLen": 376
+  },
+  {
+   "page": "crmPage",
+   "displayed": "block",
+   "error": "",
+   "textLen": 216
+  },
+  {
+   "page": "fleetPage",
+   "displayed": "block",
+   "error": "",
+   "textLen": 203
+  },
+  {
+   "page": "analyticsPage",
+   "displayed": "block",
+   "error": "",
+   "textLen": 310
+  },
+  {
+   "page": "promotionsPage",
+   "displayed": "block",
+   "error": "",
+   "textLen": 202
+  },
+  {
+   "page": "feedbackPage",
+   "displayed": "block",
+   "error": "",
+   "textLen": 271
+  },
+  {
+   "page": "contractsPage",
+   "displayed": "block",
+   "error": "",
+   "textLen": 230
+  }
+ ],
+ "results": [
+  {
+   "check": "script executed / globals",
+   "ok": true,
+   "info": "navigateTo=function"
+  },
+  {
+   "check": "seed users loaded",
+   "ok": false,
+   "info": "0 users"
+  },
+  {
+   "check": "seed shipments",
+   "ok": false,
+   "info": "0 shipments"
+  },
+  {
+   "check": "login works",
+   "ok": true,
+   "info": "block"
+  },
+  {
+   "check": "currentLoggedInUser set",
+   "ok": false
+  },
+  {
+   "check": "all pages navigable",
+   "ok": true,
+   "info": "[]"
+  },
+  {
+   "check": "tracking search",
+   "ok": true,
+   "info": "{\"res\":\"block\",\"items\":10}"
+  },
+  {
+   "check": "delivered filter renders",
+   "ok": false,
+   "info": "Maximum call stack size exceeded"
+  },
+  {
+   "check": "copy button in delivered list (copyToClipboard defined?)",
+   "ok": false,
+   "info": "typeof copyToClipboard=undefined"
+  },
+  {
+   "check": "shipping calculator (100kg AE→OM heavy = $2376)",
+   "ok": true,
+   "info": "💰 التكلفة التقديرية التكلفة الأساسية: $2,160 الرسوم الجمركية (تقديرية 10%): $216 الإجمالي: $2,376 🏷️ بلد التصدير: الإم"
+  },
+  {
+   "check": "wallet renders",
+   "ok": true,
+   "info": "1250 chars"
+  },
+  {
+   "check": "wallet deposit opens flow",
+   "ok": true,
+   "info": "opened modal"
+  },
+  {
+   "check": "portal renders 90 external sites",
+   "ok": false,
+   "info": "{\"links\":0,\"cards\":90,\"tabs\":0,\"len\":2580}"
+  },
+  {
+   "check": "settings render for normal user",
+   "ok": true,
+   "info": "1124 chars"
+  },
+  {
+   "check": "CRM add persists",
+   "ok": false,
+   "info": "undefined"
+  },
+  {
+   "check": "Fleet add persists",
+   "ok": false,
+   "info": "undefined"
+  },
+  {
+   "check": "promo code apply (seeded?)",
+   "ok": false,
+   "info": "no promo codes seeded"
+  },
+  {
+   "check": "backup creation",
+   "ok": true,
+   "info": "true"
+  },
+  {
+   "check": "applyUserDataToUI defined twice (code smell)",
+   "ok": true,
+   "info": "confirmed statically"
+  }
+ ],
+ "errors": [
+  "jsdomError: Uncaught [ReferenceError: copyToClipboard is not defined]"
+ ]
+}

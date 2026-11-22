@@ -1,0 +1,132 @@
+/**
+ * auth.js — مصادقة حقيقية: تشفير كلمات المرور بـ scrypt + رموز موقّعة HMAC-SHA256
+ * ---------------------------------------------------------------------------
+ * لا كلمات مرور بنص صريح، لا رموز قابلة للتزوير، لا اعتماد على ساعة العميل.
+ * الوصول: Access Token قصير (20 دقيقة) + Refresh Token طويل (30 يومًا) مخزّن مُهشَّرًا.
+ */
+'use strict';
+const crypto = require('crypto');
+const fs = require('fs');
+const path = require('path');
+const { db } = require('./store');
+
+const SECRET_FILE = path.join(process.env.DATA_DIR || path.join(__dirname, '..', '..', 'data'), '.jwt_secret');
+const ACCESS_TTL = 20 * 60;          // ثانية
+const REFRESH_TTL = 30 * 24 * 3600;  // ثانية
+
+// ---------- مفتاح التوقيع ----------
+let SECRET;
+(function initSecret() {
+  const env = process.env.JWT_SECRET;
+  if (env && env.length >= 32) { SECRET = env; return; }
+  try {
+    if (fs.existsSync(SECRET_FILE)) { SECRET = fs.readFileSync(SECRET_FILE, 'utf8').trim(); return; }
+    SECRET = crypto.randomBytes(48).toString('hex');
+    fs.mkdirSync(path.dirname(SECRET_FILE), { recursive: true });
+    fs.writeFileSync(SECRET_FILE, SECRET, { mode: 0o600 });
+  } catch (e) {
+    SECRET = crypto.randomBytes(48).toString('hex');
+  }
+})();
+
+// ---------- كلمات المرور ----------
+function hashPassword(password) {
+  const salt = crypto.randomBytes(16).toString('hex');
+  const hash = crypto.scryptSync(String(password), salt, 64, { N: 16384, r: 8, p: 1 }).toString('hex');
+  return `scrypt$16384$8$1$${salt}$${hash}`;
+}
+
+function verifyPassword(password, stored) {
+  try {
+    const parts = String(stored).split('$');
+    if (parts.length !== 6 || parts[0] !== 'scrypt') return false;
+    const [, N, r, p, salt, hash] = parts;
+    const calc = crypto.scryptSync(String(password), salt, 64, { N: +N, r: +r, p: +p }).toString('hex');
+    const a = Buffer.from(calc, 'hex');
+    const b = Buffer.from(hash, 'hex');
+    return a.length === b.length && crypto.timingSafeEqual(a, b);
+  } catch (e) { return false; }
+}
+
+// ---------- الرموز ----------
+const b64u = (buf) => Buffer.from(buf).toString('base64').replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+const unb64u = (s) => Buffer.from(String(s).replace(/-/g, '+').replace(/_/g, '/'), 'base64');
+
+function signToken(payload, ttl = ACCESS_TTL) {
+  const body = { ...payload, iat: Math.floor(Date.now() / 1000), exp: Math.floor(Date.now() / 1000) + ttl };
+  const p = b64u(JSON.stringify(body));
+  const sig = b64u(crypto.createHmac('sha256', SECRET).update(p).digest());
+  return p + '.' + sig;
+}
+
+function verifyToken(token) {
+  if (!token || typeof token !== 'string') return null;
+  const [p, sig] = token.split('.');
+  if (!p || !sig) return null;
+  const expected = b64u(crypto.createHmac('sha256', SECRET).update(p).digest());
+  const a = Buffer.from(sig), b = Buffer.from(expected);
+  if (a.length !== b.length || !crypto.timingSafeEqual(a, b)) return null;
+  let body;
+  try { body = JSON.parse(unb64u(p).toString('utf8')); } catch (e) { return null; }
+  if (!body.exp || body.exp < Math.floor(Date.now() / 1000)) return null;
+  return body;
+}
+
+function issueSession(user, meta = {}) {
+  const access = signToken({ sub: user.id, role: user.role, typ: 'access' }, ACCESS_TTL);
+  const refresh = signToken({ sub: user.id, typ: 'refresh', jti: crypto.randomUUID() }, REFRESH_TTL);
+  db.sessions.insert({
+    id: crypto.randomUUID(),
+    user_id: user.id,
+    refresh_hash: crypto.createHash('sha256').update(refresh).digest('hex'),
+    ip: meta.ip || null,
+    ua: meta.ua ? String(meta.ua).slice(0, 200) : null,
+    created_at: new Date().toISOString(),
+    expires_at: new Date(Date.now() + REFRESH_TTL * 1000).toISOString()
+  });
+  return { access_token: access, refresh_token: refresh, expires_in: ACCESS_TTL, token_type: 'Bearer' };
+}
+
+function sessionExists(refresh) {
+  const h = crypto.createHash('sha256').update(String(refresh)).digest('hex');
+  const s = db.sessions.findOne((x) => x.refresh_hash === h);
+  if (!s) return false;
+  if (new Date(s.expires_at).getTime() < Date.now()) { db.sessions.remove(s.id); return false; }
+  return true;
+}
+
+function revokeRefresh(refresh) {
+  const h = crypto.createHash('sha256').update(String(refresh)).digest('hex');
+  const s = db.sessions.findOne((x) => x.refresh_hash === h);
+  if (s) { db.sessions.remove(s.id); return true; }
+  return false;
+}
+
+function userFromRequest(req) {
+  const h = req.headers['authorization'] || '';
+  const token = h.startsWith('Bearer ') ? h.slice(7) : (new URL(req.url, 'http://x').searchParams.get('token') || null);
+  const body = verifyToken(token);
+  if (!body || body.typ !== 'access') return null;
+  const user = db.users.byId(body.sub);
+  if (!user || user.status !== 'active') return null;
+  return user;
+}
+
+// ---------- تحديد المحاولات (Rate Limit) ----------
+const buckets = new Map();
+function rateLimit(key, limit, windowMs) {
+  const now = Date.now();
+  const b = buckets.get(key) || { count: 0, reset: now + windowMs };
+  if (now > b.reset) { b.count = 0; b.reset = now + windowMs; }
+  b.count += 1;
+  buckets.set(key, b);
+  return { ok: b.count <= limit, remaining: Math.max(0, limit - b.count), retryAfter: Math.ceil((b.reset - now) / 1000) };
+}
+
+const ROLE_RANK = { user: 1, agent: 2, support_staff: 3, shipping_staff: 4, branch_manager: 5, warehouse_manager: 5, super_admin: 9 };
+const hasRole = (user, minRole) => !!user && (ROLE_RANK[user.role] || 0) >= (ROLE_RANK[minRole] || 99);
+
+module.exports = {
+  hashPassword, verifyPassword, signToken, verifyToken, issueSession, revokeRefresh,
+  userFromRequest, rateLimit, hasRole, ROLE_RANK, sessionExists
+};

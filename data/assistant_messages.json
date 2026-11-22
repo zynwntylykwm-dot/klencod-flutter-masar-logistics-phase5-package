@@ -1,0 +1,314 @@
+[
+ {
+  "id": "23fdcb89-a38b-4e7c-8571-f1838a4b9a42",
+  "conversation_id": "fba3da26-0140-4a9a-a7b7-70b0e2bee5b1",
+  "user_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "channel": "web",
+  "role": "user",
+  "text": "وين شحنتي HDTA6351661؟",
+  "created_at": "2026-11-22T20:49:07.416Z"
+ },
+ {
+  "id": "8198cd15-29ba-4c4b-b528-7924d27f3b11",
+  "conversation_id": "fba3da26-0140-4a9a-a7b7-70b0e2bee5b1",
+  "user_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "channel": "web",
+  "role": "assistant",
+  "text": "📦 الشحنة HDTA6351661\n• الحالة: تم الشحن (90%)\n• الموقع الحالي: جمارك نهم\n• المسار: الولايات المتحدة الأمريكية — شيكاغو ← ميناء عدن\n• المتبقي على الشحنة: 7,000$\n• نوع البضاعة: إلكترونيات + مركبات\n• (شحنة تجريبية من بيانات النظام السابق)",
+  "engine": "rules",
+  "provider": "rules",
+  "model": "masar-rules-v1",
+  "intent": "tracking",
+  "grounded": true,
+  "sources": [
+   {
+    "type": "shipment",
+    "ref": "HDTA6351661"
+   },
+   {
+    "type": "user_context",
+    "ref": "0877f1d4-0366-461f-a3ec-7b4bf38c47be"
+   }
+  ],
+  "latency_ms": 16,
+  "tokens_in": null,
+  "tokens_out": null,
+  "degraded": false,
+  "reason": "لا يوجد مفتاح LLM في بيئة الخادم — الإجابات تأتي من محرّك القواعد المبني على بياناتك الحقيقية، وليست من نموذج ذكاء اصطناعي.",
+  "feedback": null,
+  "created_at": "2026-11-22T20:49:07.416Z"
+ },
+ {
+  "id": "3948cdb4-236f-4a90-92d4-96da47855ed7",
+  "conversation_id": "8b5fc414-338a-41f5-92d8-c71688728aab",
+  "user_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "channel": "web",
+  "role": "user",
+  "text": "كم تكلفة 20 كجم جوي؟",
+  "created_at": "2026-11-22T20:58:00.697Z"
+ },
+ {
+  "id": "3b96e42a-ab52-49d5-943c-db31c5c38bfd",
+  "conversation_id": "8b5fc414-338a-41f5-92d8-c71688728aab",
+  "user_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "channel": "web",
+  "role": "assistant",
+  "text": "💰 اقتباس من محرّك التسعير — القاعدة: «شحن جوي قياسي (حتى 100 كجم)»\n• رسم ثابت: 15$\n• الوزن: 20 كجم × 6.5$ = 130$\n• المجموع قبل التعديلات: 145$\n\nالإجمالي: 145$\n(تقدير شحن فقط — لا يشمل الرسوم الجمركية أو الأرضيات.)",
+  "engine": "rules",
+  "provider": "rules",
+  "model": "masar-rules-v1",
+  "intent": "pricing",
+  "grounded": true,
+  "sources": [
+   {
+    "type": "pricing_rule",
+    "ref": "c15edea6-bbad-496a-ba63-382631b313b9"
+   },
+   {
+    "type": "user_context",
+    "ref": "0877f1d4-0366-461f-a3ec-7b4bf38c47be"
+   }
+  ],
+  "latency_ms": 8,
+  "tokens_in": null,
+  "tokens_out": null,
+  "degraded": false,
+  "reason": "لا يوجد مفتاح LLM في بيئة الخادم — الإجابات تأتي من محرّك القواعد المبني على بياناتك الحقيقية، وليست من نموذج ذكاء اصطناعي.",
+  "feedback": null,
+  "created_at": "2026-11-22T20:58:00.698Z"
+ },
+ {
+  "id": "53a73bcd-0bfe-4c08-b7b7-cef56ad95c38",
+  "conversation_id": "8b5fc414-338a-41f5-92d8-c71688728aab",
+  "user_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "channel": "web",
+  "role": "user",
+  "text": "وين شحنتي HDTA6351661",
+  "created_at": "2026-11-22T20:58:02.211Z"
+ },
+ {
+  "id": "6b620497-fa41-4a17-bc7e-478fc24d5a58",
+  "conversation_id": "8b5fc414-338a-41f5-92d8-c71688728aab",
+  "user_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "channel": "web",
+  "role": "assistant",
+  "text": "📦 الشحنة HDTA6351661\n• الحالة: تم الشحن (90%)\n• الموقع الحالي: جمارك نهم\n• المسار: الولايات المتحدة الأمريكية — شيكاغو ← ميناء عدن\n• المتبقي على الشحنة: 7,000$\n• نوع البضاعة: إلكترونيات + مركبات\n• (شحنة تجريبية من بيانات النظام السابق)",
+  "engine": "rules",
+  "provider": "rules",
+  "model": "masar-rules-v1",
+  "intent": "tracking",
+  "grounded": true,
+  "sources": [
+   {
+    "type": "shipment",
+    "ref": "HDTA6351661"
+   },
+   {
+    "type": "user_context",
+    "ref": "0877f1d4-0366-461f-a3ec-7b4bf38c47be"
+   }
+  ],
+  "latency_ms": 0,
+  "tokens_in": null,
+  "tokens_out": null,
+  "degraded": false,
+  "reason": "لا يوجد مفتاح LLM في بيئة الخادم — الإجابات تأتي من محرّك القواعد المبني على بياناتك الحقيقية، وليست من نموذج ذكاء اصطناعي.",
+  "feedback": null,
+  "created_at": "2026-11-22T20:58:02.211Z"
+ },
+ {
+  "id": "ee1b06a2-8f96-434c-874e-5e5b4432b523",
+  "conversation_id": "dc1f5087-e493-421d-a135-856daec11060",
+  "user_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "channel": "web",
+  "role": "user",
+  "text": "كم تكلفة 15 كجم جوي؟",
+  "created_at": "2026-11-22T21:11:05.804Z"
+ },
+ {
+  "id": "4401f90a-f2ba-4e88-a214-c5e990c24b53",
+  "conversation_id": "dc1f5087-e493-421d-a135-856daec11060",
+  "user_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "channel": "web",
+  "role": "assistant",
+  "text": "💰 اقتباس من محرّك التسعير — القاعدة: «شحن جوي قياسي (حتى 100 كجم)»\n• رسم ثابت: 15$\n• الوزن: 15 كجم × 6.5$ = 97.5$\n• المجموع قبل التعديلات: 112.5$\n\nالإجمالي: 112.5$\n(تقدير شحن فقط — لا يشمل الرسوم الجمركية أو الأرضيات.)",
+  "engine": "rules",
+  "provider": "rules",
+  "model": "masar-rules-v1",
+  "intent": "pricing",
+  "grounded": true,
+  "sources": [
+   {
+    "type": "pricing_rule",
+    "ref": "c15edea6-bbad-496a-ba63-382631b313b9"
+   },
+   {
+    "type": "user_context",
+    "ref": "0877f1d4-0366-461f-a3ec-7b4bf38c47be"
+   }
+  ],
+  "latency_ms": 18,
+  "tokens_in": null,
+  "tokens_out": null,
+  "degraded": false,
+  "reason": "لا يوجد مفتاح LLM في بيئة الخادم — الإجابات تأتي من محرّك القواعد المبني على بياناتك الحقيقية، وليست من نموذج ذكاء اصطناعي.",
+  "feedback": null,
+  "created_at": "2026-11-22T21:11:05.804Z"
+ },
+ {
+  "id": "9841f830-295b-4639-a705-985e6c7046fa",
+  "conversation_id": "1fa13fd2-fa18-490e-a833-a502cc637257",
+  "user_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "channel": "web",
+  "role": "user",
+  "text": "كم تكلفة 20 كجم جوي؟",
+  "created_at": "2026-11-22T21:18:11.051Z"
+ },
+ {
+  "id": "5aee1a95-bc4d-4541-bfd8-14c5c1cc9baf",
+  "conversation_id": "1fa13fd2-fa18-490e-a833-a502cc637257",
+  "user_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "channel": "web",
+  "role": "assistant",
+  "text": "💰 اقتباس من محرّك التسعير — القاعدة: «شحن جوي قياسي (حتى 100 كجم)»\n• رسم ثابت: 15$\n• الوزن: 20 كجم × 6.5$ = 130$\n• المجموع قبل التعديلات: 145$\n\nالإجمالي: 145$\n(تقدير شحن فقط — لا يشمل الرسوم الجمركية أو الأرضيات.)",
+  "engine": "rules",
+  "provider": "rules",
+  "model": "masar-rules-v1",
+  "intent": "pricing",
+  "grounded": true,
+  "sources": [
+   {
+    "type": "pricing_rule",
+    "ref": "c15edea6-bbad-496a-ba63-382631b313b9"
+   },
+   {
+    "type": "user_context",
+    "ref": "0877f1d4-0366-461f-a3ec-7b4bf38c47be"
+   }
+  ],
+  "latency_ms": 11,
+  "tokens_in": null,
+  "tokens_out": null,
+  "degraded": false,
+  "reason": "لا يوجد مفتاح LLM في بيئة الخادم — الإجابات تأتي من محرّك القواعد المبني على بياناتك الحقيقية، وليست من نموذج ذكاء اصطناعي.",
+  "feedback": null,
+  "created_at": "2026-11-22T21:18:11.051Z"
+ },
+ {
+  "id": "2963e2b9-4b3f-4314-97c5-e3c5fbbf9f85",
+  "conversation_id": "1fa13fd2-fa18-490e-a833-a502cc637257",
+  "user_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "channel": "web",
+  "role": "user",
+  "text": "وين شحنتي HDTA6351661",
+  "created_at": "2026-11-22T21:18:12.567Z"
+ },
+ {
+  "id": "a4d50d48-6fc6-47cb-b8ba-302138d4ded9",
+  "conversation_id": "1fa13fd2-fa18-490e-a833-a502cc637257",
+  "user_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "channel": "web",
+  "role": "assistant",
+  "text": "📦 الشحنة HDTA6351661\n• الحالة: تم الشحن (90%)\n• الموقع الحالي: جمارك نهم\n• المسار: الولايات المتحدة الأمريكية — شيكاغو ← ميناء عدن\n• المتبقي على الشحنة: 7,000$\n• نوع البضاعة: إلكترونيات + مركبات\n• (شحنة تجريبية من بيانات النظام السابق)",
+  "engine": "rules",
+  "provider": "rules",
+  "model": "masar-rules-v1",
+  "intent": "tracking",
+  "grounded": true,
+  "sources": [
+   {
+    "type": "shipment",
+    "ref": "HDTA6351661"
+   },
+   {
+    "type": "user_context",
+    "ref": "0877f1d4-0366-461f-a3ec-7b4bf38c47be"
+   }
+  ],
+  "latency_ms": 0,
+  "tokens_in": null,
+  "tokens_out": null,
+  "degraded": false,
+  "reason": "لا يوجد مفتاح LLM في بيئة الخادم — الإجابات تأتي من محرّك القواعد المبني على بياناتك الحقيقية، وليست من نموذج ذكاء اصطناعي.",
+  "feedback": null,
+  "created_at": "2026-11-22T21:18:12.567Z"
+ },
+ {
+  "id": "4638235e-adcf-47c1-881f-508018ab3582",
+  "conversation_id": "688f9e76-c981-4664-8bac-246f5cb3233c",
+  "user_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "channel": "web",
+  "role": "user",
+  "text": "كم تكلفة 20 كجم جوي؟",
+  "created_at": "2026-11-22T21:20:24.068Z"
+ },
+ {
+  "id": "df763367-a99e-4783-a44b-6110d50c18af",
+  "conversation_id": "688f9e76-c981-4664-8bac-246f5cb3233c",
+  "user_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "channel": "web",
+  "role": "assistant",
+  "text": "💰 اقتباس من محرّك التسعير — القاعدة: «شحن جوي قياسي (حتى 100 كجم)»\n• رسم ثابت: 15$\n• الوزن: 20 كجم × 6.5$ = 130$\n• المجموع قبل التعديلات: 145$\n\nالإجمالي: 145$\n(تقدير شحن فقط — لا يشمل الرسوم الجمركية أو الأرضيات.)",
+  "engine": "rules",
+  "provider": "rules",
+  "model": "masar-rules-v1",
+  "intent": "pricing",
+  "grounded": true,
+  "sources": [
+   {
+    "type": "pricing_rule",
+    "ref": "c15edea6-bbad-496a-ba63-382631b313b9"
+   },
+   {
+    "type": "user_context",
+    "ref": "0877f1d4-0366-461f-a3ec-7b4bf38c47be"
+   }
+  ],
+  "latency_ms": 11,
+  "tokens_in": null,
+  "tokens_out": null,
+  "degraded": false,
+  "reason": "لا يوجد مفتاح LLM في بيئة الخادم — الإجابات تأتي من محرّك القواعد المبني على بياناتك الحقيقية، وليست من نموذج ذكاء اصطناعي.",
+  "feedback": null,
+  "created_at": "2026-11-22T21:20:24.068Z"
+ },
+ {
+  "id": "7cec0634-da6c-4aeb-9b23-50a054c8a7f0",
+  "conversation_id": "688f9e76-c981-4664-8bac-246f5cb3233c",
+  "user_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "channel": "web",
+  "role": "user",
+  "text": "وين شحنتي HDTA6351661",
+  "created_at": "2026-11-22T21:20:25.584Z"
+ },
+ {
+  "id": "2d1006fd-d239-4428-b840-d179e05b3722",
+  "conversation_id": "688f9e76-c981-4664-8bac-246f5cb3233c",
+  "user_id": "0877f1d4-0366-461f-a3ec-7b4bf38c47be",
+  "channel": "web",
+  "role": "assistant",
+  "text": "📦 الشحنة HDTA6351661\n• الحالة: تم الشحن (90%)\n• الموقع الحالي: جمارك نهم\n• المسار: الولايات المتحدة الأمريكية — شيكاغو ← ميناء عدن\n• المتبقي على الشحنة: 7,000$\n• نوع البضاعة: إلكترونيات + مركبات\n• (شحنة تجريبية من بيانات النظام السابق)",
+  "engine": "rules",
+  "provider": "rules",
+  "model": "masar-rules-v1",
+  "intent": "tracking",
+  "grounded": true,
+  "sources": [
+   {
+    "type": "shipment",
+    "ref": "HDTA6351661"
+   },
+   {
+    "type": "user_context",
+    "ref": "0877f1d4-0366-461f-a3ec-7b4bf38c47be"
+   }
+  ],
+  "latency_ms": 1,
+  "tokens_in": null,
+  "tokens_out": null,
+  "degraded": false,
+  "reason": "لا يوجد مفتاح LLM في بيئة الخادم — الإجابات تأتي من محرّك القواعد المبني على بياناتك الحقيقية، وليست من نموذج ذكاء اصطناعي.",
+  "feedback": null,
+  "created_at": "2026-11-22T21:20:25.584Z"
+ }
+]

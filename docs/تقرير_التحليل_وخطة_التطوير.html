@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>تقرير التحليل وخطة التطوير — المسار العالمي اللوجستي</title>
+<style>
+  *{box-sizing:border-box}
+  body{margin:0;padding:0 0 90px;font-family:"Segoe UI",Tahoma,"Noto Naskh Arabic",Arial,sans-serif;background:#eef1f6;color:#16243a;line-height:1.95;font-size:15.5px}
+  .wrap{max-width:1060px;margin:0 auto;padding:0 16px}
+  header.hero{background:linear-gradient(135deg,#071b30 0%,#123c63 55%,#a3121a 170%);color:#fff;padding:44px 16px 34px;border-bottom:6px solid #d40511;margin-bottom:24px}
+  header.hero h1{margin:0 0 8px;font-size:29px;line-height:1.45}
+  header.hero .kick{font-size:12.5px;letter-spacing:1px;opacity:.85;margin-bottom:8px}
+  header.hero p{margin:0;max-width:840px;opacity:.93;font-size:15px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+  .chip{background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.28);padding:5px 12px;border-radius:20px;font-size:12.5px}
+  section.card{background:#fff;border-radius:18px;padding:24px 26px;margin-bottom:18px;border:1px solid #e2e8f0;box-shadow:0 6px 18px rgba(7,27,48,.07)}
+  h2{font-size:21px;margin:0 0 14px;color:#071b30;padding-bottom:10px;border-bottom:2px solid #eef1f6}
+  h2 .n{display:inline-flex;align-items:center;justify-content:center;width:31px;height:31px;border-radius:10px;background:#123c63;color:#fff;font-size:14px;margin-left:10px;vertical-align:middle}
+  h3{font-size:16.5px;color:#123c63;margin:20px 0 8px}
+  h4{font-size:15px;color:#071b30;margin:14px 0 5px}
+  p{margin:8px 0}
+  ul,ol{padding-right:22px;margin:8px 0}
+  li{margin:4px 0}
+  table{width:100%;border-collapse:collapse;margin:12px 0;font-size:14px}
+  th{background:#071b30;color:#fff;text-align:right;padding:9px 11px;font-weight:600;font-size:13.5px}
+  td{padding:8px 11px;border-bottom:1px solid #e8edf3;vertical-align:top}
+  tr:nth-child(even) td{background:#f8fafc}
+  code{background:#f1f5f9;border:1px solid #e2e8f0;border-radius:6px;padding:1px 6px;font-family:Consolas,monospace;font-size:13px;color:#b42318;direction:ltr;display:inline-block}
+  pre{background:#0d1626;color:#e2e8f0;padding:13px 15px;border-radius:12px;overflow-x:auto;direction:ltr;text-align:left;font-size:12.5px;line-height:1.65}
+  pre code{background:none;border:none;color:inherit;padding:0}
+  .badge{display:inline-block;font-size:11.5px;padding:2px 9px;border-radius:20px;font-weight:700;white-space:nowrap}
+  .ok{background:#d1fae5;color:#047857}
+  .part{background:#fef3c7;color:#b45309}
+  .bad{background:#fee2e2;color:#b91c1c}
+  .fake{background:#ede9fe;color:#6d28d9}
+  .na{background:#e5e7eb;color:#374151}
+  .callout{border-radius:12px;padding:12px 16px;margin:14px 0;font-size:14.5px;border-right:5px solid}
+  .i-blue{background:#eff6ff;border-color:#2563eb}
+  .i-red{background:#fef2f2;border-color:#dc2626}
+  .i-amber{background:#fff7ed;border-color:#f59e0b}
+  .i-green{background:#ecfdf5;border-color:#10b981}
+  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media(max-width:760px){.grid3,.grid2{grid-template-columns:1fr}}
+  .stat{background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:14px;text-align:center}
+  .stat .v{font-size:21px;font-weight:800;color:#071b30}
+  .stat .l{font-size:12px;color:#64748b}
+  .arch{display:grid;gap:10px;margin:14px 0}
+  .layer{border:2px solid #123c63;border-radius:14px;padding:12px 14px;background:#f8fbff}
+  .layer h5{margin:0 0 6px;color:#071b30;font-size:14.5px}
+  .layer p{margin:0;font-size:13.5px;color:#475569}
+  .arrow{text-align:center;color:#94a3b8;font-size:18px;line-height:1}
+  .toc{columns:2;column-gap:26px;font-size:14.5px}
+  @media(max-width:680px){.toc{columns:1}}
+  .toc a{color:#123c63;text-decoration:none;display:block;padding:3px 0}
+  .foot{text-align:center;color:#64748b;font-size:12.5px;margin-top:24px}
+  .p0{color:#b91c1c;font-weight:800}
+  .p1{color:#b45309;font-weight:800}
+  .p2{color:#047857;font-weight:800}
+  .small{font-size:13px;color:#64748b}
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="wrap">
+    <div class="kick">تقرير هندسي — المرحلة الأولى: التحليل والتصميم وخطة التنفيذ</div>
+    <h1>تحليل نظام «المسار العالمي اللوجستي» وخطة الارتقاء به إلى منصة إنتاجية</h1>
+    <p>تقرير مبني على فحص فعلي وتشغيل آلي للكود — لا على قراءة سطحية. يتضمن جرد الميزات الحقيقية، والأعطال المثبتة بالاختبار،
+    والميزات المقترحة، ومتطلباتها التقنية، وما يمكن تنفيذه الآن وما يتطلب خدمات خارجية، وخطة تنفيذ مُراحلية مع معايير قبول لكل مرحلة.</p>
+    <div class="chips">
+      <span class="chip">📅 تاريخ الفحص: 22 نوفمبر 2026</span>
+      <span class="chip">🧪 208 معالج حدث تم تنفيذه</span>
+      <span class="chip">🔬 34 اختبارًا وظيفيًا آليًا</span>
+      <span class="chip">🐞 5 أعطال مؤكدة + 11 ملاحظة</span>
+      <span class="chip">🌐 6 مصادر بيانات حية تم التحقق منها فعليًا</span>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+<section class="card">
+  <h2><span class="n">١</span>ملخص تنفيذي</h2>
+  <p>
+    النظام الحالي <b>واجهة أمامية غنية جدًا لكنها بلا طبقة خلفية</b>: 18 صفحة، 174 دالة، 90 موقعًا خارجيًا، 37 شحنة تجريبية،
+    وكل شيء يعيش في <code>localStorage</code> داخل متصفح واحد. الملف <b>خالٍ تمامًا من أي طلب شبكة</b>
+    (0 استدعاء <code>fetch</code> / <code>XMLHttpRequest</code> / <code>WebSocket</code>)، أي لا توجد أي بيانات حية اليوم.
+  </p>
+  <p>
+    الفحص الآلي أثبت أن <b>الفلاتر الأساسية في صفحتي «شحناتي» و«الفروع» معطّلة تمامًا</b> بسبب خطأ استدعاء ذاتي لا نهائي،
+    وأن <b>أزرار النسخ</b> تستدعي دالة غير موجودة، وأن <b>المساعد الذكي لا يستطيع العثور على أي رقم تتبع</b>.
+    هذه ليست عيوبًا تجميلية — هي وظائف لا تعمل عند المستخدم.
+  </p>
+  <p>
+    الطريق الصحيح ليس «إضافة صفحات جديدة فوق واجهة بلا خادم»، بل: <b>إصلاح الأعطال فورًا</b> ← <b>بناء خادم وقاعدة بيانات حقيقية</b>
+    ← <b>ثم بناء الميزات المتقدمة (المزادات، الإشعارات الفورية، البحث، المفضلة، التقييمات، لوحة التحكم) على أساس سليم</b>.
+    كل الميزات التي طلبتها <b>قابلة للتنفيذ فعليًا</b>، لكن ثلاثًا منها فقط (المزادات، الدفع، تتبع شركات الشحن) تحتاج قرارات ومفاتيح/حسابات منك.
+  </p>
+  <div class="grid3" style="margin-top:14px">
+    <div class="stat"><div class="v">0</div><div class="l">طلبات شبكة في الكود الحالي</div></div>
+    <div class="stat"><div class="v">5</div><div class="l">وظائف معطّلة بالكامل (Stack Overflow)</div></div>
+    <div class="stat"><div class="v">2</div><div class="l">دوال مستدعاة وغير موجودة</div></div>
+    <div class="stat"><div class="v">6</div><div class="l">مصادر بيانات حية جاهزة بلا مفاتيح</div></div>
+    <div class="stat"><div class="v">~35</div><div class="l">يوم عمل تقديري للوصول لمنصة إنتاجية</div></div>
+    <div class="stat"><div class="v">7</div><div class="l">مراحل تنفيذ بمعايير قبول</div></div>
+  </div>
+</section>
+
+<section class="card">
+  <h2><span class="n">٢</span>المنهجية: كيف فُحص النظام فعليًا</h2>
+  <table>
+    <tr><th style="width:26%">الخطوة</th><th style="width:40%">ما تم تنفيذه</th><th>النتيجة</th></tr>
+    <tr><td>1. قراءة كاملة</td><td>مراجعة 4,861 سطرًا (477 CSS / 299 HTML / 4,074 JS) وتصنيف الدوال في 12 وحدة.</td><td>خريطة كاملة للنظام (أُنجزت في التقرير السابق).</td></tr>
+    <tr><td>2. تحليل ساكن (Static)</td><td>مطابقة كل <code>onclick</code> مع الدوال المعرّفة، وكشف الدوال الميتة والمكررة والمعرّفة مرتين.</td><td>كشف <code>copyToClipboard</code> و<code>shareShipmentLocation</code> غير موجودتين، و3 دوال مكرّرة، و4 دوال ميتة.</td></tr>
+    <tr><td>3. تشغيل آلي للمنطق</td><td>تحميل الملف في بيئة DOM حقيقية (jsdom) مع بدائل للمكتبات الخارجية، ثم تسجيل الدخول وتنفيذ <b>208 معالج onclick</b> وكل معالجات <code>onchange/oninput</code>.</td><td>التقاط الأخطاء الفعلية وقت التنفيذ لكل زر.</td></tr>
+    <tr><td>4. اختبارات وظيفية</td><td>34 اختبارًا: التنقل في 19 صفحة، الفلاتر، البحث، إضافة/تعديل بيانات، حساب الأسعار، المحفظة، المعاينة، البوابة، الإشعارات، النسخ الاحتياطي.</td><td>23 ناجحًا / 11 فاشلًا — التفاصيل أدناه.</td></tr>
+    <tr><td>5. فحص المصادر الخارجية</td><td>اختبار 9 واجهات API حقيقية للتأكد من صلاحيتها من بيئة التشغيل اليوم.</td><td>6 صالحة بلا مفاتيح، 3 تحتاج حسابًا/مفتاحًا.</td></tr>
+    <tr><td>6. فحص الجودة والإتاحة</td><td>قياس التكرار في المعرّفات، وسمات الوصول، وحجم الملف، والتحقق من المدخلات.</td><td>4 معرّفات مكررة، 0 سمات ARIA، 208 اعتماد على onclick مضمّن.</td></tr>
+  </table>
+  <div class="callout i-amber">
+    <b>حدود الفحص بشفافية:</b> تعذّر تشغيل متصفح كامل (Chromium) داخل بيئة العمل الحالية لنقص مكتبات نظام (<code>libnspr4</code>)،
+    لذلك اعتُمد محرك jsdom لاختبار <b>المنطق والوظائف</b> (وهو كافٍ لكشف الأعطال البرمجية والاستدعاءات المفقودة).
+    أما اختبار <b>التخطيط البصري والاستجابة للأحجام</b> فسيُنفَّذ ضمن المرحلة 6 عبر متصفح حقيقي، وحزمة الاختبار الآلي جاهزة للتشغيل فورًا في بيئة تدعمه.
+  </div>
+</section>
+
+<section class="card">
+  <h2><span class="n">٣</span>جرد الميزات الحالية: ما يعمل فعلًا وما لا يعمل</h2>
+  <p class="small">الرموز: <span class="badge ok">يعمل</span> <span class="badge part">جزئي</span> <span class="badge bad">معطّل</span> <span class="badge fake">شكلي</span> — والحكم مبني على تنفيذ فعلي لا على وجود الزر.</p>
+  <table>
+    <tr><th style="width:20%">الوحدة</th><th style="width:44%">الموجود حاليًا</th><th style="width:11%">الحكم</th><th>الملاحظة الحاسمة</th></tr>
+    <tr><td>تسجيل الدخول والتسجيل</td><td>دخول بمُعرّف واحد (اسم/بريد/هاتف)، تسجيل بأدوار، موافقة إدارية، «تذكرني»، استعادة كلمة مرور.</td><td><span class="badge part">جزئي</span></td><td>يعمل منطقيًا، لكن كلمات المرور نص صريح والرمز المؤقت وهمي.</td></tr>
+    <tr><td>الصلاحيات</td><td>إخفاء زر الإعدادات/إضافة مستودع لغير المدير + ضغط مطوّل 7 ثوانٍ.</td><td><span class="badge fake">شكلي</span></td><td>تُتجاوز من أدوات المطوّر بسطر واحد.</td></tr>
+    <tr><td>التتبع السريع</td><td>بحث برقم، محاكاة باركود، خريطة Leaflet حقيقية، مشاركة موقع، طباعة بوليصة.</td><td><span class="badge ok">يعمل</span></td><td>الخريطة تُرسم فعلًا (10 حقول معلومات)؛ لكن البيانات ثابتة والطباعة = طباعة الصفحة.</td></tr>
+    <tr><td>شحناتي</td><td>قائمة 37 شحنة، 5 فلاتر، فلترة بالتاريخ، تفاصيل، سجل تتبع.</td><td><span class="badge bad">معطّل</span></td><td><b>كل أزرار الفلترة ترمي Stack Overflow</b> — القائمة الافتراضية فقط تعمل.</td></tr>
+    <tr><td>طلب شحن</td><td>نموذج 40+ حقلًا، مسار 5 محطات، مرفقات، معاينة، حفظ، طباعة.</td><td><span class="badge part">جزئي</span></td><td>الحفظ يعمل (37→38 شحنة)؛ لكن آلية الضغط المطوّل غير مكتشفة للمستخدم، والتحذير «ليس لديك صلاحية» مضلّل.</td></tr>
+    <tr><td>المستودعات</td><td>8 مستودعات، فلترة دول، بحث، إحصائيات، خريطة، إضافة.</td><td><span class="badge ok">يعمل</span></td><td>الفلترة والبحث يعملان (تحقق آلي).</td></tr>
+    <tr><td>حاسبة الشحن</td><td>وزن × 15$ × 3 عوامل + 10% جمارك + كود خصم.</td><td><span class="badge ok">يعمل</span></td><td>الرياضيات صحيحة (تحقق: 100كجم AE→OM ثقيل = 2,376$).</td></tr>
+    <tr><td>المحفظة</td><td>بطاقتان، إيداع/سحب/تحويل/دفع، عمولة 1%، سجل، إخفاء رصيد، تراجع.</td><td><span class="badge part">جزئي</span></td><td>العمليات تُحفظ فعليًا؛ لكن OTP يُولَّد ويُقارن محليًا، وCVV مخزّن، ولا بوابة دفع.</td></tr>
+    <tr><td>المعتمدون</td><td>بطاقتا تاجر موثّق + نسخ الأرقام.</td><td><span class="badge part">جزئي</span></td><td>العرض يعمل والنسخ يعمل؛ لكن زرّا البحث/التصفية يظهران Toast فقط (دالتان ميتتان).</td></tr>
+    <tr><td>الإحصائيات</td><td>8 مؤشرات + مخطط دائري + مخطط أعمدة حسب البلد.</td><td><span class="badge ok">يعمل</span></td><td>Chart.js يعمل ويُدمَّر المخطط السابق قبل الرسم.</td></tr>
+    <tr><td>البوابة اللوجستية</td><td>90 موقعًا / 6 تصنيفات، بحث، مفضلة، شراء بفاتورة.</td><td><span class="badge part">جزئي</span></td><td>الفاتورة تُحسب حيًا (100×2 + 3كجم×25 = 275$ ✔)؛ لكن جلب بيانات المنتج <b>محاكاة عشوائية</b>، والمفضلة تُفقد عند إعادة الرسم، والدفع وهمي.</td></tr>
+    <tr><td>الفروع</td><td>3 فروع + فلترة + بحث.</td><td><span class="badge bad">معطّل</span></td><td>الفلترة والبحث يرميان Stack Overflow (نفس علّة «شحناتي»).</td></tr>
+    <tr><td>الإعدادات</td><td>12 قسمًا: حساب، أمان، شحن، محفظة، لغة/مظهر، إشعارات، نسخ احتياطي، مشاركة، دعم، مستخدمون.</td><td><span class="badge part">جزئي</span></td><td>النسخ الاحتياطي/التصدير يعملان؛ التحقق بخطوتين واللغة «تفضيلات» بلا أثر فعلي.</td></tr>
+    <tr><td>التقارير</td><td>4 تقارير مجمّعة + طباعة.</td><td><span class="badge ok">يعمل</span></td><td>أرقام محسوبة من البيانات الحقيقية للنظام.</td></tr>
+    <tr><td>CRM / الأسطول</td><td>إضافة/عرض/حذف/بحث + حالات.</td><td><span class="badge ok">يعمل</span></td><td>CRUD كامل ومحفوظ (تحقق: إضافة عميل 2→3، مركبة 2→3).</td></tr>
+    <tr><td>العروض / الشكاوى / العقود</td><td>توليد أكواد، تصنيف، حل الشكوى، إدارة عقود.</td><td><span class="badge part">جزئي</span></td><td>المنطق يعمل؛ لكن أزرار «نسخ الكود» تستدعي دالة غير موجودة.</td></tr>
+    <tr><td>المساعد الذكي</td><td>قاعدة معرفة + 18 فرع شرط + ردود.</td><td><span class="badge part">جزئي</span></td><td>الردود العامة تعمل؛ <b>البحث عن رقم تتبع مستحيل</b> (خطأ تحويل الحالة إلى أحرف صغيرة).</td></tr>
+    <tr><td>الإشعارات</td><td>جرس + عدّاد + تخزين محلي.</td><td><span class="badge part">جزئي</span></td><td>تُنشأ وتُعرض؛ لكن لا لحظية ولا Push ولا إشعار خارج الصفحة.</td></tr>
+    <tr><td>النسخ الاحتياطي والتصدير</td><td>لقطة JSON في المتصفح + تنزيل ملف + استيراد.</td><td><span class="badge ok">يعمل</span></td><td>أفضل ما في النظام: مسار جاهز لترحيل البيانات إلى قاعدة بيانات.</td></tr>
+    <tr><td>عمل دون اتصال (PWA)</td><td>—</td><td><span class="badge bad">غائب</span></td><td>لا Service Worker ولا Manifest؛ وبدون إنترنت تختفي الأيقونات والخط والخريطة.</td></tr>
+  </table>
+</section>
+
+<section class="card">
+  <h2><span class="n">٤</span>الأعطال المؤكدة بالاختبار (مع الدليل والإصلاح)</h2>
+  <p>هذه أخطاء وقت التنفيذ ظهرت فعليًا أثناء الضغط على الأزرار، وليست ملاحظات أسلوبية.</p>
+  <table>
+    <tr><th style="width:6%">#</th><th style="width:8%">الأولوية</th><th style="width:30%">العطل</th><th style="width:28%">الدليل</th><th>الإصلاح المطلوب</th></tr>
+    <tr>
+      <td>1</td><td class="p0">P0</td>
+      <td><b>استدعاء ذاتي لا نهائي</b> في 5 دوال: <code>filterShipments</code>, <code>showDeliveredFilter</code>, <code>filterByDate</code>, <code>filterBranches</code>, <code>searchBranches</code></td>
+      <td><code>RangeError: Maximum call stack size exceeded</code> عند تنفيذ كل زر فلترة. السبب: أسطر 3026–3032 تعيد تعريف الدالة بغلاف يستدعي نفسها.</td>
+      <td>حذف الأغلفة الخمسة (الدوال معلنة عالميًا وتعمل أصلًا) أو إعادة تسمية الدالة الداخلية.</td>
+    </tr>
+    <tr>
+      <td>2</td><td class="p0">P0</td>
+      <td><b><code>copyToClipboard</code> غير موجودة</b> لكنها مستدعاة في 3 مواضع (أزرار نسخ رقم الشحنة المسلَّمة وأكواد الخصم)</td>
+      <td><code>ReferenceError: copyToClipboard is not defined</code></td>
+      <td>إضافة الدالة (Clipboard API + بديل <code>execCommand</code>) مرة واحدة في وحدة مشتركة.</td>
+    </tr>
+    <tr>
+      <td>3</td><td class="p0">P0</td>
+      <td><b>المساعد الذكي لا يجد أي رقم تتبع</b></td>
+      <td>السؤال «تتبع HDTA6351661» يُعيد نص «أرسل رقم التتبع». السبب: <code>toLowerCase()</code> قبل مطابقة <code>[A-Z0-9]{8,}</code>.</td>
+      <td>تنفيذ المطابقة على النص الأصلي مع <code>/gi</code>.</td>
+    </tr>
+    <tr>
+      <td>4</td><td class="p1">P1</td>
+      <td><b><code>shareShipmentLocation</code> غير معرّفة</b> في HTML الثابت</td>
+      <td>تُعيَّن فقط كخاصية <code>.onclick</code> بعد نجاح بحث؛ أي نقرة قبل البحث تفشل.</td>
+      <td>تعريف الدالة عالميًا وربطها بالزر عبر <code>addEventListener</code>.</td>
+    </tr>
+    <tr>
+      <td>5</td><td class="p1">P1</td>
+      <td><b>4 معرّفات مكررة:</b> <code>forgotError</code>, <code>forgotIdentifier</code>, <code>walletTransferAmount</code>, <code>portalFavCount</code> (×4)</td>
+      <td>عدّ 312 معرّفًا → 4 تكرارات.</td>
+      <td>إعادة تسمية أو تحويلها إلى أصناف (classes) وحسم موضع واحد لكل معرّف.</td>
+    </tr>
+    <tr>
+      <td>6</td><td class="p1">P1</td>
+      <td><b>3 دوال معرّفة مرتين</b> (<code>applyUserDataToUI</code>, <code>isUserSuperAdmin</code>, <code>applyPermissions</code>)</td>
+      <td>التعريف الثاني يلغي الأول بفارق سلوكي محتمل.</td>
+      <td>حذف النسخ المكررة والإبقاء على تطبيق واحد.</td>
+    </tr>
+    <tr>
+      <td>7</td><td class="p2">P2</td>
+      <td><b>مفضلة البوابة لا تُحفظ</b> (الحالة داخل دالة الرسم)</td>
+      <td>إعادة رسم البوابة = فقدان كل المفضلة.</td>
+      <td>نقل الحالة إلى مخزن دائم (localStorage ثم الخادم).</td>
+    </tr>
+    <tr>
+      <td>8</td><td class="p2">P2</td>
+      <td><b>90 رابطًا بلا <code>href</code></b> (الرابط في <code>data-url</code> فقط)</td>
+      <td>لا يمكن النسخ أو الفتح في تبويب جديد أو قراءتها بقارئ الشاشة.</td>
+      <td>استخدام <code>&lt;a href&gt;</code> حقيقي مع <code>rel="noopener noreferrer"</code>.</td>
+    </tr>
+    <tr>
+      <td>9</td><td class="p2">P2</td>
+      <td><b>أرقام سالبة مقبولة</b> في الوزن والرسوم والقيمة</td>
+      <td>لا تحقق من النطاق قبل الحفظ.</td>
+      <td>طبقة تحقق مركزية (schema) على العميل والخادم.</td>
+    </tr>
+    <tr>
+      <td>10</td><td class="p2">P2</td>
+      <td><b>إتاحة ضعيفة</b>: 0 سمات <code>aria-*</code>، أزرار على شكل <code>div</code>، نصوص 11px</td>
+      <td>قياس مباشر على الملف.</td>
+      <td>تحويل العناصر التفاعلية إلى أزرار، إضافة تسميات، وتكبير الخطوط الدنيا.</td>
+    </tr>
+    <tr>
+      <td>11</td><td class="p2">P2</td>
+      <td><b>الأسعار ثابتة في الكود</b> (15$/كجم، 25$/كجم، 1%، 10%)</td>
+      <td>لا يمكن تعديلها إلا بتعديل المصدر.</td>
+      <td>نقلها إلى جدول إعدادات/أسعار في قاعدة البيانات مع لوحة تحكم.</td>
+    </tr>
+  </table>
+  <div class="callout i-red">
+    <b>الأثر التجاري للأعطال 1–3:</b> العميل الذي يضغط «تم تسليمها» أو «الفروع» لا يرى أي استجابة (تبدو الأزرار ميتة)،
+    والمساعد الذكي يفشل في أهم وظيفة يطلبها المستخدم (تتبع رقمه). إصلاحها لا يحتاج بنية جديدة — ساعة عمل واحدة.
+  </div>
+</section>
+
+<section class="card">
+  <h2><span class="n">٥</span>الفجوات المعمارية (سبب كل المشكلات القادمة)</h2>
+  <div class="grid2">
+    <div>
+      <h3>على مستوى البيانات</h3>
+      <ul>
+        <li><b>لا قاعدة بيانات:</b> كل شيء في <code>localStorage</code> — لا مزامنة بين الأجهزة، ولا وصول إداري، وفقدان كامل عند مسح بيانات المتصفح.</li>
+        <li><b>لا مصدر حقيقي:</b> 0 طلبات شبكة؛ لا أسعار صرف، لا طقس، لا تتبع شركات، لا مزادات فعلية.</li>
+        <li><b>لا نسخ احتياطي مركزي:</b> النسخة موجودة في نفس المتصفح الذي قد يُمحى.</li>
+        <li><b>تكرار البيانات:</b> المستخدمون في مفتاحين (<code>system_users</code> و<code>system_settings.users</code>) قد يتباعدان.</li>
+      </ul>
+    </div>
+    <div>
+      <h3>على مستوى الأمان والثقة</h3>
+      <ul>
+        <li><b>لا مصادقة حقيقية:</b> كلمات المرور نص صريح في المصدر وفي التخزين.</li>
+        <li><b>لا صلاحيات فعلية:</b> الحماية إخفاء عناصر + ضغط مطوّل.</li>
+        <li><b>XSS:</b> إدراج مدخلات المستخدم بـ <code>innerHTML</code> في الشات وCRM والملاحظات.</li>
+        <li><b>بيانات مالية:</b> أرقام بطاقات وCVV في المتصفح — مخالفة صريحة لأي معيار دفع.</li>
+        <li><b>رموز تحقق وهمية</b> تُولَّد وتُقارن محليًا.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="callout i-amber">
+    <b>الاستنتاج الهندسي:</b> لا يمكن بناء «مزاد حقيقي» أو «إشعارات فورية» أو «لوحة تحكم» على تخزين محلي:
+    المزاد يحتاج ساعة خادم موثوقة وقفل على مستوى الصف (Row Lock) لمَنع تعارض المزايدات، والإشعارات تحتاج قناة دفع من الخادم،
+    ولوحة التحكم تحتاج سلطة على بيانات كل المستخدمين. <b>لذلك الخادم ليس رفاهية — هو شرط وجود لهذه الميزات.</b>
+  </div>
+</section>
+
+<section class="card">
+  <h2><span class="n">٦</span>الميزات المقترحة — مصنّفة بقابلية التنفيذ</h2>
+  <p>
+    قسّمت كل ما طلبته (وما أضيفه) إلى ثلاث مجموعات حسب ما تحتاجه فعليًا. <b>المجموعة (أ)</b> يمكن البدء بها اليوم،
+    <b>(ب)</b> تحتاج فقط مصادر خارجية مجانية (بدون مفاتيح في معظمها)، <b>(ج)</b> تحتاج خادمًا/حسابات تجارية.
+  </p>
+
+  <h3>أ) ميزات تُنفَّذ فورًا بلا أي اعتماد خارجي <span class="badge ok">جاهزة الآن</span></h3>
+  <table>
+    <tr><th style="width:24%">الميزة</th><th style="width:42%">ما تفعله فعليًا</th><th>التقنية</th></tr>
+    <tr><td>إصلاح الأعطال P0/P1</td><td>إحياء فلاتر الشحنات والفروع، أزرار النسخ، والبحث في المساعد الذكي.</td><td>تعديل JS + حزمة اختبار آلية.</td></tr>
+    <tr><td>بحث متقدم موحّد</td><td>مربع واحد يبحث في الشحنات والمستودعات والفروع والمعتمدين والأكواد والعملاء والأسطول والمواقع الـ90، مع فلاتر (حالة، تاريخ، قيمة، بلد) وفرز وحفظ آخر بحث.</td><td>فهرس محلي + تطبيع عربي (إزالة التشكيل/ألف-همزة) + <code>debounce</code>.</td></tr>
+    <tr><td>نظام مفضلة موحّد</td><td>حفظ أي عنصر (شحنة/مستودع/موقع/مزاد/كود) في «متابعاتي» مع مزامنة عند وجود الخادم.</td><td>مخزن مركزي + مفتاح <code>favorites</code> + واجهة موحدة.</td></tr>
+    <tr><td>صفحات تفاصيل + روابط عميقة</td><td>كل شحنة/مستودع/مزاد له رابط مستقل <code>#/shipment/HDTA6351661</code> قابل للمشاركة والطباعة.</td><td>Hash Router صغير (بدون مكتبة) + قوالب تفاصيل موحدة.</td></tr>
+    <tr><td>مركز إشعارات محسّن + إشعارات نظام المتصفح</td><td>تصنيفات، مقروء/غير مقروء، أرشفة، وإشعار فعلي خارج الصفحة عند الأحداث المهمة.</td><td><code>Notification API</code> + Permission + تخزين منظم.</td></tr>
+    <tr><td>تقييمات ومراجعات</td><td>نجوم 1–5 + تعليق على الشحنة/الخدمة/التاجر، ومتوسط التقييم وعدّاد المراجعات (قابل للمشاركة عند إضافة الخادم).</td><td>نموذج + تجميع + منع التكرار لكل مستخدم/عنصر.</td></tr>
+    <tr><td>طباعة احترافية + QR</td><td>بوليصة/فاتورة بتخطيط طباعة مستقل (A4/A6) مع رمز QR حقيقي لرقم التتبع.</td><td><code>@media print</code> + مولّد QR محلي (بدون CDN).</td></tr>
+    <tr><td>PWA وعمل دون اتصال</td><td>تثبيت التطبيق على الجوال، فتحه بدون إنترنت، وتخزين مؤقت للأيقونات والخطوط والمكتبات.</td><td><code>manifest.json</code> + Service Worker + تنزيل المكتبات محليًا.</td></tr>
+    <tr><td>تخطيط سطح المكتب</td><td>بدل حصر الواجهة في 480px: عمودان + شريط جانبي على الشاشات الكبيرة، مع بقاء تجربة الجوال كما هي.</td><td>CSS Grid + <code>clamp()</code> + نقاط توقف.</td></tr>
+    <tr><td>تحصين أساسي</td><td>تنقية كل إدخال، حذف الأسرار من المصدر، CSP، وإزالة الدوال المكررة.</td><td>دالة <code>escapeHtml</code> مركزية + مراجعة نقاط الإدراج.</td></tr>
+  </table>
+
+  <h3>ب) ميزات تحتاج مصادر خارجية (تم التحقق من صلاحيتها اليوم) <span class="badge part">تحتاج التحقق من CORS/الحصص</span></h3>
+  <table>
+    <tr><th style="width:22%">الميزة</th><th style="width:30%">المصدر الحقيقي</th><th style="width:24%">المتطلب</th><th>ما يُعرض للمستخدم</th></tr>
+    <tr><td>أسعار صرف حية</td><td><code>api.frankfurter.dev</code> (البنك المركزي الأوروبي) + <code>open.er-api.com</code> للريال اليمني</td><td>لا مفتاح — CORS متاح</td><td>تحويل الأسعار في الحاسبة والفواتير مع «آخر تحديث: …» وعلم المصدر.</td></tr>
+    <tr><td>طقس الموانئ وحالة البحر</td><td>Open-Meteo + Marine API</td><td>لا مفتاح</td><td>لكل مستودع/ميناء: درجة الحرارة، الريح، ارتفاع الموج — مؤشر تأخير محتمل.</td></tr>
+    <tr><td>أخبار الشحن والخدمات اللوجستية</td><td>RSS: gCaptain، FreightWaves</td><td>يحتاج <b>وكيل خادم</b> (RSS لا يدعم CORS)</td><td>قسم «أخبار السوق» بتحديث تلقائي ومصدر وتاريخ.</td></tr>
+    <tr><td>أسعار العملات الرقمية</td><td>CoinGecko</td><td>لا مفتاح (حصة محدودة)</td><td>عرض سعر BTC/ETH/USDT عند اختيار الدفع الرقمي.</td></tr>
+    <tr><td>مؤشرات اقتصادية للتقارير</td><td>World Bank Open Data</td><td>لا مفتاح</td><td>سياق تجاري للبلد الهدف (سكان، تجارة) في تقارير التوسع.</td></tr>
+    <tr><td>إحداثيات وعناوين</td><td>OpenStreetMap / Nominatim</td><td>لا مفتاح (سياسة استخدام)</td><td>تحويل عنوان إلى إحداثيات لخريطة التتبع وإضافة المستودعات.</td></tr>
+  </table>
+
+  <h3>ج) ميزات تحتاج خادمًا / حسابات تجارية <span class="badge bad">تحتاج قرارك ومفاتيح</span></h3>
+  <table>
+    <tr><th style="width:22%">الميزة</th><th style="width:38%">ما تحتاجه بالضبط</th><th>ملاحظة تنفيذية</th></tr>
+    <tr>
+      <td><b>نظام المزادات الكامل</b></td>
+      <td>خادم + قاعدة بيانات + محرك إغلاق بمؤقّت على الخادم (لا ساعة العميل) + أقفال صفوف لمنع تعارض المزايدات + قناة لحظية + سياسة تأمين مبلغ + شروط إغلاق وتمديد.</td>
+      <td>يُنفَّذ بالكامل داخليًا (لا يحتاج مزوّدًا خارجيًا). Copart/IAAI لا توفّران API عامًا، لذا المزاد سيكون <b>منصتك أنت</b> وسيطًا بين بائعين ومشترين.</td>
+    </tr>
+    <tr>
+      <td><b>إشعارات فورية حقيقية</b></td>
+      <td>SSE/WebSocket من الخادم + Web Push (مفاتيح VAPID) + بريد (SMTP) + واتساب/SMS (Twilio أو Meta Cloud API).</td>
+      <td>اللحظية داخل التطبيق مجانية تمامًا (SSE). الإشعار خارج التطبيق يحتاج مزوّدًا وحسابًا.</td>
+    </tr>
+    <tr>
+      <td><b>الدفع الحقيقي</b></td>
+      <td>حساب تاجر لدى بوابة (PayTabs / Tap / MyFatoorah مناسبة لليمن والخليج، أو Stripe) + Webhooks + محفظة بدفتر قيود مزدوجة.</td>
+      <td>لا يجوز تخزين أرقام البطاقات إطلاقًا؛ البوابة تستضيف النموذج. المتطلب: كيان قانوني + حساب بنكي.</td>
+    </tr>
+    <tr>
+      <td><b>تتبع شركات الشحن</b></td>
+      <td>مفاتيح API من: DHL، UPS، FedEx، Aramex، أو 17TRACK (وسيط يغطي مئات الشركات).</td>
+      <td>الاستدعاء يكون من الخادم فقط (المفاتيح لا تُوضع في المتصفح). ينفّذ عبر <code>polling</code> كل 15–30 دقيقة + Webhook إن توفر.</td>
+    </tr>
+    <tr>
+      <td><b>لوحة تحكم CMS</b></td>
+      <td>خادم + نظام أدوار وسجلات تدقيق + إدارة محتوى وأسعار ومستخدمين ومزادات.</td>
+      <td>تُبنى على نفس الواجهة الحالية بصفحة إدارية جديدة محمية بصلاحيات حقيقية.</td>
+    </tr>
+    <tr>
+      <td><b>تخزين الملفات</b></td>
+      <td>S3 / Cloudflare R2 (أو قرص الخادم مبدئيًا) للمرفقات وصور الهوية والصور الرمزية.</td>
+      <td>ضروري لأن رفع الصور حاليًا يخزّن Base64 في localStorage ويستهلك الحصة بسرعة.</td>
+    </tr>
+  </table>
+</section>
+
+<section class="card">
+  <h2><span class="n">٧</span>مصفوفة المتطلبات التقنية لكل ميزة</h2>
+  <table>
+    <tr><th style="width:24%">الميزة</th><th style="width:16%">خادم؟</th><th style="width:14%">مفتاح/حساب؟</th><th style="width:14%">جهد تقديري</th><th style="width:12%">المخاطر</th><th>يمكن تنفيذها الآن؟</th></tr>
+    <tr><td>إصلاح الأعطال P0</td><td>لا</td><td>لا</td><td>ساعة</td><td>منخفضة</td><td><span class="badge ok">نعم — فورًا</span></td></tr>
+    <tr><td>بحث متقدم + تفاصيل + مفضلة + تقييمات (محليًا)</td><td>لا (للتجربة)</td><td>لا</td><td>3–5 أيام</td><td>منخفضة</td><td><span class="badge ok">نعم</span></td></tr>
+    <tr><td>PWA + طباعة + QR</td><td>لا</td><td>لا</td><td>2–3 أيام</td><td>منخفضة</td><td><span class="badge ok">نعم</span></td></tr>
+    <tr><td>أسعار صرف + طقس + مؤشرات (مباشرة)</td><td>لا</td><td>لا</td><td>2 أيام</td><td>متوسطة (CORS/حصة)</td><td><span class="badge ok">نعم</span></td></tr>
+    <tr><td>أخبار السوق (RSS)</td><td>وكيل بسيط</td><td>لا</td><td>1–2 يوم</td><td>منخفضة</td><td><span class="badge part">يحتاج وكيل</span></td></tr>
+    <tr><td>خادم API + قاعدة بيانات + مصادقة</td><td>نعم</td><td>لا</td><td>3–5 أيام</td><td>متوسطة</td><td><span class="badge ok">نعم — داخل المشروع</span></td></tr>
+    <tr><td>إشعارات لحظية (SSE)</td><td>نعم</td><td>لا</td><td>2 أيام</td><td>منخفضة</td><td><span class="badge ok">نعم</span></td></tr>
+    <tr><td>مزادات كاملة</td><td>نعم (إلزامي)</td><td>لا</td><td>5–8 أيام</td><td>عالية (نزاعات/تزامن)</td><td><span class="badge part">بعد الخادم</span></td></tr>
+    <tr><td>لوحة تحكم إدارية</td><td>نعم</td><td>لا</td><td>5–7 أيام</td><td>متوسطة</td><td><span class="badge part">بعد الخادم</span></td></tr>
+    <tr><td>تتبع شركات الشحن</td><td>نعم</td><td><b>نعم</b> (DHL/UPS/17TRACK)</td><td>3–4 أيام بعد المفاتيح</td><td>متوسطة</td><td><span class="badge bad">بانتظار مفاتيح</span></td></tr>
+    <tr><td>دفع حقيقي</td><td>نعم</td><td><b>نعم</b> (حساب بوابة)</td><td>4–6 أيام</td><td>عالية (امتثال)</td><td><span class="badge bad">بانتظار حساب تاجر</span></td></tr>
+    <tr><td>Web Push / واتساب</td><td>نعم</td><td><b>نعم</b> (VAPID/مزوّد)</td><td>2–3 أيام</td><td>متوسطة</td><td><span class="badge bad">بانتظار مزوّد</span></td></tr>
+  </table>
+</section>
+
+<section class="card">
+  <h2><span class="n">٨</span>البنية المقترحة (مع الحفاظ الكامل على الواجهة الحالية)</h2>
+  <p>
+    الفكرة: <b>لا نعيد بناء الواجهة</b>. نُبقي التصميم والصفحات والبيانات، ونُدخل «طبقة بيانات» واحدة
+    (<code>api.js</code>) تحل مكان الاستدعاءات المباشرة لـ <code>localStorage</code>، ثم نضيف الخادم خلفها.
+    هكذا يعمل النظام حتى لو تعطّل الخادم (وضع محلي)، ويتحول إلى منصة حقيقية عند تشغيله.
+  </p>
+  <div class="arch">
+    <div class="layer"><h5>1) طبقة العميل (تُحفظ كما هي)</h5><p>18 صفحة + التصميم الحالي + وحدات جديدة (المزادات، البحث، المفضلة، التقييمات) تُحمَّل كوحدات ES منفصلة.</p></div>
+    <div class="arrow">▼</div>
+    <div class="layer" style="border-color:#d40511;background:#fff7f7"><h5>2) طبقة البيانات <code>api.js</code> (جديدة — نقطة التحول)</h5><p><code>getShipments()</code>, <code>placeBid()</code>, <code>addFavorite()</code> … تختار تلقائيًا: الخادم إن كان متاحًا، وإلا التخزين المحلي.</p></div>
+    <div class="arrow">▼</div>
+    <div class="layer"><h5>3) واجهة REST + لحظية</h5><p>Express/Fastify + <code>/api/*</code> + <code>SSE /api/stream</code> للمزايدات والإشعارات + Webhooks للدفع والتتبع.</p></div>
+    <div class="arrow">▼</div>
+    <div class="layer"><h5>4) قاعدة البيانات + العاملون</h5><p>SQLite الآن ← PostgreSQL للإنتاج. مهام مجدولة (إغلاق مزادات، تحديث أسعار، تذكيرات) + تخزين ملفات.</p></div>
+    <div class="arrow">▼</div>
+    <div class="layer"><h5>5) الخدمات الخارجية</h5><p>أسعار صرف، طقس، أخبار، تتبع شركات الشحن، بوابة دفع — كلها من الخادم فقط، والمفاتيح في متغيرات بيئة.</p></div>
+  </div>
+
+  <h3>مخطط قاعدة البيانات المقترح (الجداول الأساسية)</h3>
+<pre><code>users(id, name, email UNIQUE, phone, password_hash, role, status, created_at)
+sessions(user_id, refresh_token_hash, ip, ua, expires_at)
+shipments(id, tracking_no UNIQUE, reference, status, progress, origin, dest,
+          sender_id, receiver_name, invoice_value, shipping_cost, paid, remaining,
+          weight, pieces, goods, current_lat, current_lng, created_at, expected_at)
+shipment_events(id, shipment_id, location, lat, lng, status_text, occurred_at, source)
+warehouses(id, code, name, country, city, capacity_m2, lat, lng, is_active)
+wallet_accounts(id, user_id, currency, balance_cents)             -- أرصدة بالمليم
+wallet_entries(id, account_id, direction, amount_cents, ref_type, ref_id, created_at)
+auctions(id, seller_id, title, description, category, start_price, reserve_price,
+         bid_increment, starts_at, ends_at, status, extend_seconds, created_at)
+bids(id, auction_id, user_id, amount, is_auto, max_amount, created_at)   -- مع قيد UNIQUE للصف
+favorites(user_id, item_type, item_id, created_at, PRIMARY KEY(user_id,item_type,item_id))
+reviews(id, user_id, item_type, item_id, rating 1..5, comment, created_at,
+        UNIQUE(user_id,item_type,item_id))
+notifications(id, user_id, type, title, body, link, read_at, created_at)
+price_rules(id, rule_key, value, updated_at)      -- بدل الثوابت المكتوبة في الكود
+media(id, owner_type, owner_id, url, mime, size, created_at)
+audit_logs(id, actor_id, action, entity, entity_id, before, after, ip, created_at)
+settings(key, value_json, updated_at)</code></pre>
+
+  <h3>واجهات API الرئيسية</h3>
+  <table>
+    <tr><th style="width:34%">المسار</th><th style="width:14%">النوع</th><th>الوظيفة</th></tr>
+    <tr><td><code>POST /api/auth/login</code> · <code>/refresh</code> · <code>/logout</code></td><td>REST</td><td>مصادقة JWT + Cookie آمن + حد محاولات.</td></tr>
+    <tr><td><code>GET /api/shipments?status=&amp;q=&amp;from=&amp;to=&amp;page=</code></td><td>REST</td><td>بحث وفلترة وترقيم على الخادم (لا تحميل كل البيانات).</td></tr>
+    <tr><td><code>POST/PATCH/DELETE /api/shipments/:id</code></td><td>REST</td><td>إدارة كاملة بصلاحيات وسجل تدقيق.</td></tr>
+    <tr><td><code>GET /api/auctions</code> · <code>GET /api/auctions/:id</code></td><td>REST</td><td>المزادات مع السعر الحالي والوقت المتبقي من الخادم.</td></tr>
+    <tr><td><code>POST /api/auctions/:id/bids</code></td><td>REST</td><td>مزايدة ذرّية (Transaction + قفل) + رفض المزايدة الأقل + إشعار المتجاوز.</td></tr>
+    <tr><td><code>GET /api/stream?topics=auction:12,notifications</code></td><td>SSE</td><td>دفع لحظي لتحديث أعلى سعر والوقت والإشعارات.</td></tr>
+    <tr><td><code>POST /api/favorites</code> · <code>DELETE /api/favorites/:type/:id</code></td><td>REST</td><td>مفضلة موحدة ومزامنة.</td></tr>
+    <tr><td><code>GET/POST /api/reviews</code></td><td>REST</td><td>تقييمات مع منع التكرار وحساب المتوسط.</td></tr>
+    <tr><td><code>GET /api/live/fx</code> · <code>/weather</code> · <code>/news</code></td><td>REST (بوكيل وتخزين مؤقت)</td><td>بيانات حية مع <code>fetched_at</code> و<code>source</code> و<code>stale</code>.</td></tr>
+    <tr><td><code>GET /api/tracking/:code</code></td><td>REST</td><td>تتبع موحّد: داخلي، أو من شركة شحن عبر محوّل (Adapter).</td></tr>
+    <tr><td><code>POST /api/webhooks/payment</code> · <code>/carrier</code></td><td>Webhook</td><td>تأكيد دفع/تحديث حالة شحنة موقّع رقميًا.</td></tr>
+    <tr><td><code>/api/admin/*</code></td><td>REST</td><td>لوحة التحكم: مستخدمون، أسعار، مزادات، محتوى، تدقيق.</td></tr>
+  </table>
+  <div class="callout i-blue">
+    <b>لماذا SSE وليس WebSocket؟</b> لأن احتياجنا دفع اتجاه واحد (خادم ← عميل) وهو أبسط وأخف ويعمل عبر أي وكيل واستضافة،
+    ويعيد الاتصال تلقائيًا. إن احتجنا لاحقًا محادثة ثنائية (دردشة دعم فورية) ننتقل إلى WebSocket.
+  </div>
+</section>
+
+<section class="card">
+  <h2><span class="n">٩</span>خطة التنفيذ المرحلية (كل مرحلة تُختبر قبل التالية)</h2>
+  <table>
+    <tr><th style="width:8%">المرحلة</th><th style="width:34%">المخرجات</th><th style="width:32%">معيار القبول (يُختبر فعليًا)</th><th>الجهد</th></tr>
+    <tr>
+      <td><b>0</b><br><span class="badge bad">عاجل</span></td>
+      <td>إصلاح 5 أعطال P0 + <code>copyToClipboard</code> + معرّفات مكررة + الدوال المكررة، وإضافة حزمة اختبار آلية تعمل بأمر واحد.</td>
+      <td>0 خطأ <code>RangeError</code>، 0 <code>ReferenceError</code> عند تنفيذ 208 معالجًا، وتقرير اختبار يظهر 34/34 ناجحًا.</td>
+      <td>1 يوم</td>
+    </tr>
+    <tr>
+      <td><b>1</b></td>
+      <td>خادم Node + SQLite + مخطط الجداول + مصادقة حقيقية (bcrypt/JWT) + ترحيل بياناتك الحالية عبر ملف التصدير + طبقة <code>api.js</code> في الواجهة.</td>
+      <td>الدخول يعمل من الخادم، البيانات تبقى بعد تغيير المتصفح/الجهاز، كل عمليات CRUD تمر عبر API، ولا يعمل أي طلب بلا توكن صحيح.</td>
+      <td>3–5 أيام</td>
+    </tr>
+    <tr>
+      <td><b>2</b></td>
+      <td>البحث المتقدم + صفحات التفاصيل والروابط العميقة + المفضلة الموحدة + التقييمات والمراجعات + مركز إشعارات محسّن + إشعارات نظام المتصفح.</td>
+      <td>البحث يعيد نتائج مطابقة عبر 8 كيانات، الروابط تُفتح مباشرة، المفضلة تبقى بعد إعادة التحميل، التقييم لا يُقبل مرتين لنفس المستخدم.</td>
+      <td>4–6 أيام</td>
+    </tr>
+    <tr>
+      <td><b>3</b></td>
+      <td><b>نظام المزادات الكامل:</b> إنشاء/عرض المزاد، مزايدة ذرّية، عرض أعلى سعر والوقت المتبقي من ساعة الخادم، مزايدة تلقائية، تمديد مانع للقنص، إغلاق تلقائي وفق الشروط، إشعار «تم تجاوزك»، تأمين مبلغ، عمولة، ولوحة متابعة.</td>
+      <td>اختبار تزامن: 50 مزايدة متوازية → تُقبل الأعلى فقط ولا تُفقد أي مزايدة؛ إغلاق المزاد يحدث في ثانيته المحددة دون تدخل؛ المزايدة بعد الإغلاق تُرفض؛ التمديد يعمل.</td>
+      <td>5–8 أيام</td>
+    </tr>
+    <tr>
+      <td><b>4</b></td>
+      <td>البيانات الحية (أسعار صرف/طقس/أخبار/مؤشرات) عبر الخادم مع تخزين مؤقت و«آخر تحديث»، ومحوّل تتبع شركات الشحن (يُفعّل عند وصول المفاتيح).</td>
+      <td>كل بيانات حية تحمل مصدرها ووقت جلبها، وتظهر حالة «بيانات قديمة» عند تعذر التحديث، ولا تظهر أي بيانات وهمية بلا وسم.</td>
+      <td>3–5 أيام</td>
+    </tr>
+    <tr>
+      <td><b>5</b></td>
+      <td>لوحة تحكم إدارية حقيقية: إدارة المستخدمين والصلاحيات، الأسعار وقواعد التسعير، الشحنات، المزادات، المحتوى، التقارير، وسجل تدقيق كامل.</td>
+      <td>كل دور يرى ما يخصه فقط (يُختبر بمحاولة وصول مباشرة للمسارات)، وكل تغيير يُسجَّل بهوية الفاعل والوقت.</td>
+      <td>5–7 أيام</td>
+    </tr>
+    <tr>
+      <td><b>6</b></td>
+      <td>PWA + عمل دون اتصال + إتاحة + أداء + تخطيط سطح المكتب + اختبار شامل على أحجام الأجهزة + توثيق تشغيلي.</td>
+      <td>Lighthouse ≥ 90 للأداء والإتاحة، يعمل بلا إنترنت للبيانات المخزّنة، ولا تجاوز أفقي من 320px إلى 1440px.</td>
+      <td>3–5 أيام</td>
+    </tr>
+    <tr>
+      <td><b>7</b><br><span class="badge na">اختياري</span></td>
+      <td>الدفع الحقيقي، Web Push/واتساب، تتبع شركات الشحن الفعلي، النشر (Docker + HTTPS + نسخ احتياطي آلي).</td>
+      <td>عملية دفع كاملة في بيئة اختبار البوابة، ووصول إشعار فعلي على الجوال، وتحديث تتبع من شركة حقيقية.</td>
+      <td>6–10 أيام</td>
+    </tr>
+  </table>
+  <div class="callout i-green">
+    <b>مبدأ التطوير:</b> لا تُدمج أي مرحلة قبل نجاح معيار قبولها. وأي ميزة لا يمكن تنفيذها «حقيقية» الآن
+    تُعرض بوسم واضح (مثال: «بيانات تجريبية — لا تعتمد عليها») بدلًا من إيهام المستخدم بأنها حقيقية.
+  </div>
+</section>
+
+<section class="card">
+  <h2><span class="n">١٠</span>استراتيجية الاختبار</h2>
+  <table>
+    <tr><th style="width:20%">المستوى</th><th style="width:38%">ما يُختبر</th><th>الأداة</th></tr>
+    <tr><td>اختبارات وحدة</td><td>حساب الأسعار، محرك المزايدة، قواعد الإغلاق، التقييمات، تطبيع البحث العربي.</td><td>Node test runner (مدمج) — سريع وبلا تبعيات.</td></tr>
+    <tr><td>اختبارات تكامل API</td><td>كل نقطة نهاية: صلاحيات، تحقق مدخلات، أخطاء، تزامن.</td><td>supertest + قاعدة بيانات اختبار معزولة.</td></tr>
+    <tr><td>اختبارات واجهة شاملة</td><td>الدخول، التنقل بين 19+ صفحة، إضافة/تعديل/حذف، المزايدة، الإشعارات.</td><td>حزمة jsdom الحالية (جاهزة) + Playwright عند توفر متصفح.</td></tr>
+    <tr><td>اختبار تزامن</td><td>مزايدات متوازية، تحديث رصيد المحفظة، إغلاق المزاد.</td><td>سكربت إجهاد (autocannon أو Promise.all).</td></tr>
+    <tr><td>اختبار أمني</td><td>XSS، تصاعد الصلاحيات، IDOR، رفع ملفات، معدل المحاولات.</td><td>قائمة فحص يدوية + حقن مدخلات خبيثة في الاختبارات الآلية.</td></tr>
+    <tr><td>اختبار أجهزة</td><td>320/360/390/768/1024/1440px، RTL، تكبير 200%.</td><td>متصفح حقيقي + لقطات لكل حجم.</td></tr>
+  </table>
+  <p class="small">حزمة الاختبار الحالية موجودة في المشروع (<code>audit/</code>) وتُشغَّل بأمر واحد لإعادة التحقق بعد كل مرحلة.</p>
+</section>
+
+<section class="card">
+  <h2><span class="n">١١</span>ملحق: مصادر البيانات الحية التي تحققتُ منها فعليًا اليوم</h2>
+  <p class="small">نتائج حقيقية من بيئة التشغيل بتاريخ 22 نوفمبر 2026 (وليست أمثلة من وثائق):</p>
+  <table>
+    <tr><th style="width:24%">المصدر</th><th style="width:12%">الحالة</th><th>العيّنة الفعلية</th></tr>
+    <tr><td>Frankfurter (ECB) — أسعار صرف</td><td><span class="badge ok">يعمل</span></td><td><code>base=USD, date=2026-11-20, EUR=0.90992</code> <span class="small">(ملاحظة: الريال اليمني غير مشمول — يُستكمل من open.er-api)</span></td></tr>
+    <tr><td>Open-Meteo — طقس</td><td><span class="badge ok">يعمل</span></td><td>ميناء عدن: <code>24.4°C، ريح 13 كم/س، 2026-11-22T19:30</code></td></tr>
+    <tr><td>Open-Meteo Marine — حالة البحر</td><td><span class="badge ok">يعمل</span></td><td>عدن: <code>ارتفاع الموج 0.78 م، دورة 4.3 ث</code></td></tr>
+    <tr><td>CoinGecko — عملات رقمية</td><td><span class="badge ok">يعمل</span></td><td><code>BTC 60,687$ · ETH 1,713.38$ · USDT 0.9987$</code></td></tr>
+    <tr><td>gCaptain RSS — أخبار شحن</td><td><span class="badge ok">يعمل</span></td><td>12 خبرًا، أحدثها 22 نوفمبر 2026 17:13 UTC</td></tr>
+    <tr><td>FreightWaves RSS — أخبار لوجستية</td><td><span class="badge ok">يعمل</span></td><td>50 خبرًا في التغذية</td></tr>
+    <tr><td>World Bank — بيانات اقتصادية</td><td><span class="badge ok">يعمل</span></td><td>سكان اليمن 2025: <code>41,773,878</code></td></tr>
+    <tr><td>restcountries (بيانات الدول)</td><td><span class="badge bad">توقف</span></td><td>الإصدار v3.1 أُوقف، والجديد يتطلب مفتاحًا — سيُستبدل بمصدر بديل.</td></tr>
+  </table>
+  <div class="callout i-blue">
+    <b>قاعدة صارمة سألتزم بها:</b> أي رقم أو سعر أو خبر يظهر للمستخدم سيحمل معه <b>المصدر ووقت الجلب</b>،
+    وإن فشل التحديث يظهر وسم «آخر تحديث قبل …» بدل اختلاق قيمة جديدة. ولن أُظهر أي بيانات مزيفة على أنها حقيقية.
+  </div>
+</section>
+
+<section class="card">
+  <h2><span class="n">١٢</span>قرارات مطلوبة منك قبل بدء التنفيذ</h2>
+  <table>
+    <tr><th style="width:26%">القرار</th><th style="width:40%">الخيارات</th><th>توصيتي</th></tr>
+    <tr>
+      <td><b>1. البنية الخلفية</b></td>
+      <td>(أ) خادم Node + SQLite داخل نفس المشروع — يعمل فورًا في مساحة العمل بلا حسابات. (ب) Supabase/Firebase سحابي — يحتاج حسابك. (ج) البقاء بلا خادم.</td>
+      <td><b>(أ)</b> الآن، مع تصميم يسمح بالانتقال إلى PostgreSQL/Supabase لاحقًا بلا إعادة كتابة.</td>
+    </tr>
+    <tr>
+      <td><b>2. هيكل الملفات</b></td>
+      <td>(أ) تقسيم الملف إلى وحدات (CSS/JS منفصلة) مع الحفاظ الحرفي على التصميم. (ب) الإبقاء على ملف واحد وإضافة الأكواد داخله.</td>
+      <td><b>(أ)</b> — الملف الحالي 4,074 سطر JS، وأي إضافة داخله ستجعل الصيانة مستحيلة.</td>
+    </tr>
+    <tr>
+      <td><b>3. المزادات والدفع</b></td>
+      <td>(أ) مزادات بعملة داخلية (رصيد محفظة) الآن، وربط بوابة دفع لاحقًا. (ب) ربط بوابة دفع فورًا (يحتاج حساب تاجر وكيانًا قانونيًا). (ج) مزادات بلا دفع (تسجيل نية شراء).</td>
+      <td><b>(أ)</b> — يعطي نظامًا كاملًا وقابلًا للاختبار فورًا، دون انتظار تعاقد مالي.</td>
+    </tr>
+    <tr>
+      <td><b>4. الحسابات والمفاتيح</b></td>
+      <td>هل لديك أي من: DHL / UPS / FedEx / Aramex / 17TRACK، بوابة دفع (PayTabs/Tap/Stripe)، دومين واستضافة، مزوّد SMS/واتساب؟</td>
+      <td>ابدأ بما هو متاح؛ وما ليس متاحًا سيُبنى بمحوّل (Adapter) يبقى معطّلًا بوسم «غير مهيّأ» حتى تصل المفاتيح.</td>
+    </tr>
+  </table>
+</section>
+
+<div class="foot">
+  تقرير التحليل — أُعدّ بعد فحص كامل للملف وتشغيل آلي لمنطقه. المستند التالي سيكون تقرير إنجاز المرحلة 0 مع نتائج الاختبار.
+</div>
+
+</div>
+</body>
+</html>

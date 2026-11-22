@@ -1,0 +1,38 @@
+# ============================================================================
+# تشغيل بدون Docker عبر systemd
+#   sudo cp deploy/masar.service /etc/systemd/system/
+#   sudo systemctl daemon-reload && sudo systemctl enable --now masar
+#   sudo journalctl -u masar -f
+# ============================================================================
+[Unit]
+Description=Almasar Global Logistics API (Node)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=masar
+Group=masar
+WorkingDirectory=/opt/masar
+Environment=NODE_ENV=production
+Environment=PORT=8080
+Environment=HOST=127.0.0.1
+Environment=DATA_DIR=/var/lib/masar
+EnvironmentFile=-/etc/masar/masar.env
+ExecStart=/usr/bin/node /opt/masar/server/server.js
+Restart=always
+RestartSec=3
+LimitNOFILE=65535
+
+# تقوية أمنية
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/lib/masar
+ProtectKernelTunables=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+
+[Install]
+WantedBy=multi-user.target

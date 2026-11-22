@@ -1,0 +1,17 @@
+node_modules
+data
+backups
+audit
+android
+ios
+docs
+scripts
+*.apk
+*.zip
+*.idsig
+.env
+.env.*
+.git
+.gitignore
+.cache
+*.log

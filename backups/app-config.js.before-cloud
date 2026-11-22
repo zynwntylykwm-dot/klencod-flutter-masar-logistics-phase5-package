@@ -1,0 +1,25 @@
+/**
+ * app-config.js — إعداد عنوان الخادم (يُستخدم في تطبيق الأندرويد والويب)
+ * ---------------------------------------------------------------------
+ * يُحمَّل قبل api-client.js. لا يُغيّر أي شيء في المتصفح العادي:
+ *  - إن لم يوجد عنوان محفوظ ولا معامل ?srv= يبقى السلوك كما هو (نفس الأصل).
+ *  - في تطبيق الأندرويد يُمَرَّر العنوان عبر ?srv=http://... ويُحفظ محليًا.
+ */
+(function () {
+  'use strict';
+  var KEY = 'masar.api_base';
+  var get = function (k) { try { return localStorage.getItem(k); } catch (e) { return null; } };
+  var set = function (k, v) { try { localStorage.setItem(k, v); } catch (e) {} };
+
+  var param = null;
+  try { param = new URLSearchParams(location.search).get('srv'); } catch (e) {}
+  if (param) set(KEY, String(param).replace(/\/+$/, ''));
+
+  var saved = get(KEY);
+  if (saved) window.MASAR_API_BASE = String(saved).replace(/\/+$/, '');
+  window.MASAR_SET_SERVER = function (url) {
+    if (!url) { try { localStorage.removeItem(KEY); } catch (e) {} window.MASAR_API_BASE = ''; return; }
+    var clean = String(url).trim().replace(/\/+$/, '');
+    set(KEY, clean); window.MASAR_API_BASE = clean;
+  };
+})();
